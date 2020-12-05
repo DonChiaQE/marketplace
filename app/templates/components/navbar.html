@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.0-rc.31/dist/extended.min.css">
+</head>
+
+<body style="background-color: #F2F2F2;">
+    <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
+
+        <div class="- md:+">
+            <div class=" hstack">
+                <button class="vstack align-start touch:text-underline">
+                    <div class="m-18">Fresh Produce</div>
+                </button>
+                <button class="vstack align-start touch:text-underline">
+                    <div class="m-18">Dairy</div>
+                </button>
+                <button class="vstack align-start touch:text-underline">
+                    <div class="m-18">Meat</div>
+                </button>
+                <button class="vstack align-start touch:text-underline">
+                    <div class="m-18">Others</div>
+                </button>
+                <button class="vstack align-start touch:text-underline">
+                    <div class="m-18 text-red-600">Log Out</div>
+                </button>
+            </div>
+        </div>
+
+        <div class="+ md:- group">
+            <div class="zstack w-40 h-40">
+                <div class="group vstack space-5">
+                    <div class="h-2 w-36 bg-black rounded-full"></div>
+                    <div class="h-2 w-36 bg-black rounded-full"></div>
+                    <div class="h-2 w-36 bg-black rounded-full"></div>
+                </div>
+                <div class="- group-touch:+ place-bl transform y-100">
+                    <div class="vstack w-192 bg-white rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
+                        <button class="vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">
+                        <div class="">Fresh Produce</div>
+                  </button>
+                        <button class="vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">
+                        <div class="">Dairy</div>
+                  </button>
+                        <button class="vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">
+                        <div class="">Meat</div>
+                  </button>
+                        <button class="vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">
+                        <div class="">Others</div>
+                  </button>
+                        <button class="vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">
+                        <div class="text-red-600">Log Out</div>
+                  </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="spacer"></div>
+        <button>
+          <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
+        </button>
+    </nav>
+    <div class="container py-28">
+        <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 sm:p-8 md:grid-cols-4 my-18" style="grid-template-columns: repeat(auto-fill, minmax(224px, 1fr))">
+            <div class="vstack h-320 bg-white rounded-12 shadow shadow-lg p-28">
+                <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                <div class="vstack align-start mt-20 space-8 h-144">
+                    <div class="text-48 text-500 text-black" style="font-size: 24px;">$10</div>
+                    <div class="text-14 text-400 text-black">Pasar Tomato Pack</div>
+                    <div class="text-14 text-200 text-gray-500">6 per pack</div>
+                    <div class="spacer"></div>
+                    <div class="hstack w-full">
+                        <svg class="w-36 h-36" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+                        <div class="spacer"></div>
+                        <button>
+                            <div class="text-18 text-blue-500" style="font-size: 18px;">Add to cart</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="vstack h-320 bg-white rounded-12 shadow shadow-lg p-28">
+                <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                <div class="vstack align-start mt-20 space-8 h-144">
+                    <div class="text-48 text-500 text-black" style="font-size: 24px;">$10</div>
+                    <div class="text-14 text-400 text-black">Pasar Tomato Pack</div>
+                    <div class="text-14 text-200 text-gray-500">6 per pack</div>
+                    <div class="spacer"></div>
+                    <div class="hstack w-full">
+                        <svg class="w-36 h-36" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+                        <div class="spacer"></div>
+                        <button>
+                            <div class="text-18 text-blue-500" style="font-size: 18px;">Add to cart</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="vstack h-320 bg-white rounded-12 shadow shadow-lg p-28">
+                <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                <div class="vstack align-start mt-20 space-8 h-144">
+                    <div class="text-48 text-500 text-black" style="font-size: 24px;">$10</div>
+                    <div class="text-14 text-400 text-black">Pasar Tomato Pack</div>
+                    <div class="text-14 text-200 text-gray-500">6 per pack</div>
+                    <div class="spacer"></div>
+                    <div class="hstack w-full">
+                        <svg class="w-36 h-36" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+                        <div class="spacer"></div>
+                        <button>
+                            <div class="text-18 text-blue-500" style="font-size: 18px;">Add to cart</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="vstack h-320 bg-white rounded-12 shadow shadow-lg p-28">
+                <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                <div class="vstack align-start mt-20 space-8 h-144">
+                    <div class="text-48 text-500 text-black" style="font-size: 24px;">$10</div>
+                    <div class="text-14 text-400 text-black">Pasar Tomato Pack</div>
+                    <div class="text-14 text-200 text-gray-500">6 per pack</div>
+                    <div class="spacer"></div>
+                    <div class="hstack w-full">
+                        <svg class="w-36 h-36" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+                        <div class="spacer"></div>
+                        <button>
+                            <div class="text-18 text-blue-500" style="font-size: 18px;">Add to cart</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="vstack h-320 bg-white rounded-12 shadow shadow-lg p-28">
+                <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                <div class="vstack align-start mt-20 space-8 h-144">
+                    <div class="text-48 text-500 text-black" style="font-size: 24px;">$10</div>
+                    <div class="text-14 text-400 text-black">Pasar Tomato Pack</div>
+                    <div class="text-14 text-200 text-gray-500">6 per pack</div>
+                    <div class="spacer"></div>
+                    <div class="hstack w-full">
+                        <svg class="w-36 h-36" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+                        <div class="spacer"></div>
+                        <button>
+                            <div class="text-18 text-blue-500" style="font-size: 18px;">Add to cart</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="vstack h-320 bg-white rounded-12 shadow shadow-lg p-28">
+                <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                <div class="vstack align-start mt-20 space-8 h-144">
+                    <div class="text-48 text-500 text-black" style="font-size: 24px;">$10</div>
+                    <div class="text-14 text-400 text-black">Pasar Tomato Pack</div>
+                    <div class="text-14 text-200 text-gray-500">6 per pack</div>
+                    <div class="spacer"></div>
+                    <div class="hstack w-full">
+                        <svg class="w-36 h-36" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+                        <div class="spacer"></div>
+                        <button>
+                            <div class="text-18 text-blue-500" style="font-size: 18px;">Add to cart</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<style>
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: black;
+    }
+    
+    .text-underline {
+        text-decoration: underline;
+    }
+</style>

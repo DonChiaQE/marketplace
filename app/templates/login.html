@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.0-rc.31/dist/extended.min.css">
+</head>
+
+<body class="screen hstack">
+    <form>
+        <div class="vstack p-48 w-320 h-auto bg-white shadow shadow-lg rounded-24">
+            <div class="vstack align-start space-24">
+                <div class="vstack align-start space-5">
+                    <div class="text-gray-900 px-8 pb-8">Username</div>
+                    <input type="text" class="border border-green-500 border-1 w-256 h-60 p-10 rounded-full" />
+                </div>
+                <div class="vstack align-start space-5">
+                    <div class="text-gray-900 px-8 pb-8">Password</div>
+                    <input type="text" class="border border-green-500 border-1 w-256 h-60 p-10 rounded-full" />
+                </div>
+            </div>
+            <div class="zstack pt-36 w-256">
+                <div class="hstack w-full h-48 bg-white border-1 bg-green-500 rounded-20 shadow shadow-xl button-form">
+                    <div class="text-white">Login</div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>
+
+<style>
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+    
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+    }
+    
+    .screen {
+        width: 100vw;
+        height: 100vh;
+    }
+    
+    .text-24 {
+        font-size: 24px;
+    }
+    
+    .button-form:hover {
+        text-decoration: underline;
+        cursor: pointer;
+        color: white;
+    }
+    
+    .text-24:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    
+    .button-form:active {
+        box-shadow: var(--shadow-sm);
+    }
+</style>

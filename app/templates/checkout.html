@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -65,32 +65,50 @@
             <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
         </a>
     </nav>
-    <div class="container py-28">
-        <div id="example-1">
-            <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 sm:p-8 md:grid-cols-4 my-18" style="grid-template-columns: repeat(auto-fill, minmax(224px, 1fr))">
 
-                <div v-for="item in items" :key="item.message">
-                    <div class="vstack h-320 bg-white rounded-3 shadow shadow-md p-28">
-                        <div class="w-112 h-112 bg-green-500 rounded-5"></div>
-                        <div class="vstack align-start mt-20 space-8 h-144">
-                            <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.price}}</div>
-                            <div class="text-14 text-400 text-black">{{item.name}}</div>
-                            <div class="text-14 text-200 text-gray-500">{{item.info}}</div>
-                            <div class="spacer"></div>
-                            <div class="hstack w-full">
-                                <svg class="w-36 h-36" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
+    <div class="container py-28">
+        <div class="vstack md:hstack md:space-28 h-auto">
+            <div id="example-1">
+                <form>
+                    <div v-for="item in items" :key="item.message">
+                        <div class="vstack space-28 my-28">
+                            <div class="hstack w-384 h-128 bg-white shadow shadow-md">
                                 <div class="spacer"></div>
-                                <button>
-                                    <div class="text-18 text-blue-500" style="font-size: 18px;">Add to cart</div>
-                                </button>
+                                <div class="w-80 h-80 bg-gray-200 rounded-12"></div>
+                                <div class="spacer"></div>
+                                <div class="spacer"></div>
+                                <div class="vstack align-start h-80">
+                                    <div class="text-blackm mb-2">{{item.name}}</div>
+                                    <div class="text-gray-500 text-12 mt-2">{{item.price}}</div>
+                                    <div class="spacer"></div>
+                                    <div class="hstack space-5">
+                                        <input type="button" class="hstack w-28 h-28 bg-black rounded-full text-white buttons" value="-" />
+                                        <input type="text" class="w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center" value="1" />
+                                        <input type="button" class="hstack w-28 h-28 bg-black rounded-full text-white buttons" value="+" />
+                                    </div>
+                                </div>
+                                <div class="spacer"></div>
+                                <div class="spacer"></div>
+                                <div class="vstack h-80">
+                                    <div class="spacer"></div>
+                                    <div class="text-black">$20</div>
+                                </div>
+                                <div class="spacer"></div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
-
+            <div class=" space-28 my-28 h-full bg-green-900">
+                <form>
+                    <div class="hstack w-384 h-64 bg-white shadow shadow-xl px-48 buttons">
+                        <div class="">Checkout</div>
+                        <div class="spacer"></div>
+                        <div class=""><b>$90</b></div>
+                    </div>
+                </form>
+                <div class="spacer"></div>
+            </div>
         </div>
     </div>
 </body>
@@ -98,6 +116,22 @@
 </html>
 
 <style>
+    .buttons:active {
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .buttons:hover {
+        cursor: pointer;
+    }
+    
+    .text-12 {
+        font-size: 12px;
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
      :root {
         --bg-color: #F2F2F2;
         --text-color: #2c3e50;

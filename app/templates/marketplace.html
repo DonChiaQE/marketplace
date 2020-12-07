@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.0-rc.31/dist/extended.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.0-rc.35/dist/full.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
 </head>
 
 <body>
     <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
 
-        <div class="- md:+">
+        <div class="hidden md:unhidden">
             <div class=" hstack">
                 <a href="marketplace.html" class="vstack align-start">
                     <div class="m-18 text-underline">Fresh Produce</div>
@@ -31,14 +31,14 @@
             </div>
         </div>
 
-        <div class="+ md:- group">
+        <div class="unhidden md:hidden group">
             <div class="zstack w-40 h-40">
                 <div class="group vstack space-5">
                     <div class="h-2 w-36 bg-black rounded-full"></div>
                     <div class="h-2 w-36 bg-black rounded-full"></div>
                     <div class="h-2 w-36 bg-black rounded-full"></div>
                 </div>
-                <div class="- group-touch:+ place-bl transform y-100">
+                <div class="hidden group-touch:unhidden place-bl transform y-100">
                     <div class="vstack w-192 bg-white rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
                         <a href="marketplace.html" class="vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">
                             <div class="">Fresh Produce</div>
@@ -67,31 +67,25 @@
     </nav>
 
     <div class="container py-28">
-        <div id="example-1">
-            <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 sm:p-8 md:grid-cols-4 my-18" style="grid-template-columns: repeat(auto-fill, minmax(224px, 1fr))">
-
-                <div v-for="item in items" :key="item.message">
-                    <div class="vstack h-320 bg-white rounded-3 shadow shadow-md p-28">
-                        <div class="w-112 h-112 bg-green-500 rounded-5"></div>
-                        <div class="vstack align-start mt-20 space-8 h-144">
-                            <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.price}}</div>
-                            <div class="text-14 text-400 text-black">{{item.name}}</div>
-                            <div class="text-14 text-200 text-gray-500">{{item.info}}</div>
-                            <div class="spacer"></div>
-                            <div class="hstack w-full">
-                                <svg class="w-36 h-36" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 sm:p-8 md:grid-cols-4 my-18" style="grid-template-columns: repeat(auto-fill, minmax(224px, 1fr))">
+            <form>
+                <div class="vstack h-320 bg-white rounded-3 shadow shadow-md p-28">
+                    <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                    <div class="vstack align-start mt-20 space-8 h-144">
+                        <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.price}}</div>
+                        <div class="text-14 text-400 text-black">{{item.name}}</div>
+                        <div class="text-14 text-200 text-gray-500">{{item.info}}</div>
+                        <div class="spacer"></div>
+                        <div class="hstack w-full">
+                            <svg class="w-36 h-36" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
-                                <div class="spacer"></div>
-                                <button>
-                                    <div class="text-18 text-blue-500" style="font-size: 18px;">Add to cart</div>
-                                </button>
-                            </div>
+                            <div class="spacer"></div>
+                            <input type="submit" class="text-18 text-blue-500" style="font-size: 18px;" value="Add to cart">
                         </div>
                     </div>
                 </div>
-            </div>
-
+            </form>
         </div>
     </div>
 </body>
@@ -119,44 +113,3 @@
         display: inline-block;
     }
 </style>
-
-<script>
-    var example1 = new Vue({
-        el: '#example-1',
-        data: {
-            items: [{
-                name: 'Pasar Tomato',
-                price: '$2',
-                info: '6 per pack'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }]
-        }
-    })
-</script>

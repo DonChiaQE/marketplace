@@ -13,6 +13,7 @@
         <form action="/marketplace" method="POST">
         <div class="hidden md:unhidden">
             <div class=" hstack">
+                <input type="submit" name="navbar" value="All Products" class="m-18 text-underline"/>
                 <input type="submit" name="navbar" value="Fresh Produce" class="m-18 text-underline"/>
                 <input type="submit" name="navbar" value="Dairy" class="m-18 text-underline"/>
                 <input type="submit" name="navbar" value="Meat" class="m-18 text-underline"/>
@@ -73,7 +74,7 @@
     <div class="container py-28">
         <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 sm:p-8 md:grid-cols-4 my-18" style="grid-template-columns: repeat(auto-fill, minmax(224px, 1fr))">
             {% for item in items %}
-            <form>
+            <form action="/addtocart", method="POST">
                 <div class="vstack h-320 bg-white rounded-3 shadow shadow-md p-28">
                     <div class="w-112 h-112 bg-green-500 rounded-5"></div>
                     <div class="vstack align-start mt-20 space-8 h-144">
@@ -86,7 +87,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
                             <div class="spacer"></div>
-                            <input type="submit" class="text-18 text-blue-500" style="font-size: 18px;" value="Add to cart">
+                            <button type="submit" name="Add2Cart" value="{{item.name}}">Add to Cart</button>
                         </div>
                     </div>
                 </div>

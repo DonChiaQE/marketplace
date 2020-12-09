@@ -4,20 +4,20 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.0-rc.31/dist/extended.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.0-rc.35/dist/full.css">
 </head>
 
 <body class="screen hstack">
-    <form>
+    <form action="/login" method="POST">
         <div class="vstack p-48 w-320 h-auto bg-white shadow shadow-md rounded-24">
             <div class="vstack align-start space-24">
                 <div class="vstack align-start space-5">
                     <div class="text-gray-900 px-8 pb-8">Username</div>
-                    <input type="text" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
+                    <input type="text" class="border border-black border-1 w-256 h-60 p-10 rounded-full" name="username" />
                 </div>
                 <div class="vstack align-start space-5">
                     <div class="text-gray-900 px-8 pb-8">Password</div>
-                    <input type="text" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
+                    <input type="text" class="border border-black border-1 w-256 h-60 p-10 rounded-full" name="password" />
                 </div>
             </div>
             <div class="zstack pt-36 w-256">

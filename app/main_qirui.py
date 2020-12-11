@@ -208,6 +208,31 @@ def logout():
         session.pop('student', None)
     return render_template('login.html')
 
+@app.route('/admin', methods = ['POST', 'GET'])
+def admin():
+    if request.method == 'POST':
+        if request.form['nav'] == 'Table of Student':
+            return render_template('tablestudents.html')
+        elif request.form['nav'] == 'Table of Teachers':
+            return render_template('tableteacher.html')
+        elif request.form['nav'] == 'Edit Shopping Items':
+            Rec = db.session.query(Record_Of_Items).all()
+            return render_template('editpage.html', items = Rec)
+        elif request.form['nav'] == 'Create Promotion':
+            pass
+        elif request.form['nav'] == 'Wipe DB':
+            pass
+        elif request.form['nav'] == 'Reinitialise DB':
+            pass
+
+    return render_template('admin.html')
+
+
+
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
     

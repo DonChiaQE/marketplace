@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.0-rc.35/dist/full.css">
+</head>
+
+<body>
+    <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
+        <form>
+            <button type="submit">
+                <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+            </button>
+        </form>
+
+        <div class="spacer"></div>
+
+    </nav>
+
+    <div class="container py-28">
+        <div class="vstack screen">
+            <div class="text-36">Table of Teachers</div>
+            <form class="vstack space-28 mt-28">
+                <input type="submit" class="w-256 bg-white rounded-3 shadow shadow-md p-28" value="Add Teacher" />
+                <!--for loop here-->
+                <div class="hstack w-full w-256">
+                    <input type="submit" class="w-full bg-white rounded-3 shadow shadow-md p-28 " value="Teacher_12345" />
+                    <div class="spacer"></div>
+                    <input type="submit" class=" color-red-700 bg-transparent pl-36 text-36 " value="x" />
+                </div>
+                <!--to here-->
+            </form>
+        </div>
+    </div>
+
+</body>
+
+<style>
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+</style>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.0-rc.35/dist/full.css">
+</head>
+
+<body>
+    <div class="container py-28">
+        <div class="vstack screen">
+            <div class="text-36">Admin Page</div>
+            <form class="vstack space-28 mt-28" action="/admin" method="POST">
+                <input type="submit" name='nav' value="Table of Student" class="w-256 bg-white rounded-3 shadow shadow-md p-28">
+                <input type="submit" name='nav' value="Table of Teachers" class="w-256 bg-white rounded-3 shadow shadow-md p-28">
+                <input type="submit" name='nav' value="Edit Shopping Items" class="w-256 bg-white rounded-3 shadow shadow-md p-28">
+                <input type="submit" name='nav' value="Create Promotion" class="w-256 bg-white rounded-3 shadow shadow-md p-28">
+                <input type="submit" name='nav' value="Wipe DB" class="w-256 bg-white rounded-3 shadow shadow-md p-28">
+                <input type="submit" name='nav' value="Reinitialise DB" class="w-256 bg-white rounded-3 shadow shadow-md p-28">
+            </form>
+        </div>
+    </div>
+
+</body>
+
+<style>
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+</style>
+
+</html>

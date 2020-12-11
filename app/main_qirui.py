@@ -41,6 +41,15 @@ class Temporary_Table(db.Model):
     quantity = db.Column(db.Integer,default = 1)
     cat = db.Column(db.String(200),default = '-')
 
+class Submitted_Cart(db.Model):
+    id = db.Column(db.Integer,primary_key = True)
+    acc = db.Column(db.String(200),default = '-')
+    name = db.Column(db.String(200),default = '-')
+    info = db.Column(db.String(200),default = '-')
+    price = db.Column(db.Integer,default = '-')
+    quantity = db.Column(db.Integer,default = 1)
+    cat = db.Column(db.String(200),default = '-')
+
 @app.route('/TrDB', methods=['POST','GET'])
 def database():
     new_teacher_acc = TrAcc(name = "Smallus", pword = "Peniusus")
@@ -52,6 +61,10 @@ def std():
     db.session.add(new_student_acc)
     db.session.commit()
     return "render_template('marketplace.html', new=new_teacher_acc)"
+
+@app.route('/', methods = ["POST", "GET"])
+def redirect_to_login():
+    return redirect('/login')
 
 @app.route('/login', methods=['POST', 'GET'])
 def loginpage():
@@ -74,24 +87,24 @@ def loginpage():
                         return "Please key in your username/password again."
                     else:
                         session['student'] = username
-                        Rec = db.session.query(Record_Of_Items).all()
-                        return render_template('marketplace.html',items = Rec)
+                        cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+                        return render_template('marketplace.html',items = cat)
             else:
                 check1 = TrAcc.query.filter_by(name=username, pword = password).first()
                 if check1 == None:
                     return "Please key in your username/password again."
                 else:
                     session['teacher'] = username
-                    Rec = db.session.query(Record_Of_Items).all()
-                    return render_template('marketplace.html',items = Rec)
+                    cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+                    return render_template('marketplace.html',items = cat)
         else:
             check = Admin.query.filter_by(name=username, pword = password).first()
             if check == None:
                 return "Please key in your username/password again."
             else:
                 session['admin'] = username
-                Rec = db.session.query(Record_Of_Items).all()
-                return render_template('marketplace.html',items = Rec)
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+                return render_template('marketplace.html',items = cat)
     else:
         return render_template('login.html')
 
@@ -126,23 +139,34 @@ def increase_quantity():
     if request.method == "POST":
         name = request.form.get('Plus')
         local_account = session['student']
-        item = Temporary_Table.query.filter_by(acc = local_account).first()
-        #item.quantity +=1
-        return str(item)
-        #return redirect('/checkout')
+        item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = name).first()
+        item.quantity +=1
+        db.session.commit()
+        return redirect('/checkout')
     else:
-        return "GET"
+        return "Error encountered. Please login again."
 
 @app.route('/decrease_quantity', methods = ["POST", "GET"])
 def decrease_quantity():
-    item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = request.form['Minus'])
-    item.quantity -= 1
+    if request.method == "POST":
+        name = request.form.get('Minus')
+        local_account = session['student']
+        item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = name).first()
+        item.quantity -=1
+        db.session.commit()
+        return redirect('/checkout')
+    else:
+        return "Error encountered. Please login again."
 
 @app.route('/checkout', methods=['POST', 'GET'])
 def checkout():
     if "student" in session:
         items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
-        return render_template('checkout.html',items = items)
+        all_items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
+        total = 0
+        for item in all_items:
+            total += item.quantity * item.price
+        return render_template('checkout.html',items = items, total = total)
     else:
         return render_template('login.html')
 
@@ -175,12 +199,9 @@ def shop_cat():
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
-            else:
-                Rec = db.session.query(Record_Of_Items).all()
-                return render_template('marketplace.html',items = Rec)
         else:
-            Rec = db.session.query(Record_Of_Items).all()
-            return render_template('marketplace.html',items = Rec)
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            return render_template('marketplace.html',items = cat)
     else:
         return render_template('login.html')
 
@@ -188,15 +209,43 @@ def shop_cat():
 def add_to_cart():
     if request.method == "POST":
         name = request.form['Add2Cart']
-        item = db.session.query(Record_Of_Items).filter_by(name = name).first()
         local_account = session['student']
-        add_to_cart_item = Temporary_Table(acc = local_account, name = name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
-        db.session.add(add_to_cart_item)
-        db.session.commit()
-        Rec = db.session.query(Record_Of_Items).all()
-        return render_template('marketplace.html',items = Rec)
+        check = db.session.query(Temporary_Table).filter_by(name = name, acc = local_account).first()
+        if check:
+            item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = name).first()
+            item.quantity +=1
+            db.session.commit()
+            cat = item.cat
+            items = db.session.query(Record_Of_Items).filter_by(cat = cat)
+            return render_template('marketplace.html',items = items)
+        else:
+            item = db.session.query(Record_Of_Items).filter_by(name = name).first()
+            add_to_cart_item = Temporary_Table(acc = local_account, name = name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
+            db.session.add(add_to_cart_item)
+            db.session.commit()
+            cat = item.cat
+            items = db.session.query(Record_Of_Items).filter_by(cat = cat)
+            return render_template('marketplace.html',items = items)
     else:
-        return "error"
+        return "Error encountered. Please login again."
+
+@app.route('/submitcart', methods=["POST", "GET"])
+def submit_cart():
+    if request.method == "POST":
+        local_account = session['student']
+        items = db.session.query(Temporary_Table).filter_by(acc = local_account)
+        check_for_existing_account = db.session.query(Submitted_Cart).filter_by(acc = local_account)
+        if check_for_existing_account:
+            return "You have already submitted."
+        else:
+            for item in items:
+                new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
+                db.session.add(new_stuff)
+                db.session.commit()
+            Rec = db.session.query(Record_Of_Items).all()
+            return render_template('marketplace.html',items = Rec)
+    else:
+        return redirect('/checkout')
 
 @app.route('/logout', methods = ['POST', 'GET'])
 def logout():

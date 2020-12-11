@@ -10,17 +10,17 @@
 
 <body>
     <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
-
-        <div class="hidden md:unhidden">
-            <div class=" hstack">
-                <input type="submit" name="navbar" value="Fresh Produce" class="m-18 text-underline"/>
-                <input type="submit" name="navbar" value="Dairy" class="m-18 text-underline"/>
-                <input type="submit" name="navbar" value="Meat" class="m-18 text-underline"/>
-                <input type="submit" name="navbar" value="Others" class="m-18 text-underline"/>
-                <input type="submit" name="navbar" value="Log Out" class="m-18 text-underline"/>
+        <form action="/marketplace" method="POST">
+            <div class="hidden md:unhidden">
+                <div class=" hstack">
+                    <input type="submit" name="navbar" value="Fresh Produce" class="m-18 text-underline"/>
+                    <input type="submit" name="navbar" value="Dairy" class="m-18 text-underline"/>
+                    <input type="submit" name="navbar" value="Meat" class="m-18 text-underline"/>
+                    <input type="submit" name="navbar" value="Others" class="m-18 text-underline"/>
+                    <input type="submit" name="navbar" value="Log Out" class="m-18 text-underline"/>
+                </div>
             </div>
-        </div>
-
+        </form>
         <div class="unhidden md:hidden group">
             <div class="zstack w-40 h-40">
                 <div class="group vstack space-5">

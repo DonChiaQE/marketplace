@@ -103,8 +103,7 @@ def loginpage():
                 return "Please key in your username/password again."
             else:
                 session['admin'] = username
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
-                return render_template('marketplace.html',items = cat)
+                return render_template('admin.html')
     else:
         return render_template('login.html')
 
@@ -202,8 +201,31 @@ def shop_cat():
         else:
             cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
             return render_template('marketplace.html',items = cat)
+
+    elif ("admin" in session):
+        if request.method == 'POST':
+            if request.form['navbar'] == 'Fresh Produce':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Dairy':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Meat':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Others':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Log Out':
+                return redirect('/logout')
+        else:
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            return render_template('editpage.html',items = cat)
     else:
         return render_template('login.html')
+
+
+
 
 @app.route('/addtocart', methods=['POST', 'GET'])
 def add_to_cart():
@@ -255,26 +277,35 @@ def logout():
         session.pop('teacher', None)
     elif "student" in session:
         session.pop('student', None)
+
+    session.clear()
     return render_template('login.html')
 
 @app.route('/admin', methods = ['POST', 'GET'])
 def admin():
-    if request.method == 'POST':
-        if request.form['nav'] == 'Table of Student':
-            return render_template('tablestudents.html')
-        elif request.form['nav'] == 'Table of Teachers':
-            return render_template('tableteacher.html')
-        elif request.form['nav'] == 'Edit Shopping Items':
-            Rec = db.session.query(Record_Of_Items).all()
-            return render_template('editpage.html', items = Rec)
-        elif request.form['nav'] == 'Create Promotion':
-            pass
-        elif request.form['nav'] == 'Wipe DB':
-            pass
-        elif request.form['nav'] == 'Reinitialise DB':
-            pass
+    if 'admin' in session:
+        if request.method == 'POST':
+            if request.form['nav'] == 'Table of Student':
+                return render_template('tablestudents.html')
+            elif request.form['nav'] == 'Table of Teachers':
+                return render_template('tableteacher.html')
+            elif request.form['nav'] == 'Edit Shopping Items':
+                return redirect('/marketplace')
+            elif request.form['nav'] == 'Create Promotion':
+                pass
+            elif request.form['nav'] == 'Wipe DB':
+                pass
+            elif request.form['nav'] == 'Reinitialise DB':
+                pass
+        
+        else:
+            return render_template('admin.html')
+    
+    else:
 
-    return render_template('admin.html')
+        return render_template('login.html')
+
+
 
 
 

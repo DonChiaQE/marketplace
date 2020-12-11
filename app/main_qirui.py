@@ -1,21 +1,13 @@
-from flask import Flask, render_template, url_for, request, redirect, flash
+from flask import Flask, render_template, url_for, request, redirect, flash, session
 import sqlalchemy
 from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required, UserMixin
 
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login' # the login view of your application
-app.config['SECRET_KEY'] = "lkkajdghdadkglajkgah" # a secret key for your app
-
-class User(UserMixin):
-    def __init__(self,id):
-        self.id = id
+app.config['SECRET_KEY'] = "lkkajdghdadkglajkgajdisa931!.h" # a secret key for your app
 
 class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -46,17 +38,13 @@ class Temporary_Table(db.Model):
     name = db.Column(db.String(200),default = '-')
     info = db.Column(db.String(200),default = '-')
     price = db.Column(db.Integer,default = '-')
+    quantity = db.Column(db.Integer,default = 1)
     cat = db.Column(db.String(200),default = '-')
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User(user_id)
 
 @app.route('/TrDB', methods=['POST','GET'])
 def database():
     new_teacher_acc = TrAcc(name = "Smallus", pword = "Peniusus")
     return "render_template('card.html', acc=new_teacher_acc)"
-    
 
 @app.route('/StdDB', methods=['POST','GET'])
 def std():
@@ -68,27 +56,42 @@ def std():
 @app.route('/login', methods=['POST', 'GET'])
 def loginpage():
     if request.method == "POST":
+        session.pop('admin', None)
+        session.pop('teacher', None)
+        session.pop('student', None)
         username = request.form['username']
         password = request.form['password']
-        check = Admin.query.filter_by(name=username, pword=password).first()
+        check = Admin.query.filter_by(name=username).first()
         if check == None:
-            check1 = TrAcc.query.filter_by(name=username, pword=password).first()
+            check1 = TrAcc.query.filter_by(name=username).first()
             if check1 == None:
-                check2 = StdAcc.query.filter_by(name=username, pword=password).first()
+                check2 = StdAcc.query.filter_by(name=username).first()
                 if check2 == None:
                     return "No such account exists in records."
                 else:
-                    local_account = username
+                    check2 = StdAcc.query.filter_by(name=username, pword = password).first()
+                    if check2 == None:
+                        return "Please key in your username/password again."
+                    else:
+                        session['student'] = username
+                        Rec = db.session.query(Record_Of_Items).all()
+                        return render_template('marketplace.html',items = Rec)
+            else:
+                check1 = TrAcc.query.filter_by(name=username, pword = password).first()
+                if check1 == None:
+                    return "Please key in your username/password again."
+                else:
+                    session['teacher'] = username
                     Rec = db.session.query(Record_Of_Items).all()
                     return render_template('marketplace.html',items = Rec)
+        else:
+            check = Admin.query.filter_by(name=username, pword = password).first()
+            if check == None:
+                return "Please key in your username/password again."
             else:
-                local_account = username
+                session['admin'] = username
                 Rec = db.session.query(Record_Of_Items).all()
                 return render_template('marketplace.html',items = Rec)
-        else:
-            local_account = username
-            Rec = db.session.query(Record_Of_Items).all()
-            return render_template('marketplace.html',items = Rec)
     else:
         return render_template('login.html')
 
@@ -118,9 +121,30 @@ def createacc():
                 db.session.add(new_acc)
                 return "success StudentAcc creation"
 
+@app.route('/increase_quantity', methods = ["POST", "GET"])
+def increase_quantity():
+    if request.method == "POST":
+        name = request.form.get('Plus')
+        local_account = session['student']
+        item = Temporary_Table.query.filter_by(acc = local_account).first()
+        #item.quantity +=1
+        return str(item)
+        #return redirect('/checkout')
+    else:
+        return "GET"
+
+@app.route('/decrease_quantity', methods = ["POST", "GET"])
+def decrease_quantity():
+    item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = request.form['Minus'])
+    item.quantity -= 1
+
 @app.route('/checkout', methods=['POST', 'GET'])
 def checkout():
-    return render_template('checkout.html')
+    if "student" in session:
+        items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
+        return render_template('checkout.html',items = items)
+    else:
+        return render_template('login.html')
 
 @app.route('/AdminDelete/<int:id>')
 def admin_delete(id):
@@ -134,43 +158,55 @@ def admin_delete(id):
         return "There was a problem deleting that task."
 
 @app.route('/marketplace',methods=['GET','POST'])
-@login_required
 def shop_cat():
-    if request.method == 'POST':
-        if request.form['navbar'] == 'Fresh Produce':
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
-            return render_template('marketplace.html',items = cat)
-        elif request.form['navbar'] == 'Dairy':
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
-            return render_template('marketplace.html',items = cat)
-        elif request.form['navbar'] == 'Meat':
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
-            return render_template('marketplace.html',items = cat)
-        elif request.form['navbar'] == 'Others':
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
-            return render_template('marketplace.html',items = cat)
-        elif request.form['navbar'] == 'Log Out':
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Log Out')
-            return render_template('marketplace.html',items = cat)
+    if ("student" in session):
+        if request.method == 'POST':
+            if request.form['navbar'] == 'Fresh Produce':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+                return render_template('marketplace.html',items = cat)
+            elif request.form['navbar'] == 'Dairy':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
+                return render_template('marketplace.html',items = cat)
+            elif request.form['navbar'] == 'Meat':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
+                return render_template('marketplace.html',items = cat)
+            elif request.form['navbar'] == 'Others':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
+                return render_template('marketplace.html',items = cat)
+            elif request.form['navbar'] == 'Log Out':
+                return redirect('/logout')
+            else:
+                Rec = db.session.query(Record_Of_Items).all()
+                return render_template('marketplace.html',items = Rec)
         else:
             Rec = db.session.query(Record_Of_Items).all()
             return render_template('marketplace.html',items = Rec)
     else:
-        Rec = db.session.query(Record_Of_Items).all()
-        return render_template('marketplace.html',items = Rec)
+        return render_template('login.html')
 
 @app.route('/addtocart', methods=['POST', 'GET'])
 def add_to_cart():
     if request.method == "POST":
         name = request.form['Add2Cart']
         item = db.session.query(Record_Of_Items).filter_by(name = name).first()
-        add_to_cart_item = Temporary_Table( name = name, info = item.info, price = item.price, cat = item.cat)
+        local_account = session['student']
+        add_to_cart_item = Temporary_Table(acc = local_account, name = name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
         db.session.add(add_to_cart_item)
         db.session.commit()
         Rec = db.session.query(Record_Of_Items).all()
         return render_template('marketplace.html',items = Rec)
     else:
         return "error"
+
+@app.route('/logout', methods = ['POST', 'GET'])
+def logout():
+    if "admin" in session:
+        session.pop('admin', None)
+    elif "teacher" in session:
+        session.pop('teacher', None)
+    elif "student" in session:
+        session.pop('student', None)
+    return render_template('login.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

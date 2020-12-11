@@ -69,8 +69,10 @@
     <div class="container py-28">
         <div class="vstack md:hstack md:space-28 h-auto">
             <div id="example-1">
-                <form>
-                    <div v-for="item in items" :key="item.message">
+                
+                    {% for item in items %}
+                    
+                    <div>
                         <div class="vstack space-28 my-28">
                             <div class="hstack w-384 h-128 bg-white shadow shadow-md">
                                 <div class="spacer"></div>
@@ -82,22 +84,27 @@
                                     <div class="text-gray-500 text-12 mt-2">{{item.price}}</div>
                                     <div class="spacer"></div>
                                     <div class="hstack space-5">
-                                        <input type="button" class="hstack w-28 h-28 bg-black rounded-full text-white buttons" value="-" />
-                                        <input type="text" class="w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center" value="1" />
-                                        <input type="button" class="hstack w-28 h-28 bg-black rounded-full text-white buttons" value="+" />
+                                        <form action="/decrease_quantity", method="POST">
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full text-white buttons" name="Minus" value="{{item.name}}">-</button>
+                                        </form>
+                                            <input type="text" class="w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center" value="{{item.quantity}}" />
+                                        <form action="/increase_quantity", method="POST">
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full text-white buttons" name="Plus" value="{{item.name}}">+</button>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="spacer"></div>
                                 <div class="spacer"></div>
                                 <div class="vstack h-80">
                                     <div class="spacer"></div>
-                                    <div class="text-black">$20</div>
+                                    <div class="text-black">{{item.quantity * item.price}}</div>
                                 </div>
                                 <div class="spacer"></div>
                             </div>
                         </div>
                     </div>
-                </form>
+                    {% endfor %}
+                
             </div>
             <div class=" space-28 my-28 h-full bg-green-900">
                 <form>

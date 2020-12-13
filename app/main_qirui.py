@@ -18,11 +18,13 @@ class TrAcc(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), default = '-')
     pword = db.Column(db.String(200), default = '-')
+    assigned_students = db.relationship('StdAcc', backref="assigned_teacher")
 
 class StdAcc(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), default = '-')
     pword = db.Column(db.String(200), default = '-')
+    assigned_teacher_id = db.Column(db.Integer, db.ForeignKey('tr_acc.id'))
 
 class Record_Of_Items(db.Model):
     id = db.Column(db.Integer,primary_key = True)
@@ -95,8 +97,7 @@ def loginpage():
                     return "Please key in your username/password again."
                 else:
                     session['teacher'] = username
-                    cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
-                    return render_template('marketplace.html',items = cat)
+                    return render_template('teacher.html')
         else:
             check = Admin.query.filter_by(name=username, pword = password).first()
             if check == None:
@@ -127,15 +128,40 @@ def createacc():
                 new_acc = TrAcc(name = new_acc_name, pword = new_acc_pword)
                 db.session.add(new_acc)
                 db.session.commit()
-                return "success StudentAcc creation"
-
-        else:
+                return render_template('addteachers.html', feedback = "Successful Teacher Account Creation.")
+            else:
+                return render_template('addteachers.html', feedback = "Teacher Account already exists.")
+        elif new_acc_user == 'StudentUser':
             check2 = StdAcc.query.filter_by(name=new_acc_name, pword=new_acc_pword).first()
             if check2 == None:
-                new_acc = StdAcc(name = new_acc_name, pword = new_acc_pword)
+                assigned_teacher_name = request.form['Teacher']
+                assigned_teacher = db.session.query(TrAcc).filter_by(name = assigned_teacher_name).first()
+                new_acc = StdAcc(name = new_acc_name, pword = new_acc_pword, assigned_teacher = assigned_teacher)
                 db.session.add(new_acc)
                 db.session.commit()
-                return "success StudentAcc creation"
+                teachers = db.session.query(TrAcc)
+                return render_template('addstudents.html', feedback = "Successful Student Account Creation.", teachers = teachers)
+            else:
+                teachers = db.session.query(TrAcc)
+                return render_template('addstudents.html', feedback = "Student Account already exists.", teachers = teachers)
+
+@app.route('/addTeacher', methods = ['POST', 'GET'])
+def addTeacher():
+    if request.method == 'POST':
+        pass
+    else:
+        return render_template('addteachers.html')
+
+@app.route('/addstudent', methods=['POST', 'GET'])
+def add_student():
+    if request.method == "POST":
+        if ('teacher' in session) or ('admin' in session):
+            teachers = db.session.query(TrAcc)
+            return render_template('addstudents.html', teachers = teachers)
+        else:
+            pass
+    else:
+        pass
 
             
 
@@ -177,12 +203,10 @@ def checkout():
 
 @app.route('/AdminDelete/<int:id>')
 def admin_delete(id):
-    to_be_deleted = Admin.query.get_or_404(id)
+    to_be_deleted = StdAcc.query.get_or_404(id)
     try:
         db.session.delete(to_be_deleted)
         db.session.commit()
-        #booking= BookDR.query.order_by(BookDR.id).all()
-        #return render_template('database.html',booking=booking)
     except:
         return "There was a problem deleting that task."
 
@@ -238,6 +262,28 @@ def shop_cat():
             cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
             return render_template('marketplace.html',items = cat)
 
+    elif ("teacher" in session):
+        if request.method == 'POST':
+            if request.form['navbar'] == 'Fresh Produce':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+                return render_template('protectedmarketplace.html',items = cat)
+            elif request.form['navbar'] == 'Dairy':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
+                return render_template('protectedmarketplace.html',items = cat)
+            elif request.form['navbar'] == 'Meat':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
+                return render_template('protectedmarketplace.html',items = cat)
+            elif request.form['navbar'] == 'Others':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
+                return render_template('protectedmarketplace.html',items = cat)
+            elif request.form['navbar'] == 'Home':
+                return render_template('teacher.html')
+            elif request.form['navbar'] == 'Log Out':
+                return redirect('/logout')
+        else:
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            return render_template('protectedmarketplace.html',items = cat)
+
     elif ("admin" in session):
         if request.method == 'POST':
             if request.form['navbar'] == 'Fresh Produce':
@@ -257,6 +303,7 @@ def shop_cat():
         else:
             cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
             return render_template('editpage.html',items = cat)
+
     else:
         return render_template('login.html')
 
@@ -336,21 +383,31 @@ def admin():
                 pass
             elif request.form['nav'] == 'Reinitialise DB':
                 pass
-        
         else:
             return render_template('admin.html')
 
     else:
-
         return render_template('login.html')
 
 
-@app.route('/addTeacher', methods = ['POST', 'GET'])
-def addTeacher():
-    if request.method == 'POST':
-        pass
+    
+@app.route('/teacher', methods = ["POST", 'GET'])
+def teacher():
+    if 'teacher' in session:
+        if request.method == 'POST':
+            if request.form['nav'] == 'Table of Student':
+                return render_template('tablestudents.html')
+            elif request.form['nav'] == 'List of Shopping Items':
+                return redirect('/marketplace')
+        else:
+            return render_template('teacher.html')
     else:
-        return render_template('addteachers.html')
+        return render_template('login.html')
+
+
+
+
+
 
 
 if __name__ == "__main__":

@@ -127,7 +127,8 @@ def createacc():
                 new_acc = TrAcc(name = new_acc_name, pword = new_acc_pword)
                 db.session.add(new_acc)
                 db.session.commit()
-                return "success TeacherAcc creation"
+                return "success StudentAcc creation"
+
         else:
             check2 = StdAcc.query.filter_by(name=new_acc_name, pword=new_acc_pword).first()
             if check2 == None:
@@ -184,6 +185,36 @@ def admin_delete(id):
         #return render_template('database.html',booking=booking)
     except:
         return "There was a problem deleting that task."
+
+
+@app.route('/deleteEntry' , methods = ['POST','GET'])
+def deleteEntry():
+    if request.method == 'POST':
+        acc_user = request.form['usertype']
+        acc_name = request.form['username']
+        acc_pword = request.form['password']
+        if acc_user == 'AdminUser':
+            try:
+                check1 = TrAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
+                db.session.commit()
+                return "success AdminAcc deletion"
+            except:
+                return 'No such User'
+        elif acc_user == 'TeacherUser':
+            try:
+                check1 = TrAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
+                db.session.commit()
+                return "success TeacherAcc deletion"
+            except:
+                return 'No such User'
+        else:
+            try:
+                check1 = StdAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
+                db.session.commit()
+                return "success StudentAcc deletion"
+            except:
+                return 'No such User'
+        
 
 @app.route('/marketplace',methods=['GET','POST'])
 def shop_cat():
@@ -244,7 +275,8 @@ def add_to_cart():
             db.session.commit()
             cat = item.cat
             items = db.session.query(Record_Of_Items).filter_by(cat = cat)
-            return render_template('marketplace.html',items = items)
+            addedToCart = True
+            return render_template('marketplace.html',items = items, addedToCart = addedToCart)
         else:
             item = db.session.query(Record_Of_Items).filter_by(name = name).first()
             add_to_cart_item = Temporary_Table(acc = local_account, name = name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
@@ -252,7 +284,8 @@ def add_to_cart():
             db.session.commit()
             cat = item.cat
             items = db.session.query(Record_Of_Items).filter_by(cat = cat)
-            return render_template('marketplace.html',items = items)
+            addedToCart = True
+            return render_template('marketplace.html',items = items, addedToCart = addedToCart)
     else:
         return "Error encountered. Please login again."
 
@@ -306,7 +339,7 @@ def admin():
         
         else:
             return render_template('admin.html')
-    
+
     else:
 
         return render_template('login.html')
@@ -318,15 +351,6 @@ def addTeacher():
         pass
     else:
         return render_template('addteachers.html')
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":

@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.0-rc.35/dist/full.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+    {% if addedToCart == True %}
+    <script>
+    $( document ).ready(function(){
+            $('#message').fadeIn('slow', function(){
+               $('#message').delay(2000).fadeOut(); 
+            });
+        });
+      </script>
+    {% endif %}
 </head>
 
 <body>
@@ -65,11 +75,20 @@
             </div>
         </div>
 
+
         <div class="spacer"></div>
         <a href="checkout">
             <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
         </a>
     </nav>
+
+    <div id="message" class="fixed t-0" style="display: none;">
+        <div class="vstack px-24 h-64 noti-full bg-red-600">
+            <div class="">{{item}} added to cart!</div>
+        </div>
+    </div>
+
+
     <div class="container py-28">
         <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 sm:p-8 md:grid-cols-4 my-18" style="grid-template-columns: repeat(auto-fill, minmax(224px, 1fr))">
             {% for item in items %}
@@ -83,10 +102,10 @@
                         <div class="spacer"></div>
                         <div class="hstack w-full">
                             <svg class="w-36 h-36" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
                             <div class="spacer"></div>
-                            <button type="submit" name="Add2Cart" value="{{item.name}}">Add to Cart</button>
+                            <button class="addToCart" type="submit" name="Add2Cart" value="{{item.name}}">Add to Cart</button>
                         </div>
                     </div>
                 </div>
@@ -100,6 +119,7 @@
 </html>
 
 <style>
+
      :root {
         --bg-color: #F2F2F2;
         --text-color: #2c3e50;
@@ -118,5 +138,9 @@
     .text-underline:hover {
         text-decoration: underline;
         display: inline-block;
+    }
+
+    .noti-full {
+        width: 100vw;
     }
 </style>

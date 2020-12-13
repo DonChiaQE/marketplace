@@ -9,11 +9,9 @@
 
 <body>
     <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
-        <form action="/admin">
-            <button type="submit">
-                <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-            </button>
-        </form>
+        <a href="#">
+            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+        </a>
 
         <div class="spacer"></div>
 
@@ -22,16 +20,26 @@
     <div class="container py-28">
         <div class="vstack screen">
             <div class="text-36">Table of Teachers</div>
-            <form class="vstack space-28 mt-28">
-                <input type="submit" class="w-256 bg-white rounded-3 shadow shadow-md p-28" value="Add Teacher" />
+            <div class="vstack space-28 mt-28 w-full">
+                <form action="/addTeacher">
+                    <input type="submit" class="w-256 bg-white rounded-3 shadow shadow-md p-28" value="Add Teacher" />
+                </form>
                 <!--for loop here-->
-                <div class="hstack w-full w-256">
-                    <input type="submit" class="w-full bg-white rounded-3 shadow shadow-md p-28 " value="Teacher_12345" />
+                {% for Teacher in Teachers %}
+                <div class="hstack w-full w-256 w-full">
+                    <form action="/deleteEntry">
+                    <div class="vstack w-full">
+                        <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Username: {{Teacher.name}}</div>
+                        <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Password: {{Teacher.pword}}</div>
+                    </div>
                     <div class="spacer"></div>
+                    
                     <input type="submit" class=" color-red-700 bg-transparent pl-36 text-36 " value="x" />
+                    </form>
                 </div>
+                {% endfor %}
                 <!--to here-->
-            </form>
+            </div>
         </div>
     </div>
 

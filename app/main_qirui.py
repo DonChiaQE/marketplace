@@ -119,19 +119,24 @@ def createacc():
             if check == None:
                 new_acc = Admin(name = new_acc_name, pword = new_acc_pword)
                 db.session.add(new_acc)
+                db.session.commit()
                 return "success AdminAcc creation"
         elif new_acc_user == 'TeacherUser':
             check1 = TrAcc.query.filter_by(name=new_acc_name, pword=new_acc_pword).first()
             if check1 == None:
                 new_acc = TrAcc(name = new_acc_name, pword = new_acc_pword)
                 db.session.add(new_acc)
+                db.session.commit()
                 return "success TeacherAcc creation"
         else:
             check2 = StdAcc.query.filter_by(name=new_acc_name, pword=new_acc_pword).first()
             if check2 == None:
                 new_acc = StdAcc(name = new_acc_name, pword = new_acc_pword)
                 db.session.add(new_acc)
+                db.session.commit()
                 return "success StudentAcc creation"
+
+            
 
 @app.route('/increase_quantity', methods = ["POST", "GET"])
 def increase_quantity():
@@ -288,7 +293,8 @@ def admin():
             if request.form['nav'] == 'Table of Student':
                 return render_template('tablestudents.html')
             elif request.form['nav'] == 'Table of Teachers':
-                return render_template('tableteacher.html')
+                listOfTeachers = db.session.query(TrAcc).all()
+                return render_template('tableteacher.html',Teachers = listOfTeachers)
             elif request.form['nav'] == 'Edit Shopping Items':
                 return redirect('/marketplace')
             elif request.form['nav'] == 'Create Promotion':
@@ -304,6 +310,16 @@ def admin():
     else:
 
         return render_template('login.html')
+
+
+@app.route('/addTeacher', methods = ['POST', 'GET'])
+def addTeacher():
+    if request.method == 'POST':
+        pass
+    else:
+        return render_template('addteachers.html')
+
+
 
 
 

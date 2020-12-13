@@ -21,20 +21,22 @@
 
     <div class="container py-28">
         <div class="hstack">
-            <form>
                 <div class="vstack p-48 w-320 h-auto bg-white shadow shadow-md rounded-24">
+                    <form action='/newacc' method='POST'>
                     <div class="vstack align-start space-24">
                         <div class="vstack w-full">
                             <div class="spacer"></div>
                             <div class="color-gray-900 text-28">Add Teachers</div>
                             <div class="spacer"></div>
                         </div>
-                        <input type="text" placeholder="Teacher Name" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
-                        <input type="text" placeholder="Password" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
+                        <input type="text" name="username" placeholder="Teacher Name" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
+                        <input type="text" name="password" placeholder="Password" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
+                        <input type="hidden" name="usertype" value="TeacherUser"/>
                     </div>
                     <div class="zstack pt-36 w-256">
                         <input type="submit" class="hstack w-full h-48 bg-white border-1 bg-gray-900 rounded-20 shadow shadow-xl button-form color-white" value="Add" />
                     </div>
+                    </form>
                 </div>
             </form>
         </div>

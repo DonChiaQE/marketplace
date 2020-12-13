@@ -24,7 +24,6 @@
                 <form action="/addTeacher">
                     <input type="submit" class="w-256 bg-white rounded-3 shadow shadow-md p-28" value="Add Teacher" />
                 </form>
-                <!--for loop here-->
                 {% for Teacher in Teachers %}
                 <form action="/deleteEntry" method="POST">
                 <div class="hstack w-full w-256 w-full">
@@ -41,7 +40,6 @@
                 </div>
                 </form>
                 {% endfor %}
-                <!--to here-->
             </div>
         </div>
     </div>

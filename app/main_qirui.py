@@ -144,7 +144,17 @@ def createacc():
             else:
                 teachers = db.session.query(TrAcc)
                 return render_template('addstudents.html', feedback = "Student Account already exists.", teachers = teachers)
-                
+
+
+@app.route('/addTeacher', methods = ['POST', 'GET'])
+def addTeacher():
+    if request.method == "POST":
+        if ('admin' in session):
+            return render_template('addteachers.html')
+        else:
+            pass
+    else:
+        pass
 
 @app.route('/addstudent', methods=['POST', 'GET'])
 def add_student():
@@ -156,6 +166,7 @@ def add_student():
             pass
     else:
         pass
+
 
 @app.route('/increase_quantity', methods = ["POST", "GET"])
 def increase_quantity():
@@ -175,8 +186,12 @@ def decrease_quantity():
         name = request.form.get('Minus')
         local_account = session['student']
         item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = name).first()
-        item.quantity -=1
-        db.session.commit()
+        if item.quantity == 1:
+            Temporary_Table.query.filter_by(acc = local_account, name=name).delete()
+            db.session.commit()
+        else:
+            item.quantity -=1
+            db.session.commit()
         return redirect('/checkout')
     else:
         return "Error encountered. Please login again."
@@ -201,6 +216,36 @@ def admin_delete(id):
         db.session.commit()
     except:
         return "There was a problem deleting that task."
+
+
+@app.route('/deleteEntry' , methods = ['POST','GET'])
+def deleteEntry():
+    if request.method == 'POST':
+        acc_user = request.form['usertype']
+        acc_name = request.form['username']
+        acc_pword = request.form['password']
+        if acc_user == 'AdminUser':
+            try:
+                check1 = TrAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
+                db.session.commit()
+                return "success AdminAcc deletion"
+            except:
+                return 'No such User'
+        elif acc_user == 'TeacherUser':
+            try:
+                check1 = TrAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
+                db.session.commit()
+                return "success TeacherAcc deletion"
+            except:
+                return 'No such User'
+        else:
+            try:
+                check1 = StdAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
+                db.session.commit()
+                return "success StudentAcc deletion"
+            except:
+                return 'No such User'
+        
 
 @app.route('/marketplace',methods=['GET','POST'])
 def shop_cat():
@@ -284,7 +329,8 @@ def add_to_cart():
             db.session.commit()
             cat = item.cat
             items = db.session.query(Record_Of_Items).filter_by(cat = cat)
-            return render_template('marketplace.html',items = items)
+            addedToCart = True
+            return render_template('marketplace.html',items = items, addedToCart = addedToCart)
         else:
             item = db.session.query(Record_Of_Items).filter_by(name = name).first()
             add_to_cart_item = Temporary_Table(acc = local_account, name = name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
@@ -292,7 +338,8 @@ def add_to_cart():
             db.session.commit()
             cat = item.cat
             items = db.session.query(Record_Of_Items).filter_by(cat = cat)
-            return render_template('marketplace.html',items = items)
+            addedToCart = True
+            return render_template('marketplace.html',items = items, addedToCart = addedToCart)
     else:
         return "Error encountered. Please login again."
 
@@ -301,16 +348,19 @@ def submit_cart():
     if request.method == "POST":
         local_account = session['student']
         items = db.session.query(Temporary_Table).filter_by(acc = local_account)
-        check_for_existing_account = db.session.query(Submitted_Cart).filter_by(acc = local_account)
+        check_for_existing_account = db.session.query(Submitted_Cart).filter_by(acc = local_account).first()
+        check_for_existing_items = db.session.query(Temporary_Table).filter_by(acc = local_account).first()
         if check_for_existing_account:
-            return "You have already submitted."
+            return "You have already submitted once."
+        elif check_for_existing_items == None:
+            return "There are currently no items in the cart."
         else:
             for item in items:
                 new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
                 db.session.add(new_stuff)
                 db.session.commit()
-            Rec = db.session.query(Record_Of_Items).all()
-            return render_template('marketplace.html',items = Rec)
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            return render_template('marketplace.html',items = cat)
     else:
         return redirect('/checkout')
 
@@ -333,7 +383,7 @@ def admin():
             if request.form['nav'] == 'Table of Student':
                 return render_template('tablestudents.html')
             elif request.form['nav'] == 'Table of Teachers':
-                return render_template('tableteacher.html')
+                return redirect('/tableteacher')
             elif request.form['nav'] == 'Edit Shopping Items':
                 return redirect('/marketplace')
             elif request.form['nav'] == 'Create Promotion':
@@ -344,9 +394,12 @@ def admin():
                 pass
         else:
             return render_template('admin.html')
+
     else:
         return render_template('login.html')
 
+
+    
 @app.route('/teacher', methods = ["POST", 'GET'])
 def teacher():
     if 'teacher' in session:
@@ -362,6 +415,23 @@ def teacher():
 
 
 
+#RETURN FUNCTIONS
+
+
+@app.route('/back', methods = ["POST", 'GET'])
+def back():
+    return request.url_rule.endpoint
+
+#PAGES
+
+@app.route('/tableteacher', methods = ["POST", 'GET'])
+def tableTeacher():
+    if "admin" in session:
+        listOfTeachers = db.session.query(TrAcc).all()
+        return render_template('tableteacher.html',Teachers = listOfTeachers)
+
+    else:
+        pass
 
 
 
@@ -369,6 +439,8 @@ def teacher():
 if __name__ == "__main__":
     app.run(debug=True)
     
+
+
 
 
 

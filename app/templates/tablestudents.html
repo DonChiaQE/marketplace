@@ -24,13 +24,13 @@
             <div class="text-36">Table of Students</div>
             <form method="POST" action="/addstudent" class="vstack space-28 mt-28">
                 <input type="submit" class="w-256 bg-white rounded-3 shadow shadow-md p-28" value="Add Team" />
-                <!--for loop here-->
+                {% for student in students %}
                 <div class="hstack w-full w-256">
-                    <input type="submit" class="w-full bg-white rounded-3 shadow shadow-md p-28" value="DHS_Team123455678" />
+                    <input type="submit" class="w-full bg-white rounded-3 shadow shadow-md p-28" value="{{student.name}}" />
                     <div class="spacer"></div>
                     <input type="submit" class=" color-red-700 bg-transparent pl-36 text-36" value="x" />
                 </div>
-                <!--to here-->
+                {% endfor %}
             </form>
         </div>
     </div>

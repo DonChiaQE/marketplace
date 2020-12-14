@@ -156,7 +156,7 @@ def addTeacher():
     else:
         pass
 
-@app.route('/addstudent', methods=['POST', 'GET'])
+@app.route('/addStudent', methods=['POST', 'GET'])
 def add_student():
     if request.method == "POST":
         if ('teacher' in session) or ('admin' in session):
@@ -381,7 +381,7 @@ def admin():
     if 'admin' in session:
         if request.method == 'POST':
             if request.form['nav'] == 'Table of Student':
-                return render_template('tablestudents.html')
+                return redirect('/tablestudent')
             elif request.form['nav'] == 'Table of Teachers':
                 return redirect('/tableteacher')
             elif request.form['nav'] == 'Edit Shopping Items':
@@ -405,7 +405,7 @@ def teacher():
     if 'teacher' in session:
         if request.method == 'POST':
             if request.form['nav'] == 'Table of Student':
-                return render_template('tablestudents.html')
+                return redirect('/tablestudent')
             elif request.form['nav'] == 'List of Shopping Items':
                 return redirect('/marketplace')
         else:
@@ -426,15 +426,29 @@ def back():
 
 @app.route('/tableteacher', methods = ["POST", 'GET'])
 def tableTeacher():
-    if "admin" in session:
+    if ("admin" in session):
         listOfTeachers = db.session.query(TrAcc).all()
         return render_template('tableteacher.html',Teachers = listOfTeachers)
+
 
     else:
         pass
 
 
 
+@app.route('/tablestudent', methods = ["POST", 'GET'])
+def tableStudent():
+    if "admin" in session:
+        students = db.session.query(StdAcc).order_by(db.text('assigned_teacher_id')).all()
+        teachers = db.session.query(TrAcc).all()
+        usertype = "admin"
+        return render_template('tablestudents.html',students = students, teachers = teachers)
+
+    elif "teacher" in session:
+        teacher = db.session.query(TrAcc).filter_by(name = session['teacher']).first()
+        students = db.session.query(StdAcc).filter_by(assigned_teacher_id = teacher.id)
+        usertype = "teacher"
+        return render_template('tablestudents.html',students = students,usertype = usertype)
 
 if __name__ == "__main__":
     app.run(debug=True)

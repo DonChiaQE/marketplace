@@ -9,11 +9,15 @@
 
 <body>
     <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
-        <form>
-            <button type="submit">
-                <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-            </button>
-        </form>
+        {% if usertype == 'admin' %}
+        <a href="{{url_for('admin')}}">
+            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+        </a>
+        {% elif usertype == 'teacher' %}
+        <a href="{{url_for('teacher')}}">
+            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+        </a>
+        {% endif %}
 
         <div class="spacer"></div>
 
@@ -22,16 +26,30 @@
     <div class="container py-28">
         <div class="vstack screen">
             <div class="text-36">Table of Students</div>
-            <form method="POST" action="/addstudent" class="vstack space-28 mt-28">
-                <input type="submit" class="w-256 bg-white rounded-3 shadow shadow-md p-28" value="Add Team" />
+            <div class="vstack space-28 mt-28 w-full">
+                <form action="/addStudent" method="POST">
+                    <input type="submit" class="w-256 bg-white rounded-3 shadow shadow-md p-28" value="Add Student" />
+                </form>
                 {% for student in students %}
-                <div class="hstack w-full w-256">
-                    <input type="submit" class="w-full bg-white rounded-3 shadow shadow-md p-28" value="{{student.name}}" />
+                <form action="/deleteEntry" method="POST">
+                <div class="hstack w-full w-256 w-full">
+                    <div class="vstack w-full">
+                        <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Username: {{student.name}}</div>
+                        <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Password: {{student.pword}}</div>
+                        {% for teacher in teachers if teacher.id == student.assigned_teacher_id %}
+                        <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Assigned To: {{teacher.name}}</div>
+                        {% endfor %}
+                    </div>
                     <div class="spacer"></div>
-                    <input type="submit" class=" color-red-700 bg-transparent pl-36 text-36" value="x" />
+                    <input type="hidden" name='username' value="{{student.name}}"/>
+                    <input type="hidden" name='usertype' value="StudentUser"/>
+                    <input type="hidden" name='password' value="{{student.pword}}"/>
+                    <input type="submit" class=" color-red-700 bg-transparent pl-36 text-36 " value="x" />
+                    
                 </div>
+                </form>
                 {% endfor %}
-            </form>
+            </div>
         </div>
     </div>
 

@@ -341,16 +341,19 @@ def submit_cart():
     if request.method == "POST":
         local_account = session['student']
         items = db.session.query(Temporary_Table).filter_by(acc = local_account)
-        check_for_existing_account = db.session.query(Submitted_Cart).filter_by(acc = local_account)
+        check_for_existing_account = db.session.query(Submitted_Cart).filter_by(acc = local_account).first()
+        check_for_existing_items = db.session.query(Temporary_Table).filter_by(acc = local_account).first()
         if check_for_existing_account:
-            return "You have already submitted."
+            return "You have already submitted once."
+        elif check_for_existing_items == None:
+            return "There are currently no items in the cart."
         else:
             for item in items:
                 new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
                 db.session.add(new_stuff)
                 db.session.commit()
-            Rec = db.session.query(Record_Of_Items).all()
-            return render_template('marketplace.html',items = Rec)
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            return render_template('marketplace.html',items = cat)
     else:
         return redirect('/checkout')
 

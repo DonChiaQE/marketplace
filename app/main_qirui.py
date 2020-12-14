@@ -33,6 +33,7 @@ class Record_Of_Items(db.Model):
     price = db.Column(db.Integer,default = '-')
     cat = db.Column(db.String(200),default = '-')
     image = db.Column(db.String(200),default = '-')
+    quantifier = db.Column(db.String(200),default=None)
 
 class Temporary_Table(db.Model):
     id = db.Column(db.Integer,primary_key = True)
@@ -52,7 +53,30 @@ class Submitted_Cart(db.Model):
     quantity = db.Column(db.Integer,default = 1)
     cat = db.Column(db.String(200),default = '-')
 
-#FUNCTIONS
+
+@app.route('/update/<int:id>', methods = ['POST', 'GET'])
+def update(id):
+    if 'admin' in session:
+        item = Record_Of_Items.query.get_or_404(id)
+        if request.method == "POST":
+            if item == None:
+                return redirect('/additems')
+            item.name = request.form['itemname']
+            item.price = request.form['itemprice']
+            item.info = request.form['iteminfo']
+            item.cat = request.form['itemcat']
+            item.quantifier = request.form['itemquantifier']
+            try:
+                db.session.commit()
+                return redirect('/marketplace')
+            except:
+                return 'There was an issue updating your task.'
+        else:
+            return render_template("edititems.html", item = item)
+    else:
+        return redirect('/login')
+
+
 @app.route('/newacc', methods=['POST', 'GET'])
 def createacc():
     #render_template for creating acc
@@ -89,6 +113,28 @@ def createacc():
             else:
                 teachers = db.session.query(TrAcc)
                 return render_template('addstudents.html', feedback = "Student Account already exists.", teachers = teachers)
+
+@app.route('/additems', methods=["POST", 'GET'])
+def additems():
+    if 'admin' in session:
+        if request.method == 'POST':
+            new_item_name = request.form['itemname']
+            new_item_price = request.form['itemprice']
+            new_item_info = request.form['iteminfo']
+            new_item_cat = request.form['itemcat']
+            new_item_quantifier = request.form['itemquantifier']
+            check = Record_Of_Items.query.filter_by(name=new_item_name).first()
+            if check == None:
+                new_item = Record_Of_Items(name = new_item_name, price = new_item_price, info = new_item_info, cat = new_item_cat, quantifier = new_item_quantifier)
+                db.session.add(new_item)
+                db.session.commit()
+                return redirect('/marketplace')
+            else:
+                return "Item already exists!"
+        else:
+            return render_template('additems.html', item = None)
+    else:
+        return redirect('/')
 
 
 @app.route('/increase_quantity', methods = ["POST", "GET"])
@@ -131,6 +177,34 @@ def checkout():
     else:
         return render_template('login.html')
 
+@app.route('/AdminDelete/<int:id>')
+def admin_delete(id):
+    to_be_deleted = StdAcc.query.get_or_404(id)
+    try:
+        db.session.delete(to_be_deleted)
+        db.session.commit()
+    except:
+        return "There was a problem deleting that task."
+
+@app.route('/deleteItem/<id>', methods = ['POST', 'GET'])
+def delete_item(id):
+    if 'admin' in session:
+        item = Record_Of_Items.query.get_or_404(id)
+        if request.method == "POST":
+            if item == None:
+                return "Item doesn't exist."
+            else:
+                Record_Of_Items.query.filter_by(id = id).delete()
+            try:
+                db.session.commit()
+                return redirect('/marketplace')
+            except:
+                return 'There was an issue updating your task.'
+        else:
+            return redirect('/marketplace')
+    else:
+        return redirect('/login')
+        
 
 @app.route('/deleteEntry' , methods = ['POST','GET'])
 def deleteEntry():
@@ -264,7 +338,16 @@ def teacher():
 
 @app.route('/', methods = ["POST", "GET"])
 def redirect_to_login():
-    return redirect('/login')
+    if request.method == "POST":
+        if request.form['manipulate'] == 'Edit':
+            id = request.form['itemid']
+            item = db.session.query(Record_Of_Items).filter_by(id=id).first()
+            return render_template('edititems.html', item = item)
+        elif request.form['manipulate'] == 'Delete':
+            id = request.form['itemid']
+            return redirect(url_for('delete_item', id = id), code=307)
+    else:
+        return redirect('/login')
 
 @app.route('/login', methods=['POST', 'GET'])
 def loginpage():

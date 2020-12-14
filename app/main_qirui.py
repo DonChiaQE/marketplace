@@ -183,8 +183,12 @@ def decrease_quantity():
         name = request.form.get('Minus')
         local_account = session['student']
         item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = name).first()
-        item.quantity -=1
-        db.session.commit()
+        if item.quantity == 1:
+            Temporary_Table.query.filter_by(acc = local_account, name=name).delete()
+            db.session.commit()
+        else:
+            item.quantity -=1
+            db.session.commit()
         return redirect('/checkout')
     else:
         return "Error encountered. Please login again."

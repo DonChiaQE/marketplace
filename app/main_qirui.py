@@ -53,30 +53,6 @@ class Submitted_Cart(db.Model):
     quantity = db.Column(db.Integer,default = 1)
     cat = db.Column(db.String(200),default = '-')
 
-@app.route('/TrDB', methods=['POST','GET'])
-def database():
-    new_teacher_acc = TrAcc(name = "Smallus", pword = "Peniusus")
-    return "render_template('card.html', acc=new_teacher_acc)"
-
-@app.route('/StdDB', methods=['POST','GET'])
-def std():
-    new_student_acc = StdAcc(name = "Biggus", pword = "Dickus")
-    db.session.add(new_student_acc)
-    db.session.commit()
-    return "render_template('marketplace.html', new=new_teacher_acc)"
-
-@app.route('/', methods = ["POST", "GET"])
-def redirect_to_login():
-    if request.method == "POST":
-        if request.form['manipulate'] == 'Edit':
-            id = request.form['itemid']
-            item = db.session.query(Record_Of_Items).filter_by(id=id).first()
-            return render_template('edititems.html', item = item)
-        elif request.form['manipulate'] == 'Delete':
-            id = request.form['itemid']
-            return redirect(url_for('delete_item', id = id), code=307)
-    else:
-        return redirect('/login')
 
 @app.route('/update/<int:id>', methods = ['POST', 'GET'])
 def update(id):
@@ -100,45 +76,6 @@ def update(id):
     else:
         return redirect('/login')
 
-@app.route('/login', methods=['POST', 'GET'])
-def loginpage():
-    if request.method == "POST":
-        session.pop('admin', None)
-        session.pop('teacher', None)
-        session.pop('student', None)
-        username = request.form['username']
-        password = request.form['password']
-        check = Admin.query.filter_by(name=username).first()
-        if check == None:
-            check1 = TrAcc.query.filter_by(name=username).first()
-            if check1 == None:
-                check2 = StdAcc.query.filter_by(name=username).first()
-                if check2 == None:
-                    return "No such account exists in records."
-                else:
-                    check2 = StdAcc.query.filter_by(name=username, pword = password).first()
-                    if check2 == None:
-                        return "Please key in your username/password again."
-                    else:
-                        session['student'] = username
-                        cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
-                        return render_template('marketplace.html',items = cat)
-            else:
-                check1 = TrAcc.query.filter_by(name=username, pword = password).first()
-                if check1 == None:
-                    return "Please key in your username/password again."
-                else:
-                    session['teacher'] = username
-                    return render_template('teacher.html')
-        else:
-            check = Admin.query.filter_by(name=username, pword = password).first()
-            if check == None:
-                return "Please key in your username/password again."
-            else:
-                session['admin'] = username
-                return render_template('admin.html')
-    else:
-        return render_template('login.html')
 
 @app.route('/newacc', methods=['POST', 'GET'])
 def createacc():
@@ -176,28 +113,6 @@ def createacc():
             else:
                 teachers = db.session.query(TrAcc)
                 return render_template('addstudents.html', feedback = "Student Account already exists.", teachers = teachers)
-
-
-@app.route('/addTeacher', methods = ['POST', 'GET'])
-def addTeacher():
-    if request.method == "POST":
-        if ('admin' in session):
-            return render_template('addteachers.html')
-        else:
-            pass
-    else:
-        pass
-
-@app.route('/addStudent', methods=['POST', 'GET'])
-def add_student():
-    if request.method == "POST":
-        if ('teacher' in session) or ('admin' in session):
-            teachers = db.session.query(TrAcc)
-            return render_template('addstudents.html', teachers = teachers)
-        else:
-            pass
-    else:
-        pass
 
 @app.route('/additems', methods=["POST", 'GET'])
 def additems():
@@ -320,6 +235,161 @@ def deleteEntry():
                 return 'No such User'
         
 
+@app.route('/addtocart', methods=['POST', 'GET'])
+def add_to_cart():
+    if request.method == "POST":
+        name = request.form['Add2Cart']
+        local_account = session['student']
+        check = db.session.query(Temporary_Table).filter_by(name = name, acc = local_account).first()
+        if check:
+            item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = name).first()
+            item.quantity +=1
+            db.session.commit()
+            cat = item.cat
+            items = db.session.query(Record_Of_Items).filter_by(cat = cat)
+            addedToCart = True
+            return render_template('marketplace.html',items = items, addedToCart = addedToCart)
+        else:
+            item = db.session.query(Record_Of_Items).filter_by(name = name).first()
+            add_to_cart_item = Temporary_Table(acc = local_account, name = name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
+            db.session.add(add_to_cart_item)
+            db.session.commit()
+            cat = item.cat
+            items = db.session.query(Record_Of_Items).filter_by(cat = cat)
+            addedToCart = True
+            return render_template('marketplace.html',items = items, addedToCart = addedToCart)
+    else:
+        return "Error encountered. Please login again."
+
+@app.route('/submitcart', methods=["POST", "GET"])
+def submit_cart():
+    if request.method == "POST":
+        local_account = session['student']
+        items = db.session.query(Temporary_Table).filter_by(acc = local_account)
+        check_for_existing_account = db.session.query(Submitted_Cart).filter_by(acc = local_account).first()
+        check_for_existing_items = db.session.query(Temporary_Table).filter_by(acc = local_account).first()
+        if check_for_existing_account:
+            return "You have already submitted once."
+        elif check_for_existing_items == None:
+            return "There are currently no items in the cart."
+        else:
+            for item in items:
+                new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
+                db.session.add(new_stuff)
+                db.session.commit()
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            return render_template('marketplace.html',items = cat)
+    else:
+        return redirect('/checkout')
+
+@app.route('/logout', methods = ['POST', 'GET'])
+def logout():
+    if "admin" in session:
+        session.pop('admin', None)
+    elif "teacher" in session:
+        session.pop('teacher', None)
+    elif "student" in session:
+        session.pop('student', None)
+
+    session.clear()
+    return render_template('login.html')
+
+
+#MENU(TEACHER AND ADMIN)
+@app.route('/admin', methods = ['POST', 'GET'])
+def admin():
+    if 'admin' in session:
+        if request.method == 'POST':
+            if request.form['nav'] == 'Table of Student':
+                return redirect('/tablestudent')
+            elif request.form['nav'] == 'Table of Teachers':
+                return redirect('/tableteacher')
+            elif request.form['nav'] == 'Edit Shopping Items':
+                return redirect('/marketplace')
+            elif request.form['nav'] == 'Create Promotion':
+                pass
+            elif request.form['nav'] == 'Wipe DB':
+                pass
+            elif request.form['nav'] == 'Reinitialise DB':
+                pass
+        else:
+            return render_template('admin.html')
+
+    else:
+        return render_template('login.html')
+
+
+    
+@app.route('/teacher', methods = ["POST", 'GET'])
+def teacher():
+    if 'teacher' in session:
+        if request.method == 'POST':
+            if request.form['nav'] == 'Table of Student':
+                return redirect('/tablestudent')
+            elif request.form['nav'] == 'List of Shopping Items':
+                return redirect('/marketplace')
+        else:
+            return render_template('teacher.html')
+    else:
+        return render_template('login.html')
+
+
+#PAGES
+
+@app.route('/', methods = ["POST", "GET"])
+def redirect_to_login():
+    if request.method == "POST":
+        if request.form['manipulate'] == 'Edit':
+            id = request.form['itemid']
+            item = db.session.query(Record_Of_Items).filter_by(id=id).first()
+            return render_template('edititems.html', item = item)
+        elif request.form['manipulate'] == 'Delete':
+            id = request.form['itemid']
+            return redirect(url_for('delete_item', id = id), code=307)
+    else:
+        return redirect('/login')
+
+@app.route('/login', methods=['POST', 'GET'])
+def loginpage():
+    if request.method == "POST":
+        session.pop('admin', None)
+        session.pop('teacher', None)
+        session.pop('student', None)
+        username = request.form['username']
+        password = request.form['password']
+        check = Admin.query.filter_by(name=username).first()
+        if check == None:
+            check1 = TrAcc.query.filter_by(name=username).first()
+            if check1 == None:
+                check2 = StdAcc.query.filter_by(name=username).first()
+                if check2 == None:
+                    return "No such account exists in records."
+                else:
+                    check2 = StdAcc.query.filter_by(name=username, pword = password).first()
+                    if check2 == None:
+                        return "Please key in your username/password again."
+                    else:
+                        session['student'] = username
+                        cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+                        return render_template('marketplace.html',items = cat)
+            else:
+                check1 = TrAcc.query.filter_by(name=username, pword = password).first()
+                if check1 == None:
+                    return "Please key in your username/password again."
+                else:
+                    session['teacher'] = username
+                    return render_template('teacher.html')
+        else:
+            check = Admin.query.filter_by(name=username, pword = password).first()
+            if check == None:
+                return "Please key in your username/password again."
+            else:
+                session['admin'] = username
+                return render_template('admin.html')
+    else:
+        return render_template('login.html')
+
+
 @app.route('/marketplace',methods=['GET','POST'])
 def shop_cat():
     if ("student" in session):
@@ -390,111 +460,6 @@ def shop_cat():
 
 
 
-@app.route('/addtocart', methods=['POST', 'GET'])
-def add_to_cart():
-    if request.method == "POST":
-        name = request.form['Add2Cart']
-        local_account = session['student']
-        check = db.session.query(Temporary_Table).filter_by(name = name, acc = local_account).first()
-        if check:
-            item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = name).first()
-            item.quantity +=1
-            db.session.commit()
-            cat = item.cat
-            items = db.session.query(Record_Of_Items).filter_by(cat = cat)
-            addedToCart = True
-            return render_template('marketplace.html',items = items, addedToCart = addedToCart)
-        else:
-            item = db.session.query(Record_Of_Items).filter_by(name = name).first()
-            add_to_cart_item = Temporary_Table(acc = local_account, name = name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
-            db.session.add(add_to_cart_item)
-            db.session.commit()
-            cat = item.cat
-            items = db.session.query(Record_Of_Items).filter_by(cat = cat)
-            addedToCart = True
-            return render_template('marketplace.html',items = items, addedToCart = addedToCart)
-    else:
-        return "Error encountered. Please login again."
-
-@app.route('/submitcart', methods=["POST", "GET"])
-def submit_cart():
-    if request.method == "POST":
-        local_account = session['student']
-        items = db.session.query(Temporary_Table).filter_by(acc = local_account)
-        check_for_existing_account = db.session.query(Submitted_Cart).filter_by(acc = local_account).first()
-        check_for_existing_items = db.session.query(Temporary_Table).filter_by(acc = local_account).first()
-        if check_for_existing_account:
-            return "You have already submitted once."
-        elif check_for_existing_items == None:
-            return "There are currently no items in the cart."
-        else:
-            for item in items:
-                new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
-                db.session.add(new_stuff)
-                db.session.commit()
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
-            return render_template('marketplace.html',items = cat)
-    else:
-        return redirect('/checkout')
-
-@app.route('/logout', methods = ['POST', 'GET'])
-def logout():
-    if "admin" in session:
-        session.pop('admin', None)
-    elif "teacher" in session:
-        session.pop('teacher', None)
-    elif "student" in session:
-        session.pop('student', None)
-
-    session.clear()
-    return render_template('login.html')
-
-@app.route('/admin', methods = ['POST', 'GET'])
-def admin():
-    if 'admin' in session:
-        if request.method == 'POST':
-            if request.form['nav'] == 'Table of Student':
-                return redirect('/tablestudent')
-            elif request.form['nav'] == 'Table of Teachers':
-                return redirect('/tableteacher')
-            elif request.form['nav'] == 'Edit Shopping Items':
-                return redirect('/marketplace')
-            elif request.form['nav'] == 'Create Promotion':
-                pass
-            elif request.form['nav'] == 'Wipe DB':
-                pass
-            elif request.form['nav'] == 'Reinitialise DB':
-                pass
-        else:
-            return render_template('admin.html')
-
-    else:
-        return render_template('login.html')
-
-
-    
-@app.route('/teacher', methods = ["POST", 'GET'])
-def teacher():
-    if 'teacher' in session:
-        if request.method == 'POST':
-            if request.form['nav'] == 'Table of Student':
-                return redirect('/tablestudent')
-            elif request.form['nav'] == 'List of Shopping Items':
-                return redirect('/marketplace')
-        else:
-            return render_template('teacher.html')
-    else:
-        return render_template('login.html')
-
-#RETURN FUNCTIONS
-
-
-@app.route('/back', methods = ["POST", 'GET'])
-def back():
-    return request.url_rule.endpoint
-
-#PAGES
-
 @app.route('/tableteacher', methods = ["POST", 'GET'])
 def tableTeacher():
     if ("admin" in session):
@@ -513,13 +478,39 @@ def tableStudent():
         students = db.session.query(StdAcc).order_by(db.text('assigned_teacher_id')).all()
         teachers = db.session.query(TrAcc).all()
         usertype = "admin"
-        return render_template('tablestudents.html',students = students, teachers = teachers)
-
+        return render_template('tablestudents.html',students = students, teachers = teachers,usertype = usertype)
+    
     elif "teacher" in session:
         teacher = db.session.query(TrAcc).filter_by(name = session['teacher']).first()
         students = db.session.query(StdAcc).filter_by(assigned_teacher_id = teacher.id)
         usertype = "teacher"
         return render_template('tablestudents.html',students = students,usertype = usertype)
+
+
+@app.route('/addTeacher', methods = ['POST', 'GET'])
+def addTeacher():
+    if request.method == "POST":
+        if ('admin' in session):
+            usertype = 'admin'
+            return render_template('addteachers.html', usertype=usertype)
+        else:
+            pass
+    else:
+        pass
+
+@app.route('/addStudent', methods=['POST', 'GET'])
+def add_student():
+    if request.method == "POST":
+        teachers = db.session.query(TrAcc)
+        if 'admin' in session:
+            usertype = 'admin'
+            return render_template('addstudents.html', teachers = teachers, usertype=usertype)
+        elif 'teacher' in session:
+            usertype = 'teacher'
+            return render_template('addstudents.html', teachers = teachers, usertype=usertype)
+    else:
+        pass
+
 
 if __name__ == "__main__":
     app.run(debug=True)

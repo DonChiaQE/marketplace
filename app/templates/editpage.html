@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="spacer"></div>
-        <a href="add.html">
+        <a href="additems">
             <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
         </a>
     </nav>
@@ -62,13 +62,14 @@
                     <div class="w-112 h-112 bg-green-500 rounded-5"></div>
                     <div class="vstack align-start mt-20 space-8 h-144">
                         <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
-                        <div class="text-14 text-400 text-black">${{item.price}}</div>
+                        <div class="text-14 text-400 text-black">${{item.price}} {{item.quantifier}}</div>
                         <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
                         <div class="spacer"></div>
                         <div class="hstack w-full">
-                            <input type="submit" class="bg-transparent text-18 color-blue-500" style="font-size: 18px;" value="Edit">
+                            <input type="submit" name="manipulate" class="bg-transparent text-18 color-blue-500" style="font-size: 18px;" value="Edit">
                             <div class="spacer"></div>
-                            <input type="submit" class="bg-transparent text-18 color-red-500" style="font-size: 18px;" value="Delete">
+                            <input type="submit" name="manipulate" class="bg-transparent text-18 color-red-500" style="font-size: 18px;" value="Delete">
+                            <input type="hidden" name="itemid" value="{{item.id}}">
                         </div>
                     </div>
                 </div>

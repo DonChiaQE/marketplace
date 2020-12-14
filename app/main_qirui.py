@@ -145,12 +145,16 @@ def createacc():
                 teachers = db.session.query(TrAcc)
                 return render_template('addstudents.html', feedback = "Student Account already exists.", teachers = teachers)
 
+
 @app.route('/addTeacher', methods = ['POST', 'GET'])
 def addTeacher():
-    if request.method == 'POST':
-        pass
+    if request.method == "POST":
+        if ('admin' in session):
+            return render_template('addteachers.html')
+        else:
+            pass
     else:
-        return render_template('addteachers.html')
+        pass
 
 @app.route('/addstudent', methods=['POST', 'GET'])
 def add_student():
@@ -163,7 +167,6 @@ def add_student():
     else:
         pass
 
-            
 
 @app.route('/increase_quantity', methods = ["POST", "GET"])
 def increase_quantity():
@@ -373,8 +376,7 @@ def admin():
             if request.form['nav'] == 'Table of Student':
                 return render_template('tablestudents.html')
             elif request.form['nav'] == 'Table of Teachers':
-                listOfTeachers = db.session.query(TrAcc).all()
-                return render_template('tableteacher.html',Teachers = listOfTeachers)
+                return redirect('/tableteacher')
             elif request.form['nav'] == 'Edit Shopping Items':
                 return redirect('/marketplace')
             elif request.form['nav'] == 'Create Promotion':
@@ -406,6 +408,23 @@ def teacher():
 
 
 
+#RETURN FUNCTIONS
+
+
+@app.route('/back', methods = ["POST", 'GET'])
+def back():
+    return request.url_rule.endpoint
+
+#PAGES
+
+@app.route('/tableteacher', methods = ["POST", 'GET'])
+def tableTeacher():
+    if "admin" in session:
+        listOfTeachers = db.session.query(TrAcc).all()
+        return render_template('tableteacher.html',Teachers = listOfTeachers)
+
+    else:
+        pass
 
 
 
@@ -413,6 +432,8 @@ def teacher():
 if __name__ == "__main__":
     app.run(debug=True)
     
+
+
 
 
 

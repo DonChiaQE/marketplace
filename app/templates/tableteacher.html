@@ -21,7 +21,7 @@
         <div class="vstack screen">
             <div class="text-36">Table of Teachers</div>
             <div class="vstack space-28 mt-28 w-full">
-                <form action="/addTeacher">
+                <form action="/addTeacher" method="POST">
                     <input type="submit" class="w-256 bg-white rounded-3 shadow shadow-md p-28" value="Add Teacher" />
                 </form>
                 {% for Teacher in Teachers %}

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.0-rc.35/dist/full.css">
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
 </head>
 
 <body>
@@ -26,18 +26,18 @@
                 </form>
                 {% for Teacher in Teachers %}
                 <form action="/deleteEntry" method="POST">
-                <div class="hstack w-full w-256 w-full">
-                    <div class="vstack w-full">
-                        <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Username: {{Teacher.name}}</div>
-                        <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Password: {{Teacher.pword}}</div>
+                    <div class="hstack  w-256 p-28 w-full ">
+                        <div class="vstack w-full">
+                            <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Username: {{Teacher.name}}</div>
+                            <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Password: {{Teacher.pword}}</div>
+                        </div>
+                        <div class="spacer"></div>
+                        <input type="hidden" name='username' value="{{Teacher.name}}" />
+                        <input type="hidden" name='usertype' value="TeacherUser" />
+                        <input type="hidden" name='password' value="{{Teacher.pword}}" />
+                        <input type="submit" class=" color-red-700 bg-transparent pl-36 text-36 " value="x" />
+
                     </div>
-                    <div class="spacer"></div>
-                    <input type="hidden" name='username' value="{{Teacher.name}}"/>
-                    <input type="hidden" name='usertype' value="TeacherUser"/>
-                    <input type="hidden" name='password' value="{{Teacher.pword}}"/>
-                    <input type="submit" class=" color-red-700 bg-transparent pl-36 text-36 " value="x" />
-                    
-                </div>
                 </form>
                 {% endfor %}
             </div>

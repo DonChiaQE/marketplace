@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {% if addedToCart == True %}
+    <script>
+        $(document).ready(function() {
+            $('#message').fadeIn('slow', function() {
+                $('#message').delay(2000).fadeOut();
+            });
+        });
+    </script>
+    {% endif %}
+</head>
+
+<body>
+    <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
+        <form action="/marketplace" method="POST">
+            <div class="hidden md:unhidden">
+                <div class=" hstack">
+                    <input type="submit" name="navbar" value="Fresh Produce" class="bg-white m-18 text-underline pb-1" />
+                    <input type="submit" name="navbar" value="Dairy" class="bg-white m-18 text-underline pb-1" />
+                    <input type="submit" name="navbar" value="Meat" class="bg-white m-18 text-underline pb-1" />
+                    <input type="submit" name="navbar" value="Others" class="bg-white m-18 text-underline pb-1" />
+                    <input type="submit" name="navbar" value="Log Out" class="bg-white m-18 text-underline color-red-600 pb-1" />
+                </div>
+            </div>
+        </form>
+        <form action="/marketplace" method="POST">
+            <div class="unhidden md:hidden group">
+                <div class="zstack w-40 h-40">
+                    <div class="group vstack space-5">
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                    </div>
+                    <div class="hidden group-touch:unhidden place-bl transform translate-y-100">
+                        <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
+                            <input type="submit" name="navbar" value="Fresh Produce" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Meat" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Others" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+        <div class="spacer"></div>
+        <a href="checkout">
+            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
+        </a>
+    </nav>
+
+    <div class="container py-28">
+        <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 md:gap-28 sm:p-8 md:grid-cols-4 my-18 " style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
+            {% for item in items %}
+            <form action="/addtocart" , method="POST">
+                <div class="vstack h-320 bg-white rounded-3 shadow shadow-md p-28">
+                    <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                    <div class="vstack align-start mt-20 space-8 h-144">
+                        <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
+                        <div class="text-14 text-400 text-black">${{item.price}} {{item.quantifier}}</div>
+                        <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
+                        <div class="spacer"></div>
+                        <div class="hstack space-28 w-full">
+                            <div class="spacer"></div>
+                            <button class="text-underline" type="submit" name="CreatePromotion" value="{{promotion}}">Create Promotion</button>
+                            <div class="spacer"></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {% endfor %}
+        </div>
+
+    </div>
+</body>
+
+</html>
+
+<style>
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+    
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+        cursor: pointer;
+    }
+    
+    .noti-full {
+        width: 100vw;
+    }
+</style>

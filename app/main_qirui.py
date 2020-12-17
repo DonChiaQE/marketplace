@@ -137,6 +137,15 @@ def additems():
     else:
         return redirect('/')
 
+@app.route('/lol', methods=['POST', 'GET'])
+def lol():
+    if request.method == 'POST' or request.method == 'GET':
+        items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
+        all_items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
+        total = 0
+        for item in all_items:
+            total += item.quantity * item.price
+        return render_template('viewstudentcart.html',items = items, total = total)
 
 @app.route('/increase_quantity', methods = ["POST", "GET"])
 def increase_quantity():

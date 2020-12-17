@@ -51,43 +51,24 @@
 
     <div class="container py-28">
         <div class="vstack md:hstack md:space-28 h-auto">
-            <div id="example-1">
-                <div class="hstack space-28">
-                {% for item in items %}
-
-                <div>
-                    <div class="vstack space-28 my-28">
-                        <div class="hstack w-384 h-128 bg-white shadow shadow-md">
-                            <div class="spacer"></div>
-                            <div class="w-80 h-80 bg-gray-200 rounded-12"></div>
-                            <div class="spacer"></div>
-                            <div class="spacer"></div>
-                            <div class="vstack align-start h-80">
-                                <div class="text-blackm mb-2">{{item.name}}</div>
-                                <div class="text-gray-500 text-12 mt-2">{{item.price}}</div>
-                                <div class="spacer"></div>
-                                <div class="hstack space-5">
-                                    <form action="/decrease_quantity" , method="POST">
-                                        <button type="submit" class="hstack w-28 h-28 bg-black rounded-full text-white buttons" name="Minus" value="{{item.name}}">-</button>
-                                    </form>
-                                    <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item.quantity}}</div>
-                                    <form action="/increase_quantity" , method="POST">
-                                        <button type="submit" class="hstack w-28 h-28 bg-black rounded-full text-white buttons" name="Plus" value="{{item.name}}">+</button>
-                                    </form>
-                                </div>
+            <div id="example-1" class=" vstack space-28">
+                <!--for loop teams here as well-->
+                <div class="vstack bg-gray-200 p-28 space-28 align-start rounded-28 mx-8">
+                    <div class="text-28">Test student 29</div>
+                    <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!--for loop start here-->
+                        <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
+                            <div class="text-20">Budget Heavy Weight Bathroom Tissues 10 rolls
                             </div>
-                            <div class="spacer"></div>
-                            <div class="spacer"></div>
-                            <div class="vstack h-80">
-                                <div class="spacer"></div>
-                                <div class="text-black">{{item.quantity * item.price}}</div>
-                            </div>
+                            <div class="text-14">Quantity</div>
+                            <div class="text-14">Prices</div>
+                            <div class="text-14 bold">Total Price</div>
                             <div class="spacer"></div>
                         </div>
+                        <!--for loop end here-->
                     </div>
                 </div>
-                {% endfor %}
-                </div>
+                <!--end for loop here-->
             </div>
         </div>
     </div>

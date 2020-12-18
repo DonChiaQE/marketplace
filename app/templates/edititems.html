@@ -11,8 +11,9 @@
 <body>
     <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
 
-        <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-
+        <a href="{{url_for('shop_cat')}}">
+            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+        </a>
         <div class="spacer"></div>
 
     </nav>
@@ -31,15 +32,15 @@
                         <input type="text" name="itemprice" value="{{item.price}}" placeholder="Item Price" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
                         <input type="text" name="iteminfo" value="{{item.info}}" placeholder="Item Expiry Date" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
                         <select name='itemcat' id='Teacher'>
-                            <option value="Fresh Produce">Fresh Produce</option>
-                            <option value="Dairy">Dairy</option>
-                            <option value="Meat">Meat</option>
-                            <option value="Others">Others</option>
+                            <option {% if item.cat == "Fresh Produce" %}selected = "selected" {% endif %} value="Fresh Produce">Fresh Produce</option>
+                            <option {% if item.cat == "Dairy" %}selected = "selected" {% endif %} value="Dairy">Dairy</option>
+                            <option {% if item.cat == "Meat" %}selected = "selected" {% endif %} value="Meat">Meat</option>
+                            <option {% if item.cat == "Others" %}selected = "selected" {% endif %} value="Others">Others</option>
                         </select>
                         <select name='itemquantifier' id='Teacher'>
-                            <option value="">None</option>
-                            <option value="per pkt">per pkt</option>
-                            <option value="per kg">per kg</option>
+                            <option {% if item.quantifier == "" %}selected = "selected" {% endif %} value="">None</option>
+                            <option {% if item.quantifier == "per pkt" %}selected = "selected" {% endif %} value="per pkt">per pkt</option>
+                            <option {% if item.quantifier == "per kg" %}selected = "selected" {% endif %} value="per kg">per kg</option>
                         </select>
                     </div>
                     <div class="zstack pt-36 w-256">

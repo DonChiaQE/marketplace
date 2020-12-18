@@ -33,6 +33,7 @@
                 {% for student in students %}
                 <form action="/deleteEntry" method="POST">
                     <div class="hstack p-28 w-full">
+                        <button type="submit" name="todo" value="viewstudentcart">
                         <div class="vstack w-full">
                             <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Username: {{student.name}}</div>
                             <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Password: {{student.pword}}</div>
@@ -40,12 +41,12 @@
                             <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Assigned To: {{teacher.name}}</div>
                             {% endfor %}
                         </div>
+                        </button>
                         <div class="spacer"></div>
                         <input type="hidden" name='username' value="{{student.name}}" />
                         <input type="hidden" name='usertype' value="StudentUser" />
                         <input type="hidden" name='password' value="{{student.pword}}" />
-                        <input type="submit" class="text-underline color-red-700 bg-transparent pl-36 text-36 " value="x" />
-
+                        <input name="todo" type="submit" class="text-underline color-red-700 bg-transparent pl-36 text-36 " value="x" />
                     </div>
                 </form>
                 {% endfor %}

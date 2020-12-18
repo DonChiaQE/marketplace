@@ -137,15 +137,19 @@ def additems():
     else:
         return redirect('/')
 
-@app.route('/lol', methods=['POST', 'GET'])
-def lol():
-    if request.method == 'POST' or request.method == 'GET':
-        items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
-        all_items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
-        total = 0
-        for item in all_items:
-            total += item.quantity * item.price
-        return render_template('viewstudentcart.html',items = items, total = total)
+@app.route('/viewstudentcart', methods=['POST', 'GET'])
+def viewstudentcart():
+    if ('teacher' in session) or ('admin' in session):
+        if request.method == 'GET':
+            accounts = db.session.query(Temporary_Table).filter_by
+            items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
+            all_items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
+            total = 0
+            for item in all_items:
+                total += item.quantity * item.price
+            return render_template('viewstudentcart.html',items = items, total = total)
+    else:
+        return redirect('/login')
 
 @app.route('/increase_quantity', methods = ["POST", "GET"])
 def increase_quantity():
@@ -219,30 +223,41 @@ def delete_item(id):
 @app.route('/deleteEntry' , methods = ['POST','GET'])
 def deleteEntry():
     if request.method == 'POST':
-        acc_user = request.form['usertype']
-        acc_name = request.form['username']
-        acc_pword = request.form['password']
-        if acc_user == 'AdminUser':
-            try:
-                check1 = TrAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
-                db.session.commit()
-                return "success AdminAcc deletion"
-            except:
-                return 'No such User'
-        elif acc_user == 'TeacherUser':
-            try:
-                check1 = TrAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
-                db.session.commit()
-                return "success TeacherAcc deletion"
-            except:
-                return 'No such User'
-        else:
-            try:
-                check1 = StdAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
-                db.session.commit()
-                return "success StudentAcc deletion"
-            except:
-                return 'No such User'
+        if request.form['todo'] == 'x':
+            acc_user = request.form['usertype']
+            acc_name = request.form['username']
+            acc_pword = request.form['password']
+            if acc_user == 'AdminUser':
+                try:
+                    check1 = TrAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
+                    db.session.commit()
+                    return "success AdminAcc deletion"
+                except:
+                    return 'No such User'
+            elif acc_user == 'TeacherUser':
+                try:
+                    check1 = TrAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
+                    db.session.commit()
+                    return "success TeacherAcc deletion"
+                except:
+                    return 'No such User'
+            else:
+                try:
+                    check1 = StdAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
+                    db.session.commit()
+                    return "success StudentAcc deletion"
+                except:
+                    return 'No such User'
+        elif request.form['todo'] == 'viewstudentcart':
+            username = request.form['username']
+            items = db.session.query(Temporary_Table).filter_by(acc = username)
+            item_test = db.session.query(Temporary_Table).filter_by(acc = username).first()
+            text = ""
+            if item_test == None:
+                text = "Empty Cart"
+            else:
+                text = ""
+            return render_template('viewstudentcart.html',items = items, username = username, text = text)
         
 
 @app.route('/addtocart', methods=['POST', 'GET'])

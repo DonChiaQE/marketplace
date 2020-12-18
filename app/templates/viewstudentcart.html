@@ -52,23 +52,21 @@
     <div class="container py-28">
         <div class="vstack md:hstack md:space-28 h-auto">
             <div id="example-1" class=" vstack space-28">
-                <!--for loop teams here as well-->
                 <div class="vstack bg-gray-200 p-28 space-28 align-start rounded-28 mx-8">
-                    <div class="text-28">Test student 29</div>
+                    <div class="text-28">{{username}}</div>
                     <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <!--for loop start here-->
+                        {% for item in items %}
                         <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
-                            <div class="text-20">Budget Heavy Weight Bathroom Tissues 10 rolls
-                            </div>
-                            <div class="text-14">Quantity</div>
-                            <div class="text-14">Prices</div>
-                            <div class="text-14 bold">Total Price</div>
+                            <div class="text-20">{{item.name}}</div>
+                            <div class="text-14">Price: {{item.price}}</div>
+                            <div class="text-14">Quantity: {{item.quantity}}</div>
+                            <div class="text-14 bold">Total: {{item.quantity * item.price}}</div>
                             <div class="spacer"></div>
                         </div>
-                        <!--for loop end here-->
+                        {% endfor %}
+                        <div>{{text}}</div>
                     </div>
                 </div>
-                <!--end for loop here-->
             </div>
         </div>
     </div>

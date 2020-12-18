@@ -317,7 +317,7 @@ def admin():
             elif request.form['nav'] == 'Edit Shopping Items':
                 return redirect('/marketplace')
             elif request.form['nav'] == 'Create Promotion':
-                pass
+                return redirect('/promotion')
             elif request.form['nav'] == 'Wipe DB':
                 pass
             elif request.form['nav'] == 'Reinitialise DB':
@@ -520,6 +520,31 @@ def add_student():
             return render_template('addstudents.html', teachers = teachers, usertype=usertype)
     else:
         pass
+
+
+@app.route('/promotion', methods=['POST', 'GET'])
+def promotion():
+    if 'admin' in session:
+        if request.method == 'POST':
+            if request.form['navbar'] == 'Fresh Produce':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+                return render_template('promotion.html',items = cat)
+            elif request.form['navbar'] == 'Dairy':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
+                return render_template('promotion.html',items = cat)
+            elif request.form['navbar'] == 'Meat':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
+                return render_template('promotion.html',items = cat)
+            elif request.form['navbar'] == 'Others':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
+                return render_template('promotion.html',items = cat)
+            elif request.form['navbar'] == 'Log Out':
+                return redirect('/logout')
+        else:
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            return render_template('promotion.html',items = cat)
+
+
 
 
 if __name__ == "__main__":

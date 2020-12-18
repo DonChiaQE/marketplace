@@ -89,7 +89,9 @@
                     <div class="vstack align-start mt-20 space-8">
                         <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
                         <div class="text-14 text-400 text-black">${{"$%.2f"|format(item.price)}} {{item.quantifier}}</div>
+                        {% if (item.info != "") and (item.info != None) %}
                         <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
+                        {% endif %}
                         <div class="spacer"></div>
                     </div>
                     <div class="spacer"></div>

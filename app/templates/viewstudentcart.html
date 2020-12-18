@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -41,64 +41,35 @@
                 </div>
             </div>
         </form>
+
+
         <div class="spacer"></div>
-        <a href="additems">
-            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+        <a href="checkout">
+            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
         </a>
     </nav>
-    <!--div class="container py-28">
-        <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 md:gap-28 sm:p-8 md:grid-cols-4 my-18 " style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr))">
-            {% for item in items %}
-            <form action="/" , method="POST">
-                <div class="vstack h-320 bg-white rounded-3 shadow shadow-md p-28">
-                    <div class="w-112 h-112 bg-green-500 rounded-5"></div>
-                    <div class="vstack align-start mt-20 space-8 h-144">
-                        <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
-                        <div class="text-14 text-400 text-black">${{"$%.2f"|format(item.price)}} {{item.quantifier}}</div>
-                        <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
-                        <div class="spacer"></div>
-                        <div class="hstack space-28 w-full">
-                            <div class="spacer"></div>
-                            <input type="submit" name="manipulate" class="bg-transparent text-18 color-blue-500 text-underline" style="font-size: 18px;" value="Edit">
-                            <input type="submit" name="manipulate" class="bg-transparent text-18 color-red-500 text-underline" style="font-size: 18px;" value="Delete">
-                            <input type="hidden" name="itemid" value="{{item.id}}">
-                            <div class="spacer"></div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            {% endfor %}
-        </div>
-
-    </div-->
 
     <div class="container py-28">
-        <div class="align-self-stretch grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-12">
-            {% for item in items %}
-            <form action="/" , method="POST">
-                <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
-                    <div class="w-112 h-112 bg-green-500 rounded-5"></div>
-                    <div class="vstack align-start mt-20 space-8">
-                        <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
-                        <div class="text-14 text-400 text-black">${{"$%.2f"|format(item.price)}} {{item.quantifier}}</div>
-                        <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
-                        <div class="spacer"></div>
-                    </div>
-                    <div class="spacer"></div>
-                    <div class="vstack">
-                        <div class="hstack space-28 w-full">
-                            <div class="spacer"></div>
-                            <input type="submit" name="manipulate" class="bg-transparent text-18 color-blue-500 text-underline" style="font-size: 18px;" value="Edit">
-                            <input type="submit" name="manipulate" class="bg-transparent text-18 color-red-500 text-underline" style="font-size: 18px;" value="Delete">
-                            <input type="hidden" name="itemid" value="{{item.id}}">
+        <div class="vstack md:hstack md:space-28 h-auto">
+            <div id="example-1" class=" vstack space-28">
+                <!--for loop teams here as well-->
+                <div class="vstack bg-gray-200 p-28 space-28 align-start rounded-28 mx-8">
+                    <div class="text-28">Test student 29</div>
+                    <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!--for loop start here-->
+                        <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
+                            <div class="text-20">Budget Heavy Weight Bathroom Tissues 10 rolls
+                            </div>
+                            <div class="text-14">Quantity</div>
+                            <div class="text-14">Prices</div>
+                            <div class="text-14 bold">Total Price</div>
                             <div class="spacer"></div>
                         </div>
-
+                        <!--for loop end here-->
                     </div>
-
                 </div>
-            </form>
-            {% endfor %}
+                <!--end for loop here-->
+            </div>
         </div>
     </div>
 </body>
@@ -106,6 +77,22 @@
 </html>
 
 <style>
+    .buttons:active {
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .buttons:hover {
+        cursor: pointer;
+    }
+    
+    .text-12 {
+        font-size: 12px;
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
      :root {
         --bg-color: #F2F2F2;
         --text-color: #2c3e50;
@@ -127,3 +114,44 @@
         cursor: pointer;
     }
 </style>
+
+<script>
+    var example1 = new Vue({
+        el: '#example-1',
+        data: {
+            items: [{
+                name: 'Pasar Tomato',
+                price: '$2',
+                info: '6 per pack'
+            }, {
+                name: 'Celery',
+                price: '$4',
+                info: 'Single celery'
+            }, {
+                name: 'Celery',
+                price: '$4',
+                info: 'Single celery'
+            }, {
+                name: 'Celery',
+                price: '$4',
+                info: 'Single celery'
+            }, {
+                name: 'Celery',
+                price: '$4',
+                info: 'Single celery'
+            }, {
+                name: 'Celery',
+                price: '$4',
+                info: 'Single celery'
+            }, {
+                name: 'Celery',
+                price: '$4',
+                info: 'Single celery'
+            }, {
+                name: 'Celery',
+                price: '$4',
+                info: 'Single celery'
+            }]
+        }
+    })
+</script>

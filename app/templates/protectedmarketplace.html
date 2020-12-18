@@ -43,28 +43,24 @@
             </div>
         </form>
         <div class="spacer"></div>
-        <a href="add.html">
-            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-        </a>
     </nav>
     <div class="container py-28">
-        <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 md:gap-28 sm:p-8 md:grid-cols-4 my-18 " style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr))">
+        <div class="align-self-stretch grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-12">
             {% for item in items %}
             <form action="/" , method="POST">
-                <div class="vstack h-320 bg-white rounded-3 shadow shadow-md p-28">
+                <div class="vstack h-448 bg-white rounded-3 shadow shadow-md py-28 px-24">
                     <div class="w-112 h-112 bg-green-500 rounded-5"></div>
-                    <div class="vstack align-start mt-20 space-8 h-144">
+                    <div class="vstack align-start mt-20 space-8">
                         <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
-                        <div class="text-14 text-400 text-black">${{item.price}}</div>
+                        <div class="text-14 text-400 text-black">${{"$%.2f"|format(item.price)}} {{item.quantifier}}</div>
                         <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
                         <div class="spacer"></div>
-
                     </div>
+                    <div class="spacer"></div>
                 </div>
             </form>
             {% endfor %}
         </div>
-
     </div>
 </body>
 

@@ -296,13 +296,14 @@ def submit_cart():
 def logout():
     if "admin" in session:
         session.pop('admin', None)
+        promotionalItems = []
     elif "teacher" in session:
         session.pop('teacher', None)
     elif "student" in session:
         session.pop('student', None)
 
     session.clear()
-    return render_template('login.html')
+    return redirect('/login')
 
 
 #MENU(TEACHER AND ADMIN)
@@ -317,7 +318,7 @@ def admin():
             elif request.form['nav'] == 'Edit Shopping Items':
                 return redirect('/marketplace')
             elif request.form['nav'] == 'Create Promotion':
-                return redirect('/promotion')
+                return redirect('/promotion/Fresh Produce')
             elif request.form['nav'] == 'Wipe DB':
                 pass
             elif request.form['nav'] == 'Reinitialise DB':
@@ -343,8 +344,8 @@ def teacher():
     else:
         return render_template('login.html')
 
-
 #PAGES
+
 
 @app.route('/', methods = ["POST", "GET"])
 def redirect_to_login():
@@ -522,27 +523,42 @@ def add_student():
         pass
 
 
-@app.route('/promotion', methods=['POST', 'GET'])
-def promotion():
+@app.route('/promotion/<category>', methods=['POST', 'GET'])
+def promotion(category):
     if 'admin' in session:
-        if request.method == 'POST':
-            if request.form['navbar'] == 'Fresh Produce':
+        if request.method == 'GET':
+            if category == 'Fresh Produce':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
                 return render_template('promotion.html',items = cat)
-            elif request.form['navbar'] == 'Dairy':
+            elif category == 'Dairy':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
                 return render_template('promotion.html',items = cat)
-            elif request.form['navbar'] == 'Meat':
+            elif category == 'Meat':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
                 return render_template('promotion.html',items = cat)
-            elif request.form['navbar'] == 'Others':
+            elif category == 'Others':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
                 return render_template('promotion.html',items = cat)
-            elif request.form['navbar'] == 'Log Out':
+            elif category == 'Log Out':
                 return redirect('/logout')
         else:
             cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
             return render_template('promotion.html',items = cat)
+
+promotionalItems = []
+
+@app.route('/promotionItems', methods=['POST', 'GET'])
+def add_promotion():
+    if request.method == 'POST':
+        item = request.form.get('promotionItem')
+        promotionalItems.append(item)
+        cat = db.session.query(Record_Of_Items).filter_by(name = item).first()
+        return redirect(url_for('promotion', category= cat.cat))
+
+@app.route('/promotionitems', methods=['POST', 'GET'])
+def viewpromotion():
+    return str(promotionalItems)
+    
 
 
 

@@ -86,16 +86,11 @@
             {% if item.promo_price == '-' or item.promo_price == None %}
             <form action="/addtocart" , method="POST">
                 <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
-<<<<<<< HEAD
-                    <div class="w-112 h-112 bg-green-500 rounded-5">
-                    </div>
-=======
                     {% if item.image %}
                     <img src="{{ url_for('display_image', filename=item.image) }}">
                     {% else %}
                     <div class="w-112 h-112 bg-green-500 rounded-5"></div>
                     {% endif %}
->>>>>>> e4b746d77ff5a15018b54169826dbd4e20a43a2a
                     <div class="vstack align-start mt-20 space-8">
                         <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
                         <div class="text-14 text-400 text-black">{{"$%.2f"|format(item.price)}} {{item.quantifier}}</div>

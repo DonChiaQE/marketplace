@@ -3,12 +3,18 @@ import sqlalchemy
 from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required, UserMixin
+import os
+import urllib.request
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config['TESTING'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = "lkkajdghdadkglajkgajdisa931!.h" # a secret key for your app
+UPLOAD_FOLDER = 'static/uploads/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,7 +39,7 @@ class Record_Of_Items(db.Model):
     info = db.Column(db.String(200),default = '-')
     price = db.Column(db.Integer,default = '-')
     cat = db.Column(db.String(200),default = '-')
-    image = db.Column(db.String(200),default = '-')
+    image = db.Column(db.String(200),default = '')
     quantifier = db.Column(db.String(200),default=None)
     promo_price = db.Column(db.Integer,default = '-')
     
@@ -56,6 +62,9 @@ class Submitted_Cart(db.Model):
     quantity = db.Column(db.Integer,default = 1)
     cat = db.Column(db.String(200),default = '-')
 
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+def allowed_file(filename):
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/update/<int:id>', methods = ['POST', 'GET'])
 def update(id):
@@ -117,6 +126,33 @@ def createacc():
                 teachers = db.session.query(TrAcc)
                 return render_template('addstudents.html', feedback = "Student Account already exists.", teachers = teachers)
 
+@app.route('/display/<filename>', methods = ['POST', 'GET'])
+def display_image(filename):
+    return redirect(url_for('static', filename='uploads/' + filename), code=301)
+
+@app.route('/testadd', methods=['POST', 'GET'])
+def upload_image():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        image_file = request.files['file']
+        if image_file.filename == '':
+            flash('No image selected for uploading')
+            return redirect(request.url)
+        if image_file and allowed_file(image_file.filename):
+            filename = secure_filename(image_file.filename)
+            image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            new_file = Record_Of_Items(image = filename)
+            db.session.add(new_file)
+            db.session.commit()
+            return render_template('testadd.html', filename=filename)
+        else:
+            flash('Allowed image types are -> png, jpg, jpeg, gif')
+            return redirect(request.url)
+    else:
+        return render_template('testadd.html')
+
 @app.route('/additems', methods=["POST", 'GET'])
 def additems():
     if 'admin' in session:
@@ -126,9 +162,15 @@ def additems():
             new_item_info = request.form['iteminfo']
             new_item_cat = request.form['itemcat']
             new_item_quantifier = request.form['itemquantifier']
+            new_item_image = request.files['itemimage']
             check = Record_Of_Items.query.filter_by(name=new_item_name).first()
             if check == None:
-                new_item = Record_Of_Items(name = new_item_name, price = new_item_price, info = new_item_info, cat = new_item_cat, quantifier = new_item_quantifier)
+                if new_item_image and allowed_file(new_item_image.filename):
+                    filename = secure_filename(new_item_image.filename)
+                    new_item_image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                else:
+                    filename = None
+                new_item = Record_Of_Items(name = new_item_name, price = new_item_price, info = new_item_info, cat = new_item_cat, quantifier = new_item_quantifier, image = filename)
                 db.session.add(new_item)
                 db.session.commit()
                 return redirect('/marketplace')
@@ -147,9 +189,10 @@ def viewstudentcart():
             items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
             all_items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
             total = 0
+            usertype = "teacher"
             for item in all_items:
                 total += item.quantity * item.price
-            return render_template('viewstudentcart.html',items = items, total = total)
+            return render_template('viewstudentcart.html', items = items, total = total, usertype = usertype)
     else:
         return redirect('/login')
 
@@ -231,7 +274,7 @@ def deleteEntry():
             acc_pword = request.form['password']
             if acc_user == 'AdminUser':
                 try:
-                    check1 = TrAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
+                    check1 = Admin.query.filter_by(name=acc_name, pword=acc_pword).delete()
                     db.session.commit()
                     return "success AdminAcc deletion"
                 except:
@@ -240,14 +283,14 @@ def deleteEntry():
                 try:
                     check1 = TrAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
                     db.session.commit()
-                    return "success TeacherAcc deletion"
+                    return redirect('/tableteacher')
                 except:
                     return 'No such User'
             else:
                 try:
                     check1 = StdAcc.query.filter_by(name=acc_name, pword=acc_pword).delete()
                     db.session.commit()
-                    return "success StudentAcc deletion"
+                    return redirect('/tablestudent')
                 except:
                     return 'No such User'
         elif request.form['todo'] == 'viewstudentcart':
@@ -259,7 +302,11 @@ def deleteEntry():
                 text = "Empty Cart"
             else:
                 text = ""
-            return render_template('viewstudentcart.html',items = items, username = username, text = text)
+            
+            if 'admin' in session:
+                return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'admin')
+            elif 'teacher' in session:
+                return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'teacher')
         
 
 @app.route('/addtocart', methods=['POST', 'GET'])
@@ -296,7 +343,7 @@ def submit_cart():
         check_for_existing_account = db.session.query(Submitted_Cart).filter_by(acc = local_account).first()
         check_for_existing_items = db.session.query(Temporary_Table).filter_by(acc = local_account).first()
         if check_for_existing_account:
-            return "You have already submitted once."
+            return redirect('/checkout')
         elif check_for_existing_items == None:
             return "There are currently no items in the cart."
         else:
@@ -339,6 +386,8 @@ def admin():
                 pass
             elif request.form['nav'] == 'Reinitialise DB':
                 pass
+            elif request.form['nav'] == 'Log Out':
+                return redirect('/logout')
         else:
             return render_template('admin.html')
 
@@ -353,8 +402,12 @@ def teacher():
         if request.method == 'POST':
             if request.form['nav'] == 'Table of Student':
                 return redirect('/tablestudent')
+            elif request.form['nav'] == 'List of Submitted Carts':
+                return redirect('/viewsubmittedcarts')
             elif request.form['nav'] == 'List of Shopping Items':
                 return redirect('/marketplace')
+            elif request.form['nav'] == 'Log Out':
+                return redirect('/logout')
         else:
             return render_template('teacher.html')
     else:
@@ -362,6 +415,28 @@ def teacher():
 
 #PAGES
 
+<<<<<<< HEAD
+=======
+@app.route('/changeimage/<imageid>', methods=['POST', 'GET'])
+def change_image(imageid):
+    if 'admin' in session:
+        if request.method == 'POST':
+            id = imageid
+            changed_image = request.files['changedimage']
+            item = db.session.query(Record_Of_Items).filter_by(id=id).first()
+            if changed_image and allowed_file(changed_image.filename):
+                filename = secure_filename(changed_image.filename)
+                changed_image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            else:
+                filename = None
+            item.image = filename
+            db.session.commit()
+            return redirect('/marketplace')
+        else:
+            return render_template('changeimage.html', imageid = imageid)
+    else:
+        redirect('/login')
+>>>>>>> e4b746d77ff5a15018b54169826dbd4e20a43a2a
 
 @app.route('/', methods = ["POST", "GET"])
 def redirect_to_login():
@@ -373,6 +448,9 @@ def redirect_to_login():
         elif request.form['manipulate'] == 'Delete':
             id = request.form['itemid']
             return redirect(url_for('delete_item', id = id), code=307)
+        elif request.form['manipulate'] == 'Change Image':
+            id = request.form['itemid']
+            return redirect(url_for('change_image', imageid = id))
     else:
         return redirect('/login')
 
@@ -391,7 +469,7 @@ def loginpage():
                 else:
                     check2 = StdAcc.query.filter_by(name=username, pword = password).first()
                     if check2 == None:
-                        return "Please key in your username/password again."
+                        return render_template('login.html', feedback = 'Please key in the correct username/password.')
                     else:
                         session['student'] = username
                         cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
@@ -472,6 +550,8 @@ def shop_cat():
             elif request.form['navbar'] == 'Others':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
                 return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Home':
+                return redirect('/admin')
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
         else:
@@ -482,14 +562,20 @@ def shop_cat():
         return render_template('login.html')
 
 
-
+@app.route('/viewsubmittedcarts', methods = ['post', 'get'])
+def view_submitted_carts():
+    if 'teacher' in session:
+        local_account = session['teacher']
+        local_teacher = db.session.query(TrAcc).filter_by(name = local_account).first()
+        students = db.session.query(StdAcc).filter_by(assigned_teacher_id = local_teacher.id).all()
+        data = db.session.query(Temporary_Table).all()
+        return render_template('testviewstudent.html', students = students, data = data)
 
 @app.route('/tableteacher', methods = ["POST", 'GET'])
 def tableTeacher():
     if ("admin" in session):
         listOfTeachers = db.session.query(TrAcc).all()
         return render_template('tableteacher.html',Teachers = listOfTeachers)
-
 
     else:
         pass

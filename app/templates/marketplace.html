@@ -83,9 +83,11 @@
     <div class="container py-28">
         <div class="align-self-stretch grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-12">
             {% for item in items %}
+            {% if item.promo_price == '-' or item.promo_price == None %}
             <form action="/addtocart" , method="POST">
                 <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
-                    <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                    <div class="w-112 h-112 bg-green-500 rounded-5">
+                    </div>
                     <div class="vstack align-start mt-20 space-8">
                         <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
                         <div class="text-14 text-400 text-black">${{"$%.2f"|format(item.price)}} {{item.quantifier}}</div>
@@ -107,25 +109,17 @@
 
                 </div>
             </form>
-            {% endfor %}
-        </div>
-    </div>
-
-    <!--with promotion strikethrough-->
-
-    <div class="container py-28">
-        <div class="align-self-stretch grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-12">
-            {% for item in items %}
+            {% else %}
             <form action="/addtocart" , method="POST">
                 <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
-                    <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                    <div class="w-112 h-112 bg-green-500 rounded-5"><img src="static/{{item.image}}" width="112" height="112" /></div>
                     <div class="vstack align-start mt-20 space-8">
                         <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
                         <div class="hstack space-8">
                             <!--strikethrough promotional price-->
                             <strike><div class="text-14 text-400 text-black">${{"$%.2f"|format(item.price)}}</div></strike>
                             <!--promotional price here-->
-                            <div class="text-14 text-400 text-black">${{"$%.2f"|format(item.price)}} {{item.quantifier}}</div>
+                            <div class="text-14 text-400 text-black">${{"$%.2f"|format(item.promo_price)}} {{item.quantifier}}</div>
                             <div class="spacer"></div>
                         </div>
                         <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
@@ -146,12 +140,9 @@
 
                 </div>
             </form>
+            {% endif %}
             {% endfor %}
         </div>
-    </div>
-
-
-
     </div>
 </body>
 

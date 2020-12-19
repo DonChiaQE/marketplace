@@ -35,6 +35,8 @@ class Record_Of_Items(db.Model):
     cat = db.Column(db.String(200),default = '-')
     image = db.Column(db.String(200),default = '-')
     quantifier = db.Column(db.String(200),default=None)
+    promo_price = db.Column(db.Integer,default = '-')
+    
 
 class Temporary_Table(db.Model):
     id = db.Column(db.Integer,primary_key = True)
@@ -311,7 +313,6 @@ def submit_cart():
 def logout():
     if "admin" in session:
         session.pop('admin', None)
-        promotionalItems = []
     elif "teacher" in session:
         session.pop('teacher', None)
     elif "student" in session:
@@ -378,9 +379,6 @@ def redirect_to_login():
 @app.route('/login', methods=['POST', 'GET'])
 def loginpage():
     if request.method == "POST":
-        session.pop('admin', None)
-        session.pop('teacher', None)
-        session.pop('student', None)
         username = request.form['username']
         password = request.form['password']
         check = Admin.query.filter_by(name=username).first()
@@ -560,19 +558,51 @@ def promotion(category):
             cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
             return render_template('promotion.html',items = cat)
 
-promotionalItems = []
-
 @app.route('/promotionItems', methods=['POST', 'GET'])
-def add_promotion():
+def promotionItems():
     if request.method == 'POST':
+        if 'promo_items' not in session:
+            session['promo_items'] = []
         item = request.form.get('promotionItem')
-        promotionalItems.append(item)
+        item_list = session['promo_items']
+        if item not in item_list:
+            item_list.append(item)
+        session['promo_items'] = item_list
         cat = db.session.query(Record_Of_Items).filter_by(name = item).first()
         return redirect(url_for('promotion', category= cat.cat))
 
-@app.route('/promotionitems', methods=['POST', 'GET'])
-def viewpromotion():
-    return str(promotionalItems)
+
+
+
+@app.route('/addpromotion', methods=['POST', 'GET'])
+def addpromotion():
+    if 'admin' in session and 'promo_items' in session:
+        items = []
+        item_names = session['promo_items']
+        for name in item_names:
+            item = db.session.query(Record_Of_Items).filter_by(name = name).first()
+            items.append(item)
+
+        return render_template('addpromotion.html', items = items)
+    else:
+        return redirect(url_for('promotion', category = "Fresh Produce"))
+
+@app.route('/publishpromotion', methods=['POST', 'GET'])
+def publishpromotion():
+    if request.method == 'POST':
+        item_names = session['promo_items']
+        for name in item_names:
+            promo_price = request.form.get(name)
+            item = db.session.query(Record_Of_Items).filter_by(name = name).first()
+            item.promo_price = promo_price
+
+        db.session.commit()
+        return ("Successfully submitted")
+    else:
+        pass
+        
+
+   
     
 
 

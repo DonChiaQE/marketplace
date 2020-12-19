@@ -415,8 +415,8 @@ def teacher():
 
 #PAGES
 
-<<<<<<< HEAD
-=======
+       
+                               
 @app.route('/changeimage/<imageid>', methods=['POST', 'GET'])
 def change_image(imageid):
     if 'admin' in session:
@@ -436,7 +436,7 @@ def change_image(imageid):
             return render_template('changeimage.html', imageid = imageid)
     else:
         redirect('/login')
->>>>>>> e4b746d77ff5a15018b54169826dbd4e20a43a2a
+                   
 
 @app.route('/', methods = ["POST", "GET"])
 def redirect_to_login():

@@ -83,13 +83,19 @@
     <div class="container py-28">
         <div class="align-self-stretch grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-12">
             {% for item in items %}
+            {% if item.promo_price == '-' or item.promo_price == None %}
             <form action="/addtocart" , method="POST">
                 <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
+<<<<<<< HEAD
+                    <div class="w-112 h-112 bg-green-500 rounded-5">
+                    </div>
+=======
                     {% if item.image %}
                     <img src="{{ url_for('display_image', filename=item.image) }}">
                     {% else %}
                     <div class="w-112 h-112 bg-green-500 rounded-5"></div>
                     {% endif %}
+>>>>>>> e4b746d77ff5a15018b54169826dbd4e20a43a2a
                     <div class="vstack align-start mt-20 space-8">
                         <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
                         <div class="text-14 text-400 text-black">{{"$%.2f"|format(item.price)}} {{item.quantifier}}</div>
@@ -113,12 +119,40 @@
 
                 </div>
             </form>
+            {% else %}
+            <form action="/addtocart" , method="POST">
+                <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
+                    <div class="w-112 h-112 bg-green-500 rounded-5"><img src="static/{{item.image}}" width="112" height="112" /></div>
+                    <div class="vstack align-start mt-20 space-8">
+                        <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
+                        <div class="hstack space-8">
+                            <!--strikethrough promotional price-->
+                            <strike><div class="text-14 text-400 text-black">${{"$%.2f"|format(item.price)}}</div></strike>
+                            <!--promotional price here-->
+                            <div class="text-14 text-400 text-black">${{"$%.2f"|format(item.promo_price)}} {{item.quantifier}}</div>
+                            <div class="spacer"></div>
+                        </div>
+                        <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="vstack">
+                        <div class="hstack space-4 w-full">
+                            <div class="spacer"></div>
+                            <svg class="w-28 h-28" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                            <button class="text-underline addToCart" type="submit" name="Add2Cart" value="{{item.name}}">Add to Cart</button>
+                            <div class="spacer"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+            {% endif %}
             {% endfor %}
         </div>
-    </div>
-
-
-
     </div>
 </body>
 

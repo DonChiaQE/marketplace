@@ -23,11 +23,11 @@
         <form action="/promotion" method="POST">
             <div class="hidden md:unhidden">
                 <div class=" hstack">
-                    <input type="submit" name="navbar" value="Fresh Produce" class="bg-white m-18 text-underline pb-1" />
-                    <input type="submit" name="navbar" value="Dairy" class="bg-white m-18 text-underline pb-1" />
-                    <input type="submit" name="navbar" value="Meat" class="bg-white m-18 text-underline pb-1" />
-                    <input type="submit" name="navbar" value="Others" class="bg-white m-18 text-underline pb-1" />
-                    <input type="submit" name="navbar" value="Log Out" class="bg-white m-18 text-underline color-red-600 pb-1" />
+                    <a href="{{url_for('promotion', category='Fresh Produce')}}"  class="bg-white m-18 text-underline pb-1">Fresh Produce</a>
+                    <a href="{{url_for('promotion', category='Dairy')}}"  class="bg-white m-18 text-underline pb-1">Dairy</a>
+                    <a href="{{url_for('promotion', category='Meat')}}"  class="bg-white m-18 text-underline pb-1">Meat</a>
+                    <a href="{{url_for('promotion', category='Others')}}" class="bg-white m-18 text-underline pb-1">Others</a>
+                    <a href="{{url_for('logout')}}"  class="bg-white m-18 text-underline color-red-600 pb-1">Log Out</a>
                 </div>
             </div>
         </form>
@@ -54,7 +54,7 @@
 
 
         <div class="spacer"></div>
-        <a href="checkout">
+        <a href="{{url_for('addpromotion')}}">
             <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
         </a>
     </nav>
@@ -62,7 +62,7 @@
     <div class="container py-28">
         <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 md:gap-28 sm:p-8 md:grid-cols-4 my-18 " style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
             {% for item in items %}
-            <form action="/addtocart" , method="POST">
+            <form action="/promotionItems" , method="POST">
                 <div class="vstack h-320 bg-white rounded-3 shadow shadow-md p-28">
                     <div class="w-112 h-112 bg-green-500 rounded-5"></div>
                     <div class="vstack align-start mt-20 space-8 h-144">
@@ -72,7 +72,7 @@
                         <div class="spacer"></div>
                         <div class="hstack space-28 w-full">
                             <div class="spacer"></div>
-                            <button class="text-underline" type="submit" name="CreatePromotion" value="{{promotion}}">Create Promotion</button>
+                            <button class="text-underline" type="submit" name="promotionItem" value="{{item.name}}">Create Promotion</button>
                             <div class="spacer"></div>
                         </div>
                     </div>

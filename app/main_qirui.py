@@ -41,6 +41,8 @@ class Record_Of_Items(db.Model):
     cat = db.Column(db.String(200),default = '-')
     image = db.Column(db.String(200),default = '')
     quantifier = db.Column(db.String(200),default=None)
+    promo_price = db.Column(db.Integer,default = '-')
+    
 
 class Temporary_Table(db.Model):
     id = db.Column(db.Integer,primary_key = True)
@@ -364,7 +366,7 @@ def logout():
         session.pop('student', None)
 
     session.clear()
-    return render_template('login.html')
+    return redirect('/login')
 
 
 #MENU(TEACHER AND ADMIN)
@@ -379,7 +381,7 @@ def admin():
             elif request.form['nav'] == 'Edit Shopping Items':
                 return redirect('/marketplace')
             elif request.form['nav'] == 'Create Promotion':
-                return redirect('/promotion')
+                return redirect('/promotion/Fresh Produce')
             elif request.form['nav'] == 'Wipe DB':
                 pass
             elif request.form['nav'] == 'Reinitialise DB':
@@ -411,9 +413,10 @@ def teacher():
     else:
         return render_template('login.html')
 
-
 #PAGES
 
+<<<<<<< HEAD
+=======
 @app.route('/changeimage/<imageid>', methods=['POST', 'GET'])
 def change_image(imageid):
     if 'admin' in session:
@@ -433,6 +436,7 @@ def change_image(imageid):
             return render_template('changeimage.html', imageid = imageid)
     else:
         redirect('/login')
+>>>>>>> e4b746d77ff5a15018b54169826dbd4e20a43a2a
 
 @app.route('/', methods = ["POST", "GET"])
 def redirect_to_login():
@@ -453,9 +457,6 @@ def redirect_to_login():
 @app.route('/login', methods=['POST', 'GET'])
 def loginpage():
     if request.method == "POST":
-        session.pop('admin', None)
-        session.pop('teacher', None)
-        session.pop('student', None)
         username = request.form['username']
         password = request.form['password']
         check = Admin.query.filter_by(name=username).first()
@@ -621,27 +622,74 @@ def add_student():
         pass
 
 
-@app.route('/promotion', methods=['POST', 'GET'])
-def promotion():
+@app.route('/promotion/<category>', methods=['POST', 'GET'])
+def promotion(category):
     if 'admin' in session:
-        if request.method == 'POST':
-            if request.form['navbar'] == 'Fresh Produce':
+        if request.method == 'GET':
+            if category == 'Fresh Produce':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
                 return render_template('promotion.html',items = cat)
-            elif request.form['navbar'] == 'Dairy':
+            elif category == 'Dairy':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
                 return render_template('promotion.html',items = cat)
-            elif request.form['navbar'] == 'Meat':
+            elif category == 'Meat':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
                 return render_template('promotion.html',items = cat)
-            elif request.form['navbar'] == 'Others':
+            elif category == 'Others':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
                 return render_template('promotion.html',items = cat)
-            elif request.form['navbar'] == 'Log Out':
+            elif category == 'Log Out':
                 return redirect('/logout')
         else:
             cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
             return render_template('promotion.html',items = cat)
+
+@app.route('/promotionItems', methods=['POST', 'GET'])
+def promotionItems():
+    if request.method == 'POST':
+        if 'promo_items' not in session:
+            session['promo_items'] = []
+        item = request.form.get('promotionItem')
+        item_list = session['promo_items']
+        if item not in item_list:
+            item_list.append(item)
+        session['promo_items'] = item_list
+        cat = db.session.query(Record_Of_Items).filter_by(name = item).first()
+        return redirect(url_for('promotion', category= cat.cat))
+
+
+
+
+@app.route('/addpromotion', methods=['POST', 'GET'])
+def addpromotion():
+    if 'admin' in session and 'promo_items' in session:
+        items = []
+        item_names = session['promo_items']
+        for name in item_names:
+            item = db.session.query(Record_Of_Items).filter_by(name = name).first()
+            items.append(item)
+
+        return render_template('addpromotion.html', items = items)
+    else:
+        return redirect(url_for('promotion', category = "Fresh Produce"))
+
+@app.route('/publishpromotion', methods=['POST', 'GET'])
+def publishpromotion():
+    if request.method == 'POST':
+        item_names = session['promo_items']
+        for name in item_names:
+            promo_price = request.form.get(name)
+            item = db.session.query(Record_Of_Items).filter_by(name = name).first()
+            item.promo_price = promo_price
+
+        db.session.commit()
+        return ("Successfully submitted")
+    else:
+        pass
+        
+
+   
+    
 
 
 

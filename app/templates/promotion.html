@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    {% if addedToCart == True %}
+    {% if addedPromo == True %}
     <script>
         $(document).ready(function() {
             $('#message').fadeIn('slow', function() {
@@ -63,6 +63,12 @@
         </a>
     </nav>
 
+    <div id="message" class="fixed t-0" style="display: none;">
+        <div class="vstack px-24 h-64 noti-full bg-red-600">
+            <div class="">Added to Promotion List</div>
+        </div>
+    </div>
+
     <div class="container py-28">
         <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 md:gap-28 sm:p-8 md:grid-cols-4 my-18 " style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
             {% for item in items %}
@@ -76,7 +82,7 @@
                         <div class="spacer"></div>
                         <div class="hstack space-28 w-full">
                             <div class="spacer"></div>
-                            <button class="text-underline" type="submit" name="promotionItem" value="{{item.name}}">Create Promotion</button>
+                            <button class="text-underline" type="submit" name="promotionItem" value="{{item.id}}">Create Promotion</button>
                             <div class="spacer"></div>
                         </div>
                     </div>

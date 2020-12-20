@@ -387,6 +387,21 @@ def admin():
                 return redirect('/marketplace')
             elif request.form['nav'] == 'Create Promotion':
                 return redirect('/promotion/Fresh Produce')
+            elif request.form['nav'] == 'View Promotion':
+                displayItem = []
+                items = db.session.query(Record_Of_Items).all()
+                for item in items:
+                    if item.promo_price != '-' and item.promo_price != None:
+                        displayItem.append(item)
+                return render_template('viewpromotion.html', items = displayItem)
+
+            elif request.form['nav'] == 'Reset Promotion':
+                items = db.session.query(Record_Of_Items).all()
+                for item in items:
+                    item.promo_price = None
+                db.session.commit()
+                session['reset_promo'] = True
+                return redirect('/admin')
             elif request.form['nav'] == 'Wipe DB':
                 pass
             elif request.form['nav'] == 'Reinitialise DB':
@@ -394,7 +409,22 @@ def admin():
             elif request.form['nav'] == 'Log Out':
                 return redirect('/logout')
         else:
-            return render_template('admin.html')
+            
+            items = db.session.query(Record_Of_Items).all()
+            promoReset = False
+            msg = None
+            if 'published_promo' in session:
+                msg = 'PromoPub'
+                session.pop('published_promo', None)
+            elif 'reset_promo' in session:
+                msg = 'PromoRes'
+                session.pop('reset_promo', None)
+            for item in items:
+                if (item.promo_price != '-') and (item.promo_price != None):
+                    promoReset = True
+                    break
+            
+            return render_template('admin.html', promoReset = promoReset, msg = msg)
 
     else:
         return render_template('login.html')
@@ -420,16 +450,11 @@ def teacher():
 
 #PAGES
 
-<<<<<<< HEAD
-                               
-                               
-=======
 
 
 
 
 
->>>>>>> a0aafaac0dd47f4094e78f193b05e750e3f0880c
 @app.route('/changeimage/<imageid>', methods=['POST', 'GET'])
 def change_image(imageid):
     if 'admin' in session:
@@ -493,14 +518,14 @@ def loginpage():
                     return "Please key in your username/password again."
                 else:
                     session['teacher'] = username
-                    return render_template('teacher.html')
+                    return redirect('/teacher')
         else:
             check = Admin.query.filter_by(name=username, pword = password).first()
             if check == None:
                 return "Please key in your username/password again."
             else:
                 session['admin'] = username
-                return render_template('admin.html')
+                return redirect('/admin')
     else:
         return render_template('login.html')
 
@@ -639,18 +664,23 @@ def add_student():
 def promotion(category):
     if 'admin' in session:
         if request.method == 'GET':
+            addedPromo = False
+            if 'addedPromo' in session:
+                addedPromo = True
+                session.pop('addedPromo', None)
+    
             if category == 'Fresh Produce':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
-                return render_template('promotion.html',items = cat)
+                return render_template('promotion.html', items = cat, addedPromo = addedPromo)
             elif category == 'Dairy':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
-                return render_template('promotion.html',items = cat)
+                return render_template('promotion.html',items = cat, addedPromo = addedPromo)
             elif category == 'Meat':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
-                return render_template('promotion.html',items = cat)
+                return render_template('promotion.html',items = cat, addedPromo = addedPromo)
             elif category == 'Others':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
-                return render_template('promotion.html',items = cat)
+                return render_template('promotion.html',items = cat, addedPromo = addedPromo)
             elif category == 'Log Out':
                 return redirect('/logout')
         else:
@@ -667,7 +697,8 @@ def promotionItems():
         if item not in item_list:
             item_list.append(item)
         session['promo_items'] = item_list
-        cat = db.session.query(Record_Of_Items).filter_by(name = item).first()
+        session['addedPromo'] = True
+        cat = db.session.query(Record_Of_Items).filter_by(id = item).first()
         return redirect(url_for('promotion', category= cat.cat))
 
 
@@ -678,27 +709,35 @@ def addpromotion():
     if 'admin' in session and 'promo_items' in session:
         items = []
         item_names = session['promo_items']
-        for name in item_names:
-            item = db.session.query(Record_Of_Items).filter_by(name = name).first()
+        for idx in item_names:
+            item = db.session.query(Record_Of_Items).filter_by(id = idx).first()
             items.append(item)
 
         return render_template('addpromotion.html', items = items)
     else:
         return redirect(url_for('promotion', category = "Fresh Produce"))
 
+
+
+
 @app.route('/publishpromotion', methods=['POST', 'GET'])
 def publishpromotion():
     if request.method == 'POST':
         item_names = session['promo_items']
-        for name in item_names:
-            promo_price = request.form.get(name)
-            item = db.session.query(Record_Of_Items).filter_by(name = name).first()
+        for idx in item_names:
+            promo_price = request.form.get(idx)
+            item = db.session.query(Record_Of_Items).filter_by(id = idx).first()
             item.promo_price = promo_price
-
         db.session.commit()
-        return ("Successfully submitted")
+        flash('New Promotion')
+        session['published_promo'] = True
+        return redirect('/admin')
     else:
         pass
+
+
+
+
         
 
    

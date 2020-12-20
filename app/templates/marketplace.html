@@ -132,7 +132,9 @@
                             <div class="text-14 text-400 text-black">{{"$%.2f"|format(item.promo_price)}} {{item.quantifier}}</div>
                             <div class="spacer"></div>
                         </div>
+                        {% if (item.info != "") and (item.info != None) %}
                         <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
+                        {% endif %}
                         <div class="spacer"></div>
                     </div>
                     <div class="spacer"></div>
@@ -154,6 +156,23 @@
             {% endfor %}
         </div>
     </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class=flashes>
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+            <div id="message" class="fixed t-0" style="display: none;">
+                <div class="vstack px-64 h-64 noti-full bg-white-600">
+                    <div class="">Added to cart!</div>
+                </div>
+            </div>
+      
+      </div>
+    </div>
+  {% endif %}
+{% endwith %}
+  
 </body>
 
 </html>

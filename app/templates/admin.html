@@ -5,9 +5,40 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {% if msg == 'PromoPub' %}
+    <script>
+        $(document).ready(function() {
+            $('#msgPub').fadeIn('slow', function() {
+                $('#message').delay(2000).fadeOut();
+            });
+        });
+    </script>
+
+    {% elif msg == 'PromoRes' %}
+    <script>
+        $(document).ready(function() {
+            $('#msgRes').fadeIn('slow', function() {
+                $('#message').delay(2000).fadeOut();
+            });
+        });
+    </script>
+    {% endif %}
 </head>
 
 <body>
+    <div id="msgPub" class="fixed t-0" style="display: none;">
+        <div class="vstack px-24 h-64 noti-full bg-red-600">
+            <div class="">Promotion has been published</div>
+        </div>
+    </div>
+
+    <div id="msgRes" class="fixed t-0" style="display: none;">
+        <div class="vstack px-24 h-64 noti-full bg-red-600">
+            <div class="">Promotion has been reseted</div>
+        </div>
+    </div>
+
     <div class="container py-28">
         <div class="vstack screen">
             <div class="text-36">Admin Page</div>
@@ -15,7 +46,13 @@
                 <input type="submit" name='nav' value="Table of Student" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
                 <input type="submit" name='nav' value="Table of Teachers" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
                 <input type="submit" name='nav' value="Edit Shopping Items" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
+
+                {% if promoReset == True %}
+                <input type="submit" name='nav' value="View Promotion" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
+                <input type="submit" name='nav' value="Reset Promotion" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
+                {% else %}
                 <input type="submit" name='nav' value="Create Promotion" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
+                {% endif %}
                 <input type="submit" name='nav' value="Wipe DB" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
                 <input type="submit" name='nav' value="Reinitialise DB" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
                 <input type="submit" name='nav' value="Log Out" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">

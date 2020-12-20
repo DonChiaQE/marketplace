@@ -118,14 +118,18 @@
             {% else %}
             <form action="/addtocart" , method="POST">
                 <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
-                    <div class="w-112 h-112 bg-green-500 rounded-5"><img src="static/{{item.image}}" width="112" height="112" /></div>
+                    {% if item.image %}
+                    <img src="{{ url_for('display_image', filename=item.image) }}">
+                    {% else %}
+                    <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                    {% endif %}
                     <div class="vstack align-start mt-20 space-8">
                         <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
                         <div class="hstack space-8">
                             <!--strikethrough promotional price-->
-                            <strike><div class="text-14 text-400 text-black">${{"$%.2f"|format(item.price)}}</div></strike>
+                            <strike><div class="text-14 text-400 text-black">{{"$%.2f"|format(item.price)}}</div></strike>
                             <!--promotional price here-->
-                            <div class="text-14 text-400 text-black">${{"$%.2f"|format(item.promo_price)}} {{item.quantifier}}</div>
+                            <div class="text-14 text-400 text-black">{{"$%.2f"|format(item.promo_price)}} {{item.quantifier}}</div>
                             <div class="spacer"></div>
                         </div>
                         <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>

@@ -128,7 +128,7 @@ def createacc():
 
 @app.route('/display/<filename>', methods = ['POST', 'GET'])
 def display_image(filename):
-    return redirect(url_for('static', filename='uploads/' + filename), code=301)
+    return redirect(url_for('static', filename='images/' + filename), code=301)
 
 @app.route('/testadd', methods=['POST', 'GET'])
 def upload_image():
@@ -415,8 +415,11 @@ def teacher():
 
 #PAGES
 
-       
-                               
+
+
+
+
+
 @app.route('/changeimage/<imageid>', methods=['POST', 'GET'])
 def change_image(imageid):
     if 'admin' in session:

@@ -52,6 +52,7 @@ class Temporary_Table(db.Model):
     price = db.Column(db.Integer,default = '-')
     quantity = db.Column(db.Integer,default = 1)
     cat = db.Column(db.String(200),default = '-')
+    promo_price = db.Column(db.Integer,default = '-')
 
 class Submitted_Cart(db.Model):
     id = db.Column(db.Integer,primary_key = True)
@@ -231,7 +232,11 @@ def checkout():
         all_items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
         total = 0
         for item in all_items:
-            total += item.quantity * item.price
+            if item.promo_price == '-' or item.promo_price == None:
+                total += item.quantity * item.price
+            else:
+                total += item.quantity * item.promo_price
+
         return render_template('checkout.html',items = items, total = total)
     else:
         return render_template('login.html')
@@ -325,7 +330,7 @@ def add_to_cart():
             return render_template('marketplace.html',items = items, addedToCart = addedToCart)
         else:
             item = db.session.query(Record_Of_Items).filter_by(name = name).first()
-            add_to_cart_item = Temporary_Table(acc = local_account, name = name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
+            add_to_cart_item = Temporary_Table(acc = local_account, name = name, info = item.info, price = item.price, quantity = 1, cat = item.cat, promo_price = item.promo_price)
             db.session.add(add_to_cart_item)
             db.session.commit()
             cat = item.cat
@@ -415,7 +420,7 @@ def teacher():
 
 #PAGES
 
-       
+                               
                                
 @app.route('/changeimage/<imageid>', methods=['POST', 'GET'])
 def change_image(imageid):

@@ -4,7 +4,6 @@ from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required, UserMixin
 import os
-import urllib.request
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)

@@ -44,48 +44,11 @@
             <div class="text-36">Admin Page</div>
             <div class="container py-28">
                 <div class="vstack md:hstack md:space-28 h-auto">
-                    <div id="example-1">
-                        <div>
-                            <div class="vstack space-28 my-28">
-                                <div>
-                                    <div class="hstack space-5">
-                                        <form action="/generatecode" , method="POST">
-                                            <button type="submit" class="text-underline w-128 bg-white rounded-3 shadow shadow-md p-28" name="forest" value="clear">Clear</button>
-                                        <div class="hstack w-96 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{% for code in generated_codes %} {% if code.id ==1 %} {{code.code}} {% else %} {% endif %} {% endfor %}</div>
-                                            <button type="submit" class="text-underline w-128 bg-white rounded-3 shadow shadow-md p-28" name="forest" value="generate">Generate</button>
-                                            <input type="hidden" name="codeid" value="1">
-                                        </form>
-                                        <form action="/generatecode" , method="POST">
-                                            <button type="submit" class="text-underline w-128 bg-white rounded-3 shadow shadow-md p-28" name="forest" value="clear">Clear</button>
-                                        <div class="hstack w-96 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{% for code in generated_codes %} {% if code.id ==2 %} {{code.code}} {% else %} {% endif %} {% endfor %}</div>
-                                            <button type="submit" class="text-underline w-128 bg-white rounded-3 shadow shadow-md p-28" name="forest" value="generate">Generate</button>
-                                            <input type="hidden" name="codeid" value="2">
-                                        </form>
-                                        <form action="/generatecode" , method="POST">
-                                            <button type="submit" class="text-underline w-128 bg-white rounded-3 shadow shadow-md p-28" name="forest" value="clear">Clear</button>
-                                        <div class="hstack w-96 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{% for code in generated_codes %} {% if code.id ==3 %} {{code.code}} {% else %} {% endif %} {% endfor %}</div>
-                                            <button type="submit" class="text-underline w-128 bg-white rounded-3 shadow shadow-md p-28" name="forest" value="generate">Generate</button>
-                                            <input type="hidden" name="codeid" value="3">
-                                        </form>
-                                        <form action="/generatecode" , method="POST">
-                                            <button type="submit" class="text-underline w-128 bg-white rounded-3 shadow shadow-md p-28" name="forest" value="clear">Clear</button>
-                                        <div class="hstack w-96 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{% for code in generated_codes %} {% if code.id ==4 %} {{code.code}} {% else %} {% endif %} {% endfor %}</div>
-                                            <button type="submit" class="text-underline w-128 bg-white rounded-3 shadow shadow-md p-28" name="forest" value="generate">Generate</button>
-                                            <input type="hidden" name="codeid" value="4">
-                                        </form>
-                                        <form action="/generatecode" , method="POST">
-                                            <button type="submit" class="text-underline w-128 bg-white rounded-3 shadow shadow-md p-28" name="forest" value="clearall">Clear All</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
             <form class="vstack space-28 mt-28" action="/admin" method="POST">
                 <input type="submit" name='nav' value="Table of Student" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
                 <input type="submit" name='nav' value="Table of Teachers" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
                 <input type="submit" name='nav' value="Edit Shopping Items" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
-
+                <input type="submit" name='nav' value="Passcodes" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
                 {% if promoReset == True %}
                 <input type="submit" name='nav' value="View Promotion" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">
                 <input type="submit" name='nav' value="Reset Promotion" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28">

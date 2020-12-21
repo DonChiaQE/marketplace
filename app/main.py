@@ -6,6 +6,7 @@ from flask_login import LoginManager, current_user, login_user, logout_user, log
 import os
 import urllib.request
 from werkzeug.utils import secure_filename
+import random
 
 app = Flask(__name__)
 app.config['TESTING'] = True
@@ -63,6 +64,11 @@ class Submitted_Cart(db.Model):
     quantity = db.Column(db.Integer,default = 1)
     cat = db.Column(db.String(200),default = '-')
 
+class Generated_Codes(db.Model):
+    id = db.Column(db.Integer,primary_key = True)
+    code = db.Column(db.String(100), default = '')
+
+random_number_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z','0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -89,6 +95,37 @@ def update(id):
     else:
         return redirect('/login')
 
+@app.route('/generatecode', methods = ['POST', 'GET'])
+def generate_code():
+    if request.method == 'POST':
+        if request.form['forest'] == 'generate':
+            temp_code = []
+            for i in range(6):
+                random_character = random.choice(random_number_list)
+                temp_code.append(random_character)
+            generated_code =  str(''.join(temp_code))
+            codeid = request.form['codeid']
+            locate_code = db.session.query(Generated_Codes).filter_by(id = codeid).first()
+            locate_code.code = generated_code
+            db.session.commit()
+            all_codes = db.session.query(Generated_Codes).all()
+            return render_template('admin.html', generated_codes = all_codes)
+        elif request.form['forest'] == 'clearall':
+            all_codes = db.session.query(Generated_Codes).all()
+            for code in all_codes:
+                code.code = ''
+            db.session.commit()
+            return render_template('admin.html', generated_codes = all_codes)
+        else:
+            generated_code = ''
+            codeid = request.form['codeid']
+            locate_code = db.session.query(Generated_Codes).filter_by(id = codeid).first()
+            locate_code.code = ''
+            db.session.commit()
+            all_codes = db.session.query(Generated_Codes).all()
+            return render_template('admin.html', generated_codes = all_codes)
+    else:
+        return redirect('/login')
 
 @app.route('/newacc', methods=['POST', 'GET'])
 def createacc():
@@ -126,6 +163,23 @@ def createacc():
             else:
                 teachers = db.session.query(TrAcc)
                 return render_template('addstudents.html', feedback = "Student Account already exists.", teachers = teachers)
+
+@app.route('/wipedb', methods =['POST', 'GET'])
+def wipedb():
+    db.session.query(Submitted_Cart).delete()
+    db.session.commit()
+    return redirect('/admin')
+
+@app.route('/reinitialisedb', methods = ['POST', 'GET'])
+def reinitialisedb():
+    db.session.query(TrAcc).delete()
+    db.session.query(StdAcc).delete()
+    db.session.query(Generated_Codes).delete()
+    db.session.query(Record_Of_Items).delete()
+    db.session.query(Temporary_Table).delete()
+    db.session.query(Submitted_Cart).delete()
+    db.session.commit()
+    return redirect('/admin')
 
 @app.route('/display/<filename>', methods = ['POST', 'GET'])
 def display_image(filename):
@@ -385,6 +439,10 @@ def admin():
                 return redirect('/tableteacher')
             elif request.form['nav'] == 'Edit Shopping Items':
                 return redirect('/marketplace')
+            elif request.form['nav'] == 'Wipe DB':
+                return redirect('/wipedb')
+            elif request.form['nav'] == 'Reinitialise DB':
+                return redirect('/reinitialisedb')
             elif request.form['nav'] == 'Create Promotion':
                 return redirect('/promotion/Fresh Produce')
             elif request.form['nav'] == 'View Promotion':
@@ -424,7 +482,8 @@ def admin():
                     promoReset = True
                     break
             
-            return render_template('admin.html', promoReset = promoReset, msg = msg)
+            all_codes = db.session.query(Generated_Codes).all()
+            return render_template('admin.html', promoReset = promoReset, msg = msg, generated_codes = all_codes)
 
     else:
         return render_template('login.html')
@@ -492,6 +551,22 @@ def redirect_to_login():
     else:
         return redirect('/login')
 
+@app.route('/authenticate', methods=['POST', 'GET'])
+def authenticate():
+    if request.method == 'POST':
+        passcode = request.form['passcode']
+        check_passcode = db.session.query(Generated_Codes).filter_by(code = passcode).first()
+        total = 0
+        for i in passcode:
+            total +=1
+        if (check_passcode == None) or (total != 6):
+            return render_template('authentication.html', feedback = 'Please key in the correct code.')
+        else:
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            return render_template('marketplace.html',items = cat)
+    else:
+        redirect('/login')
+
 @app.route('/login', methods=['POST', 'GET'])
 def loginpage():
     if request.method == "POST":
@@ -510,8 +585,7 @@ def loginpage():
                         return render_template('login.html', feedback = 'Please key in the correct username/password.')
                     else:
                         session['student'] = username
-                        cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
-                        return render_template('marketplace.html',items = cat)
+                        return render_template('authentication.html')
             else:
                 check1 = TrAcc.query.filter_by(name=username, pword = password).first()
                 if check1 == None:

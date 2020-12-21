@@ -108,13 +108,13 @@ def generate_code():
             locate_code.code = generated_code
             db.session.commit()
             all_codes = db.session.query(Generated_Codes).all()
-            return render_template('admin.html', generated_codes = all_codes)
+            return render_template('passcodepage.html', generated_codes = all_codes)
         elif request.form['forest'] == 'clearall':
             all_codes = db.session.query(Generated_Codes).all()
             for code in all_codes:
                 code.code = ''
             db.session.commit()
-            return render_template('admin.html', generated_codes = all_codes)
+            return render_template('passcodepage.html', generated_codes = all_codes)
         else:
             generated_code = ''
             codeid = request.form['codeid']
@@ -122,7 +122,7 @@ def generate_code():
             locate_code.code = ''
             db.session.commit()
             all_codes = db.session.query(Generated_Codes).all()
-            return render_template('admin.html', generated_codes = all_codes)
+            return render_template('passcodepage.html', generated_codes = all_codes)
     else:
         return redirect('/login')
 
@@ -438,6 +438,8 @@ def admin():
                 return redirect('/tableteacher')
             elif request.form['nav'] == 'Edit Shopping Items':
                 return redirect('/marketplace')
+            elif request.form['nav'] == 'Passcodes':
+                return redirect('/passcodepage')
             elif request.form['nav'] == 'Wipe DB':
                 return redirect('/wipedb')
             elif request.form['nav'] == 'Reinitialise DB':
@@ -482,8 +484,7 @@ def admin():
                     promoReset = True
                     break
             
-            all_codes = db.session.query(Generated_Codes).all()
-            return render_template('admin.html', promoReset = promoReset, msg = msg, generated_codes = all_codes)
+            return render_template('admin.html', promoReset = promoReset, msg = msg)
 
     else:
         return render_template('login.html')
@@ -509,7 +510,10 @@ def teacher():
 
 #PAGES
 
-
+@app.route('/passcodepage', methods = ['POST', 'GET'])
+def passcodepage():
+    all_codes = db.session.query(Generated_Codes).all()
+    return render_template('passcodepage.html', generate_codes = all_codes)
 
 
 

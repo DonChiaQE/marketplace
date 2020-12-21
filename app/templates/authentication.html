@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
+</head>
+
+<body>
+    <div class="screen vstack">
+        <div class="text-48 color-black mb-28">Star Shop</div>
+        <form action="/authenticate" method="POST">
+            <div class="vstack bg-white shadow shadow-md rounded-24 p-28">
+                <div class="vstack space-24">
+                    <div class="vstack align-start space-5">
+                        <div class="text-gray-900 pb-8">Authentication Code</div>
+                        <input type="text" class="border border-black border-1 w-256 h-60 p-10 rounded-full" name="passcode" />
+                    </div>
+                </div>
+                <div class="zstack pt-36 w-256">
+                    <input type="submit" class="hstack w-full h-48 bg-white border-1 bg-gray-900 rounded-20 shadow shadow-xl button-form color-white" value="Enter Market" />
+                </div>
+                <div class="text-12 color-black mb-28">{{feedback}}</div>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
+
+<style>
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+    
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+    }
+    
+    .screen {
+        width: 100vw;
+        height: 100vh;
+    }
+    
+    .text-24 {
+        font-size: 24px;
+    }
+    
+    .button-form:hover {
+        text-decoration: underline;
+        cursor: pointer;
+        color: white;
+    }
+    
+    .text-24:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    
+    .button-form:active {
+        box-shadow: var(--shadow-sm);
+    }
+</style>

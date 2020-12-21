@@ -36,6 +36,7 @@
                 </div>
             </div>
         </form>
+    
         <form action="/marketplace" method="POST">
             <div class="unhidden md:hidden group">
                 <div class="zstack w-40 h-40">
@@ -63,7 +64,7 @@
             <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
         </a>
     </nav>
-
+    <div class="zstack">
     <div class="container py-28">
         <div class="vstack md:hstack md:space-28 h-auto">
             <div id="example-1">
@@ -156,6 +157,25 @@
             </div>
         </div>
     </div>
+
+    {% with messages=get_flashed_messages() %} {% if messages %}
+    <div class="flashes">
+        <div class="hstack">
+            <div class="vstack w-full h-320 m-28 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
+                <div class="hstack">
+                    <div class="text-48 bold">Promotion!</div>
+                    <div class="spacer"></div>
+                    <a href="{{url_for('checkout')}}">
+                    <svg class="w-28 h-28 color-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg></a>
+                </div>
+                <div class="text-28 regular">Wait, there's a new promotion! Come check out the exciting deals at the <a href="url_for('shop_cat')">marketplace!</a></div>
+            </div>
+        </div>
+    </div>
+    {% endif %} {% endwith %}
+</div>
 </body>
 
 </html>

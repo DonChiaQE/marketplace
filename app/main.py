@@ -393,7 +393,7 @@ def admin():
                     if item.promo_price != '-' and item.promo_price != None:
                         displayItem.append(item)
                 return render_template('viewpromotion.html', items = displayItem)
-
+           
             elif request.form['nav'] == 'Reset Promotion':
                 items = db.session.query(Record_Of_Items).all()
                 for item in items:
@@ -401,6 +401,7 @@ def admin():
                 db.session.commit()
                 session['reset_promo'] = True
                 return redirect('/admin')
+
             elif request.form['nav'] == 'Wipe DB':
                 pass
             elif request.form['nav'] == 'Reinitialise DB':
@@ -510,7 +511,7 @@ def loginpage():
                     else:
                         session['student'] = username
                         cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
-                        return render_template('marketplace.html',items = cat)
+                        return redirect('/marketplace')
             else:
                 check1 = TrAcc.query.filter_by(name=username, pword = password).first()
                 if check1 == None:
@@ -691,13 +692,13 @@ def promotionItems():
     if request.method == 'POST':
         if 'promo_items' not in session:
             session['promo_items'] = []
-        item = request.form.get('promotionItem')
-        item_list = session['promo_items']
-        if item not in item_list:
-            item_list.append(item)
-        session['promo_items'] = item_list
+        itemID = request.form.get('promotionItem')
+        itemID_list = session['promo_items']
+        if itemID not in itemID_list:
+            itemID_list.append(itemID)
+        session['promo_items'] = itemID_list
         session['addedPromo'] = True
-        cat = db.session.query(Record_Of_Items).filter_by(id = item).first()
+        cat = db.session.query(Record_Of_Items).filter_by(id = itemID).first()
         return redirect(url_for('promotion', category= cat.cat))
 
 
@@ -707,9 +708,9 @@ def promotionItems():
 def addpromotion():
     if 'admin' in session and 'promo_items' in session:
         items = []
-        item_names = session['promo_items']
-        for idx in item_names:
-            item = db.session.query(Record_Of_Items).filter_by(id = idx).first()
+        itemID_list = session['promo_items']
+        for itemID in itemID_list:
+            item = db.session.query(Record_Of_Items).filter_by(id = itemID).first()
             items.append(item)
 
         return render_template('addpromotion.html', items = items)
@@ -719,13 +720,15 @@ def addpromotion():
 
 
 
+
+
 @app.route('/publishpromotion', methods=['POST', 'GET'])
 def publishpromotion():
     if request.method == 'POST':
-        item_names = session['promo_items']
-        for idx in item_names:
-            promo_price = request.form.get(idx)
-            item = db.session.query(Record_Of_Items).filter_by(id = idx).first()
+        itemID_list = session['promo_items']
+        for idx in itemID_list:
+            promo_price = request.form.get(("item" + idx))
+            item = db.session.query(Record_Of_Items).filter_by(id = int(idx)).first()
             item.promo_price = promo_price
         db.session.commit()
         flash('New Promotion')
@@ -733,8 +736,6 @@ def publishpromotion():
         return redirect('/admin')
     else:
         pass
-
-
 
 
         

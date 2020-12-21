@@ -156,19 +156,22 @@
             {% endfor %}
         </div>
     </div>
-
+    
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <div class=flashes>
-        <!-- The Modal -->
-        <div id="myModal" class="modal">
-            <div id="message" class="fixed t-0" style="display: none;">
-                <div class="vstack px-64 h-64 noti-full bg-white-600">
-                    <div class="">Added to cart!</div>
+        <div class="h-screen hstack">
+            <div class="vstack w-320 shadow-lg shadow rounded-24 p-28 align-start space-16">
+                <div class="hstack">
+                    <div class="text-24 bold">Promotion!</div>
+                    <div class="spacer"></div>
+                    <svg class="w-18 h-18 color-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
                 </div>
+                <div class="text-16 regular">Pasar brand tomatoes are on sale right now! Prices have dropped from $2 to $1!</div>
             </div>
-      
-      </div>
+        </div>
     </div>
   {% endif %}
 {% endwith %}

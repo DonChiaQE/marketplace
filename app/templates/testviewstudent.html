@@ -25,6 +25,7 @@
                 <div class="vstack bg-gray-200 p-28 space-28 align-start rounded-28 mx-8">
                     <div class="text-28">{{student.name}}</div>
                     <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {% if data %}
                         {% for item in data if item.acc == student.name %}
                         <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
                             <div class="text-20">{{item.name}}</div>
@@ -34,6 +35,9 @@
                             <div class="spacer"></div>
                         </div>
                         {% endfor %}
+                        {% else %}
+                        <div class="text-20">Not Yet Submitted</div>
+                        {% endif %}
                         <div>{{text}}</div>
                     </div>
                 </div>

@@ -11,8 +11,8 @@ app = Flask(__name__)
 app.config['TESTING'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
-app.config['SECRET_KEY'] = "lkkajdghdadkglajkgajdisa931!.h" # a secret key for your app
-UPLOAD_FOLDER = 'static/uploads/'
+app.config['SECRET_KEY'] = "lkkajdghdadkglajkgajdisa931!.hl" # a secret key for your app
+UPLOAD_FOLDER = 'static/images1/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
@@ -165,9 +165,62 @@ def createacc():
 
 @app.route('/wipedb', methods =['POST', 'GET'])
 def wipedb():
-    db.session.query(Submitted_Cart).delete()
-    db.session.commit()
-    return redirect('/admin')
+    if 'admin' in session:
+        return render_template('wipedbpage.html')
+    else:
+        redirect('/login')
+
+@app.route('/removeallobjects', methods = ['POST', 'GET'])
+def removeallobjects():
+    if 'admin' in session:
+        if request.method == 'POST':
+            if request.form['page'] == 'wipedbpage':
+                if request.form['objectss'] == 'removeallstudents':
+                    db.session.query(StdAcc).delete()
+                    db.session.commit()
+                    return redirect('/wipedbpage')
+                elif request.form['objectss'] == 'removeallteachers':
+                    db.session.query(TrAcc).delete()
+                    db.session.commit()
+                    return redirect('/wipedbpage')
+                elif request.form['objectss'] == 'removeallitems':
+                    db.session.query(Record_Of_Items).delete()
+                    db.session.commit()
+                    return redirect('/wipedbpage')
+                elif request.form['objectss'] == 'removeallsubmitted':
+                    db.session.query(Submitted_Cart).delete()
+                    db.session.commit()
+                    return redirect('/wipedbpage')
+                elif request.form['objectss'] == 'removeallcurrent':
+                    db.session.query(Temporary_Table).delete()
+                    db.session.commit()
+                    return redirect('/wipedbpage')
+            else:
+                if request.form['objectss'] == 'removeallstudents':
+                    db.session.query(StdAcc).delete()
+                    db.session.commit()
+                    return redirect('/tablestudent')
+                elif request.form['objectss'] == 'removeallteachers':
+                    db.session.query(TrAcc).delete()
+                    db.session.commit()
+                    return redirect('/tableteacher')
+                elif request.form['objectss'] == 'removeallitems':
+                    db.session.query(Record_Of_Items).delete()
+                    db.session.commit()
+                    return redirect('/marketplace')
+                elif request.form['objectss'] == 'removeallsubmitted':
+                    db.session.query(Submitted_Cart).delete()
+                    db.session.commit()
+                    return redirect('/marketplace')
+                elif request.form['objectss'] == 'removeallcurrent':
+                    db.session.query(Temporary_Table).delete()
+                    db.session.commit()
+                    return redirect('/marketplace')
+        else:
+            return redirect('login')
+    else:
+        return redirect('/login')
+
 
 @app.route('/reinitialisedb', methods = ['POST', 'GET'])
 def reinitialisedb():
@@ -182,7 +235,7 @@ def reinitialisedb():
 
 @app.route('/display/<filename>', methods = ['POST', 'GET'])
 def display_image(filename):
-    return redirect(url_for('static', filename='images/' + filename), code=301)
+    return redirect(url_for('static', filename = 'images1/' + filename), code = 301)
 
 @app.route('/testadd', methods=['POST', 'GET'])
 def upload_image():
@@ -234,21 +287,6 @@ def additems():
             return render_template('additems.html', item = None)
     else:
         return redirect('/')
-
-@app.route('/viewstudentcart', methods=['POST', 'GET'])
-def viewstudentcart():
-    if ('teacher' in session) or ('admin' in session):
-        if request.method == 'GET':
-            accounts = db.session.query(Temporary_Table).filter_by
-            items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
-            all_items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
-            total = 0
-            usertype = "teacher"
-            for item in all_items:
-                total += item.quantity * item.price
-            return render_template('viewstudentcart.html', items = items, total = total, usertype = usertype)
-    else:
-        return redirect('/login')
 
 @app.route('/increase_quantity', methods = ["POST", "GET"])
 def increase_quantity():
@@ -515,7 +553,12 @@ def passcodepage():
     all_codes = db.session.query(Generated_Codes).all()
     return render_template('passcodepage.html', generate_codes = all_codes)
 
-
+@app.route('/wipedbpage', methods = ['POST', 'GET'])
+def wipedbpage():
+    if 'admin' in session:
+        return render_template('wipedbpage.html')
+    else:
+        redirect('/login')
 
 
 @app.route('/changeimage/<imageid>', methods=['POST', 'GET'])
@@ -569,7 +612,7 @@ def authenticate():
             cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
             return render_template('marketplace.html',items = cat)
     else:
-        redirect('/login')
+        return redirect('/login')
 
 @app.route('/login', methods=['POST', 'GET'])
 def loginpage():

@@ -364,7 +364,7 @@ def delete_item(id):
 @app.route('/deleteEntry' , methods = ['POST','GET'])
 def deleteEntry():
     if request.method == 'POST':
-        if request.form['todo'] == 'x':
+        if request.form['todo'] == 'Delete':
             acc_user = request.form['usertype']
             acc_name = request.form['username']
             acc_pword = request.form['password']
@@ -478,9 +478,9 @@ def admin():
                 return redirect('/marketplace')
             elif request.form['nav'] == 'Passcodes':
                 return redirect('/passcodepage')
-            elif request.form['nav'] == 'Wipe DB':
+            elif request.form['nav'] == 'Reset Options':
                 return redirect('/wipedb')
-            elif request.form['nav'] == 'Reinitialise DB':
+            elif request.form['nav'] == 'Clear Everything':
                 return redirect('/reinitialisedb')
             elif request.form['nav'] == 'Create Promotion':
                 return redirect('/promotion/Fresh Produce')

@@ -81,11 +81,9 @@
             {% for item in items %}
             <form action="/" , method="POST">
                 <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
-                    <input type="submit" name="manipulate" class="bg-transparent text-18 color-blue-500 text-underline" style="font-size: 18px;" value="Change Image">
-                    {% if item.image %}
-                        <br>
-                        <img src="{{ url_for('display_image', filename=item.image) }}">
-                    {% else %}
+                    <input type="submit" name="manipulate" class="bg-transparent text-18 color-blue-500 text-underline" style="font-size: 18px;" value="Change Image"> {% if item.image %}
+                    <br>
+                    <img src="{{ url_for('display_image', filename=item.image) }}"> {% else %}
                     <br>
                     <div class="w-112 h-112 bg-green-500 rounded-5"></div>
                     {% endif %}

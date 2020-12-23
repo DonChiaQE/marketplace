@@ -19,7 +19,7 @@
 
     </nav>
 
-    <div class="container py-28">
+    <div class="container py-28 vstack">
         <div class="hstack">
             <div class="vstack p-48 w-320 h-auto bg-white shadow shadow-md rounded-24">
                 <form action='/newacc' method='POST'>
@@ -40,7 +40,10 @@
             </div>
             </form>
         </div>
-    </div>{{feedback}}
+        <div class="py-28">
+            {{feedback}}
+        </div>
+    </div>
 </body>
 
 </html>

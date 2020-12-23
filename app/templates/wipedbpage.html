@@ -21,31 +21,27 @@
         <div class="vstack screen">
             <div class="text-36">Wipe Data</div>
             <div class="container py-28">
-                <div class="vstack md:hstack md:space-28 h-auto">
-                    <div id="example-1">
+                <div id="example-1">
+                    <div>
                         <div>
-                            <div class="vstack space-28 my-28">
-                                <div>
-                                    <div class="hstack space-5">
-                                        <form action="/removeallobjects" , method="POST">
-                                            <input type="hidden" name="page" value="wipedbpage">
-                                            <button type="submit" class="text-underline color-red-600 w-128 bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallstudents">Clear All Student Accounts</button>
-                                            
-                                            <button type="submit" class="text-underline color-red-600 w-128 bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallteachers">Clear All Teacher Accounts</button>
-                                            
-                                            <button type="submit" class="text-underline color-red-600 w-128 bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallitems">Clear All Existing Items</button>
-                                            
-                                            <button type="submit" class="text-underline color-red-600 w-128 bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallsubmitted">Clear All Submitted Carts</button>
-                                            
-                                            <button type="submit" class="text-underline color-red-600 w-128 bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallcurrent">Clear All Students' Current Cart</button>
-                                        </form>
-                                    </div>
-                                </div>
+                            <div class="hstack space-5">
+                                <form class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-28" action="/removeallobjects" , method="POST">
+                                    <input type="hidden" name="page" value="wipedbpage">
+                                    <button type="submit" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallstudents">Clear All Student Accounts</button>
+
+                                    <button type="submit" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallteachers">Clear All Teacher Accounts</button>
+
+                                    <button type="submit" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallitems">Clear All Existing Items</button>
+
+                                    <button type="submit" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallsubmitted">Clear All Submitted Carts</button>
+
+                                    <button type="submit" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallcurrent">Clear All Students' Current Cart</button>
+                                </form>
                             </div>
                         </div>
                     </div>
-        </div>
-    </div>
+                </div>
+            </div>
 
 </body>
 

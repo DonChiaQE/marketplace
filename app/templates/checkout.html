@@ -36,7 +36,7 @@
                 </div>
             </div>
         </form>
-    
+
         <form action="/marketplace" method="POST">
             <div class="unhidden md:hidden group">
                 <div class="zstack w-40 h-40">
@@ -65,117 +65,113 @@
         </a>
     </nav>
     <div class="zstack">
-    <div class="container py-28">
-        <div class="vstack md:hstack md:space-28 h-auto">
-            <div id="example-1">
-                {% for item in items %}
-                {% if item.promo_price == '-' or item.promo_price == None %}
-                <div>
-                    <div class="vstack space-28 my-28">
-                        <div class="hstack w-384 h-128 bg-white shadow shadow-md">
-                            <div class="spacer"></div>
-                            {% if item.image %}
-                            <img src="{{ url_for('display_image', filename=item.image) }}">
-                            {% else %}
-                            <div class="w-80 h-80 bg-gray-200 rounded-12"></div>
-                            {% endif %}
-                            <div class="spacer"></div>
-                            <div class="spacer"></div>
-                            <div class="vstack align-start h-80">
-                                <div class="text-blackm mb-2">{{item.name}}</div>
-                                <div class="text-gray-500 text-12 mt-2">{{"$%.2f"|format(item.price)}}</div>
+        <div class="container py-28">
+            <div class="vstack md:hstack md:space-28 h-auto">
+                <div class="w-full" id="example-1">
+                    {% for item in items %} {% if item.promo_price == '-' or item.promo_price == None %}
+                    <div>
+                        <div class="vstack space-28 my-28 w-full px-28">
+                            <div class="hstack w-full h-128 bg-white shadow shadow-md">
                                 <div class="spacer"></div>
-                                <div class="hstack space-5">
-                                    <form action="/decrease_quantity" , method="POST">
-                                        <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item.name}}">-</button>
-                                    </form>
-                                    <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item.quantity}}</div>
-                                    <form action="/increase_quantity" , method="POST">
-                                        <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item.name}}">+</button>
-                                    </form>
+                                {% if item.image %}
+                                <img src="{{ url_for('display_image', filename=item.image) }}"> {% else %}
+                                <div class="w-80 h-80 bg-gray-200 rounded-12"></div>
+                                {% endif %}
+                                <div class="spacer"></div>
+                                <div class="spacer"></div>
+                                <div class="vstack align-start h-80">
+                                    <div class="color-black mb-2 w-144 ellipsis text-14">{{item.name}}</div>
+                                    <div class="color-gray-500 text-12 mt-2">{{"$%.2f"|format(item.price)}}</div>
+                                    <div class="spacer"></div>
+                                    <div class="hstack space-5">
+                                        <form action="/decrease_quantity" , method="POST">
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item.name}}">-</button>
+                                        </form>
+                                        <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item.quantity}}</div>
+                                        <form action="/increase_quantity" , method="POST">
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item.name}}">+</button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="spacer"></div>
-                            <div class="spacer"></div>
-                            <div class="vstack h-80">
                                 <div class="spacer"></div>
-                                <div class="text-black">{{item.quantity * item.price}}</div>
+                                <div class="spacer"></div>
+                                <div class="vstack h-80">
+                                    <div class="spacer"></div>
+                                    <div class="text-black">{{item.quantity * item.price}}</div>
+                                </div>
+                                <div class="spacer"></div>
                             </div>
-                            <div class="spacer"></div>
                         </div>
                     </div>
-                </div>
-                {% else %}
-                <div>
-                    <div class="vstack space-28 my-28">
-                        <div class="hstack w-384 h-128 bg-white shadow shadow-md">
-                            <div class="spacer"></div>
-                            {% if item.image %}
-                            <img src="{{ url_for('display_image', filename=item.image) }}">
-                            {% else %}
-                            <div class="w-80 h-80 bg-gray-200 rounded-12"></div>
-                            {% endif %}
-                            <div class="spacer"></div>
-                            <div class="spacer"></div>
-                            <div class="vstack align-start h-80">
-                                <div class="text-blackm mb-2">{{item.name}}</div>
-                                <div class="text-14 text-400 text-black"><strike>{{"$%.2f"|format(item.price)}}</strike> {{"$%.2f"|format(item.promo_price)}}</div>
+                    {% else %}
+                    <div>
+                        <div class="vstack space-28 my-28">
+                            <div class="hstack w-384 h-128 bg-white shadow shadow-md">
                                 <div class="spacer"></div>
-                                <div class="hstack space-5">
-                                    <form action="/decrease_quantity" , method="POST">
-                                        <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item.name}}">-</button>
-                                    </form>
-                                    <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item.quantity}}</div>
-                                    <form action="/increase_quantity" , method="POST">
-                                        <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item.name}}">+</button>
-                                    </form>
+                                {% if item.image %}
+                                <img src="{{ url_for('display_image', filename=item.image) }}"> {% else %}
+                                <div class="w-80 h-80 bg-gray-200 rounded-12"></div>
+                                {% endif %}
+                                <div class="spacer"></div>
+                                <div class="spacer"></div>
+                                <div class="vstack align-start h-80">
+                                    <div class="text-blackm mb-2">{{item.name}}</div>
+                                    <div class="text-14 text-400 text-black"><strike>{{"$%.2f"|format(item.price)}}</strike> {{"$%.2f"|format(item.promo_price)}}</div>
+                                    <div class="spacer"></div>
+                                    <div class="hstack space-5">
+                                        <form action="/decrease_quantity" , method="POST">
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item.name}}">-</button>
+                                        </form>
+                                        <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item.quantity}}</div>
+                                        <form action="/increase_quantity" , method="POST">
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item.name}}">+</button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="spacer"></div>
-                            <div class="spacer"></div>
-                            <div class="vstack h-80">
                                 <div class="spacer"></div>
-                                <div class="text-black">${{item.quantity * item.promo_price}}</div>
+                                <div class="spacer"></div>
+                                <div class="vstack h-80">
+                                    <div class="spacer"></div>
+                                    <div class="text-black">${{item.quantity * item.promo_price}}</div>
+                                </div>
+                                <div class="spacer"></div>
                             </div>
-                            <div class="spacer"></div>
                         </div>
                     </div>
-                </div>
-                {% endif %}
-                {% endfor %}
+                    {% endif %} {% endfor %}
 
-            </div>
-            <div class=" space-28 my-28 h-full bg-green-900">
-                <form action="/submitcart" method="POST">
-                    <button class="hstack w-384 h-64 bg-white shadow shadow-xl px-48 buttons">
+                </div>
+                <div class=" space-28 my-28 h-full bg-green-900">
+                    <form action="/submitcart" method="POST">
+                        <button class="hstack w-384 h-64 bg-white shadow shadow-xl px-48 buttons">
                         <div class="">Checkout</div>
                         <div class="spacer"></div>
                         <div class=""><b>${{total}}</b></div>
                     </button>
-                </form>
-                <div class="spacer"></div>
+                    </form>
+                    <div class="spacer"></div>
+                </div>
             </div>
         </div>
-    </div>
 
-    {% with messages=get_flashed_messages() %} {% if messages %}
-    <div class="flashes">
-        <div class="hstack">
-            <div class="vstack w-full h-320 m-28 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
-                <div class="hstack">
-                    <div class="text-48 bold">Promotion!</div>
-                    <div class="spacer"></div>
-                    <a href="{{url_for('checkout')}}">
-                    <svg class="w-28 h-28 color-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        {% with messages=get_flashed_messages() %} {% if messages %}
+        <div class="flashes">
+            <div class="hstack">
+                <div class="vstack w-full h-320 m-28 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
+                    <div class="hstack">
+                        <div class="text-48 bold">Promotion!</div>
+                        <div class="spacer"></div>
+                        <a href="{{url_for('checkout')}}">
+                            <svg class="w-28 h-28 color-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg></a>
+                    </div>
+                    <div class="text-28 regular">Wait, there's a new promotion! Come check out the exciting deals at the <a href="url_for('shop_cat')">marketplace!</a></div>
                 </div>
-                <div class="text-28 regular">Wait, there's a new promotion! Come check out the exciting deals at the <a href="url_for('shop_cat')">marketplace!</a></div>
             </div>
         </div>
+        {% endif %} {% endwith %}
     </div>
-    {% endif %} {% endwith %}
-</div>
 </body>
 
 </html>
@@ -216,6 +212,12 @@
         text-decoration: underline;
         display: inline-block;
         cursor: pointer;
+    }
+    
+    .ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
 

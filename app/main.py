@@ -280,11 +280,11 @@ def additems():
                 new_item = Record_Of_Items(name = new_item_name, price = new_item_price, info = new_item_info, cat = new_item_cat, quantifier = new_item_quantifier, image = filename)
                 db.session.add(new_item)
                 db.session.commit()
-                return redirect('/marketplace')
+                return render_template('additems.html', item = None, feedback = "Item successfully added!")
             else:
-                return "Item already exists!"
+                return render_template('additems.html', item = None, feedback = "Item already exists!")
         else:
-            return render_template('additems.html', item = None)
+            return render_template('additems.html', item = None, feedback = '')
     else:
         return redirect('/')
 

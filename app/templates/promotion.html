@@ -33,7 +33,7 @@
 
             </div>
         </div>
-        <form action="/marketplace" method="POST">
+        <form action="/promotion" method="POST">
             <div class="unhidden md:hidden group">
                 <div class="zstack w-40 h-40">
                     <div class="group vstack space-5">
@@ -42,13 +42,13 @@
                         <div class="h-2 w-36 bg-black rounded-full"></div>
                     </div>
                     <div class="hidden group-touch:unhidden place-bl transform translate-y-100">
-                        <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
-                            <input type="submit" name="navbar" value="Home" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Fresh Produce" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Meat" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Others" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600" />
+                        <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg" style="background-color: var(--bg-color);">
+                            <a href="{{url_for('admin')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Home</a>
+                            <a href="{{url_for('promotion', category='Fresh Produce')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Fresh Produce</a>
+                            <a href="{{url_for('promotion', category='Dairy')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Dairy</a>
+                            <a href="{{url_for('promotion', category='Meat')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Meat</a>
+                            <a href="{{url_for('promotion', category='Others')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Others</a>
+                            <a href="{{url_for('logout')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600">Log Out</a>
                         </div>
                     </div>
                 </div>

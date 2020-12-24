@@ -67,7 +67,7 @@
         </div>
 
         <div class="container py-28" style="z-index: 1;">
-            <div class="align-self-stretch grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-12">
+            <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-12">
                 {% for item in items %} {% if item.promo_price == '-' or item.promo_price == None %}
                 <form action="/addtocart" , method="POST">
                     <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">

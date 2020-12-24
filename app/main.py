@@ -391,7 +391,7 @@ def deleteEntry():
                     return redirect('/tablestudent')
                 except:
                     return 'No such User'
-        elif request.form['todo'] == 'viewstudentcart':
+        elif request.form['todo'] == 'View Current Cart':
             username = request.form['username']
             items = db.session.query(Temporary_Table).filter_by(acc = username)
             item_test = db.session.query(Temporary_Table).filter_by(acc = username).first()
@@ -400,7 +400,6 @@ def deleteEntry():
                 text = "Empty Cart"
             else:
                 text = ""
-            
             if 'admin' in session:
                 return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'admin')
             elif 'teacher' in session:
@@ -441,7 +440,7 @@ def submit_cart():
         check_for_existing_account = db.session.query(Submitted_Cart).filter_by(acc = local_account).first()
         check_for_existing_items = db.session.query(Temporary_Table).filter_by(acc = local_account).first()
         if check_for_existing_account:
-            return redirect('/checkout')
+            return render_template('checkout.html', items = items, feedback = "You have already submitted once.", total = 0)
         elif check_for_existing_items == None:
             return render_template('checkout.html', feedback = "There are currently no items in the cart.", total = 0)
         else:
@@ -449,10 +448,21 @@ def submit_cart():
                 new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
                 db.session.add(new_stuff)
                 db.session.commit()
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
-            return render_template('marketplace.html',items = cat)
+            db.session.query(Temporary_Table).filter_by(acc = local_account).delete()
+            db.session.commit()
+            return render_template('success.html')
     else:
         return redirect('/checkout')
+
+@app.route('/success', methods = ['POST', 'GET'])
+def success():
+    if request.method == 'POST':
+        if request.form['todo'] == 'marketplace':
+            return redirect('/marketplace')
+        elif request.form['todo'] == 'logout':
+            return redirect('/logout')
+    else:
+        return redirect('/login')
 
 @app.route('/logout', methods = ['POST', 'GET'])
 def logout():
@@ -736,12 +746,19 @@ def view_submitted_carts():
         local_account = session['teacher']
         local_teacher = db.session.query(TrAcc).filter_by(name = local_account).first()
         students = db.session.query(StdAcc).filter_by(assigned_teacher_id = local_teacher.id).all()
-        data = db.session.query(Temporary_Table).all()
+        data = db.session.query(Submitted_Cart).all()
         existing_students = []
         for row in data:
             existing_students.append(row.acc)
         set_existing_students = set(existing_students)
-        return render_template('testviewstudent.html', students = students, data = data, set_existing_students = set_existing_students)
+        all_total_amounts = []
+        for student in students:
+            student_items = db.session.query(Submitted_Cart).filter_by(acc = student.name)
+            total_price = 0
+            for item in student_items:
+                total_price += item.price * item.quantity
+            all_total_amounts.append(total_price)
+        return render_template('testviewstudent.html', students = students, data = data, set_existing_students = set_existing_students, all_total_amounts = all_total_amounts)
 
 @app.route('/tableteacher', methods = ["POST", 'GET'])
 def tableTeacher():

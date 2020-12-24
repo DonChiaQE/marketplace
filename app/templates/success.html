@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container py-28">
+        <div class="vstack screen">
+            <div class="text-36">Successfully Submitted!</div>
+            <div class="container py-28">
+                <div id="example-1">
+                    <div>
+                        <div>
+                            <div class="hstack space-5">
+                                <form class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-28" action="/success" , method="POST">
+                                    <input type="hidden" name="page" value="wipedbpage">
+                                    <button type="submit" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="todo" value="marketplace">Back to Market</button>
+                                    <button type="submit" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="todo" value="logout">Log Out</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+</body>
+
+<style>
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+        cursor: pointer;
+    }
+</style>
+
+</html>

@@ -635,7 +635,6 @@ def loginpage():
         session.pop('admin', None)
         session.pop('teacher', None)
         session.pop('student', None)
-        session.clear()
         username = request.form['username']
         password = request.form['password']
         check = Admin.query.filter_by(name=username).first()

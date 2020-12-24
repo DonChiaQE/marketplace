@@ -33,25 +33,27 @@
 
             </div>
         </div>
-
-        <div class="unhidden md:hidden group">
-            <div class="zstack w-40 h-40">
-                <div class="group vstack space-5">
-                    <div class="h-2 w-36 bg-black rounded-full"></div>
-                    <div class="h-2 w-36 bg-black rounded-full"></div>
-                    <div class="h-2 w-36 bg-black rounded-full"></div>
-                </div>
-                <div class="hidden group-touch:unhidden place-bl transform translate-y-100">
-                    <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
-                        <input type="submit" name="navbar" value="Fresh Produce" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                        <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                        <input type="submit" name="navbar" value="Meat" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                        <input type="submit" name="navbar" value="Others" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                        <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600" />
+        <form action="/marketplace" method="POST">
+            <div class="unhidden md:hidden group">
+                <div class="zstack w-40 h-40">
+                    <div class="group vstack space-5">
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                    </div>
+                    <div class="hidden group-touch:unhidden place-bl transform translate-y-100">
+                        <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
+                            <input type="submit" name="navbar" value="Home" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Fresh Produce" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Meat" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Others" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600" />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
 
 
         <div class="spacer"></div>
@@ -67,7 +69,7 @@
     </div>
 
     <div class="container py-28">
-        <div class="align-self-stretch grid grid-cols-2 sm:grid-cols-3 gap-28 md:grid-cols-4 my-18 ">
+        <div class="align-self-stretch grid grid-cols-2 sm:grid-cols-3 gap-28 md:grid-cols-4 my-18 px-28">
             {% for item in items %}
             <form class="w-full" action="/promotionItems" , method="POST">
                 <div class="vstack bg-white rounded-3 shadow shadow-md w-full p-28">

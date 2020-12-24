@@ -31,7 +31,8 @@
                         <input type="hidden" name="usertype" value="StudentUser" />
                         <input type="text" name="username" placeholder="Team Name" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
                         <input type="text" name="password" placeholder="Password" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
-                        <select name='Teacher' id='Teacher'>
+                        <select name='Teacher' id='Teacher' required>
+                            <option value="" selected disabled hidden>Assigned To</option>
                             {% for teacher in teachers %}
                             <option value="{{teacher.name}}">{{teacher.name}}</option>
                             {% endfor %}

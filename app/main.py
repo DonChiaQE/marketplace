@@ -40,7 +40,7 @@ class Record_Of_Items(db.Model):
     price = db.Column(db.Integer,default = '-')
     cat = db.Column(db.String(200),default = '-')
     image = db.Column(db.String(200),default = '')
-    quantifier = db.Column(db.String(200),default=None)
+    quantifier = db.Column(db.String(200),default='')
     promo_price = db.Column(db.Integer,default = '-')
     
 
@@ -226,7 +226,9 @@ def removeallobjects():
 def reinitialisedb():
     db.session.query(TrAcc).delete()
     db.session.query(StdAcc).delete()
-    db.session.query(Generated_Codes).delete()
+    all_codes = db.session.query(Generated_Codes).all()
+    for code in all_codes:
+        code.code = ''
     db.session.query(Record_Of_Items).delete()
     db.session.query(Temporary_Table).delete()
     db.session.query(Submitted_Cart).delete()
@@ -441,7 +443,7 @@ def submit_cart():
         if check_for_existing_account:
             return redirect('/checkout')
         elif check_for_existing_items == None:
-            return "There are currently no items in the cart."
+            return render_template('checkout.html', feedback = "There are currently no items in the cart.", total = 0)
         else:
             for item in items:
                 new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
@@ -470,7 +472,7 @@ def logout():
 def admin():
     if 'admin' in session:
         if request.method == 'POST':
-            if request.form['nav'] == 'Table of Student':
+            if request.form['nav'] == 'Table of Teams':
                 return redirect('/tablestudent')
             elif request.form['nav'] == 'Table of Teachers':
                 return redirect('/tableteacher')
@@ -551,14 +553,14 @@ def teacher():
 @app.route('/passcodepage', methods = ['POST', 'GET'])
 def passcodepage():
     all_codes = db.session.query(Generated_Codes).all()
-    return render_template('passcodepage.html', generate_codes = all_codes)
+    return render_template('passcodepage.html', generated_codes = all_codes)
 
 @app.route('/wipedbpage', methods = ['POST', 'GET'])
 def wipedbpage():
     if 'admin' in session:
         return render_template('wipedbpage.html')
     else:
-        redirect('/login')
+        return redirect('/login')
 
 
 @app.route('/changeimage/<imageid>', methods=['POST', 'GET'])
@@ -579,7 +581,7 @@ def change_image(imageid):
         else:
             return render_template('changeimage.html', imageid = imageid)
     else:
-        redirect('/login')
+        return redirect('/login')
                    
 
 @app.route('/', methods = ["POST", "GET"])
@@ -617,6 +619,10 @@ def authenticate():
 @app.route('/login', methods=['POST', 'GET'])
 def loginpage():
     if request.method == "POST":
+        session.pop('admin', None)
+        session.pop('teacher', None)
+        session.pop('student', None)
+        session.clear()
         username = request.form['username']
         password = request.form['password']
         check = Admin.query.filter_by(name=username).first()
@@ -625,7 +631,7 @@ def loginpage():
             if check1 == None:
                 check2 = StdAcc.query.filter_by(name=username).first()
                 if check2 == None:
-                    return "No such account exists in records."
+                    return render_template('login.html', feedback = "No such account exists in records.")
                 else:
                     check2 = StdAcc.query.filter_by(name=username, pword = password).first()
                     if check2 == None:
@@ -636,14 +642,14 @@ def loginpage():
             else:
                 check1 = TrAcc.query.filter_by(name=username, pword = password).first()
                 if check1 == None:
-                    return "Please key in your username/password again."
+                    return render_template('login.html', feedback = 'Please key in the correct username/password.')
                 else:
                     session['teacher'] = username
                     return redirect('/teacher')
         else:
             check = Admin.query.filter_by(name=username, pword = password).first()
             if check == None:
-                return "Please key in your username/password again."
+                return render_template('login.html', feedback = 'Please key in the correct username/password.')
             else:
                 session['admin'] = username
                 return redirect('/admin')
@@ -728,7 +734,11 @@ def view_submitted_carts():
         local_teacher = db.session.query(TrAcc).filter_by(name = local_account).first()
         students = db.session.query(StdAcc).filter_by(assigned_teacher_id = local_teacher.id).all()
         data = db.session.query(Temporary_Table).all()
-        return render_template('testviewstudent.html', students = students, data = data)
+        existing_students = []
+        for row in data:
+            existing_students.append(row.acc)
+        set_existing_students = set(existing_students)
+        return render_template('testviewstudent.html', students = students, data = data, set_existing_students = set_existing_students)
 
 @app.route('/tableteacher', methods = ["POST", 'GET'])
 def tableTeacher():

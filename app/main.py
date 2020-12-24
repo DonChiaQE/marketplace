@@ -552,8 +552,11 @@ def teacher():
 
 @app.route('/passcodepage', methods = ['POST', 'GET'])
 def passcodepage():
-    all_codes = db.session.query(Generated_Codes).all()
-    return render_template('passcodepage.html', generated_codes = all_codes)
+    if 'admin' in session:
+        all_codes = db.session.query(Generated_Codes).all()
+        return render_template('passcodepage.html', generated_codes = all_codes)
+    else:
+        return redirect('/')
 
 @app.route('/wipedbpage', methods = ['POST', 'GET'])
 def wipedbpage():

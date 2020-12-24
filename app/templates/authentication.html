@@ -10,15 +10,15 @@
 <body>
     <div class="screen vstack">
         <div class="text-48 color-black mb-28 black">Star Shop</div>
-        <form action="/authenticate" method="POST">
-            <div class="vstack bg-white shadow shadow-md rounded-24 p-28 px-16 md:px-28">
+        <form class="w-full px-28 md:vstack" action="/authenticate" method="POST">
+            <div class="vstack bg-white shadow shadow-md rounded-24 w-full md:w-320 px-28 pt-28">
                 <div class="vstack space-24">
                     <div class="vstack align-start space-5">
                         <div class="text-gray-900 pb-8">Authentication Code</div>
-                        <input type="text" class="border border-black border-1 w-256 h-60 p-10 rounded-full" name="passcode" />
+                        <input type="text" class="border border-black border-1 w-full h-60 p-10 rounded-full" name="passcode" />
                     </div>
                 </div>
-                <div class="zstack pt-36 w-256">
+                <div class="vstack pt-36 w-full md:w-256">
                     <input type="submit" class="hstack w-full h-48 bg-white border-1 bg-gray-900 rounded-20 shadow shadow-xl button-form color-white" value="Enter Market" />
                 </div>
                 <div class="text-12 color-black mt-28">{{feedback}}</div>

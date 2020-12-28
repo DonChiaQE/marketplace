@@ -158,8 +158,7 @@
         </div>
     </div>
 
-    {% with messages=get_flashed_messages() %} {% if messages %}
-    <div class="flashes">
+    <div id="flashes">
         <div class="hstack">
             <div class="vstack w-full h-320 m-28 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
                 <div class="hstack">
@@ -174,8 +173,29 @@
             </div>
         </div>
     </div>
-    {% endif %} {% endwith %}
 </div>
+
+<script>
+
+function check_promo(){
+    $.ajax({
+        url: '/promoNoti',
+        type: 'POST',
+        success: function(response){
+            if (response == True) {
+                $('#flashes').hide();
+            }
+        alert(response);
+    }
+ });
+}
+
+setInterval(check_promo, 5000);
+
+
+
+</script>
+
 </body>
 
 </html>

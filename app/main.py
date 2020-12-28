@@ -6,6 +6,7 @@ from flask_login import LoginManager, current_user, login_user, logout_user, log
 import os
 from werkzeug.utils import secure_filename
 import random
+import json
 
 app = Flask(__name__)
 app.config['TESTING'] = True
@@ -815,6 +816,13 @@ def publishpromotion():
     else:
         pass
 
+@app.route('/promoNoti', methods=['POST', 'GET'])
+def promoNoti():
+    items = db.session.query(Record_Of_Items).filter(Record_Of_Items.promo_price.isnot(None)).count()
+    if items > 0:
+        promo = True
+        return jsonify({ 'promo': promo})
+    
 
         
 

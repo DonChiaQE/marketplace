@@ -18,7 +18,7 @@
 
     </nav>
 
-    <div class="container py-28">
+    <div class="container py-28 vstack">
         <div class="hstack">
             <form action="/newacc" , method="POST">
                 <div class="vstack p-48 h-auto bg-white shadow shadow-md rounded-24">
@@ -31,20 +31,24 @@
                         <input type="hidden" name="usertype" value="StudentUser" />
                         <input type="text" name="username" placeholder="Team Name" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
                         <input type="text" name="password" placeholder="Password" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
-                        <select name='Teacher' id='Teacher'>
+                        <select name='Teacher' id='Teacher' required>
+                            <option value="" selected disabled hidden>Assigned To</option>
                             {% for teacher in teachers %}
                             <option value="{{teacher.name}}">{{teacher.name}}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="zstack pt-36 w-256">
-                        <input type="submit" class="hstack w-full h-48 bg-white border-1 bg-gray-900 rounded-20 shadow shadow-xl button-form color-white" value="Add" />
+                        <input type="submit" class="text-underline hstack w-full h-48 bg-white border-1 bg-gray-900 rounded-20 shadow shadow-xl button-form color-white" value="Add" />
                     </div>
                 </div>
             </form>
 
         </div>
-    </div>{{feedback}}
+        <div class="py-28">
+            {{feedback}}
+        </div>
+    </div>
 </body>
 
 </html>
@@ -68,5 +72,6 @@
     .text-underline:hover {
         text-decoration: underline;
         display: inline-block;
+        cursor: pointer;
     }
 </style>

@@ -12,8 +12,8 @@ app = Flask(__name__)
 app.config['TESTING'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
-app.config['SECRET_KEY'] = "lkkajdghdadkglajkgajdisa931!.h" # a secret key for your app
-UPLOAD_FOLDER = 'static/uploads/'
+app.config['SECRET_KEY'] = "lkkajdghdadkglajkgajdisa931!.hl" # a secret key for your app
+UPLOAD_FOLDER = 'static/images1/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
@@ -41,7 +41,7 @@ class Record_Of_Items(db.Model):
     price = db.Column(db.Integer,default = '-')
     cat = db.Column(db.String(200),default = '-')
     image = db.Column(db.String(200),default = '')
-    quantifier = db.Column(db.String(200),default=None)
+    quantifier = db.Column(db.String(200),default='')
     promo_price = db.Column(db.Integer,default = '-')
     
 
@@ -166,15 +166,70 @@ def createacc():
 
 @app.route('/wipedb', methods =['POST', 'GET'])
 def wipedb():
-    db.session.query(Submitted_Cart).delete()
-    db.session.commit()
-    return redirect('/admin')
+    if 'admin' in session:
+        return render_template('wipedbpage.html')
+    else:
+        redirect('/login')
+
+@app.route('/removeallobjects', methods = ['POST', 'GET'])
+def removeallobjects():
+    if 'admin' in session:
+        if request.method == 'POST':
+            if request.form['page'] == 'wipedbpage':
+                if request.form['objectss'] == 'removeallstudents':
+                    db.session.query(StdAcc).delete()
+                    db.session.commit()
+                    return redirect('/wipedbpage')
+                elif request.form['objectss'] == 'removeallteachers':
+                    db.session.query(TrAcc).delete()
+                    db.session.commit()
+                    return redirect('/wipedbpage')
+                elif request.form['objectss'] == 'removeallitems':
+                    db.session.query(Record_Of_Items).delete()
+                    db.session.commit()
+                    return redirect('/wipedbpage')
+                elif request.form['objectss'] == 'removeallsubmitted':
+                    db.session.query(Submitted_Cart).delete()
+                    db.session.commit()
+                    return redirect('/wipedbpage')
+                elif request.form['objectss'] == 'removeallcurrent':
+                    db.session.query(Temporary_Table).delete()
+                    db.session.commit()
+                    return redirect('/wipedbpage')
+            else:
+                if request.form['objectss'] == 'removeallstudents':
+                    db.session.query(StdAcc).delete()
+                    db.session.commit()
+                    return redirect('/tablestudent')
+                elif request.form['objectss'] == 'removeallteachers':
+                    db.session.query(TrAcc).delete()
+                    db.session.commit()
+                    return redirect('/tableteacher')
+                elif request.form['objectss'] == 'removeallitems':
+                    db.session.query(Record_Of_Items).delete()
+                    db.session.commit()
+                    return redirect('/marketplace')
+                elif request.form['objectss'] == 'removeallsubmitted':
+                    db.session.query(Submitted_Cart).delete()
+                    db.session.commit()
+                    return redirect('/marketplace')
+                elif request.form['objectss'] == 'removeallcurrent':
+                    db.session.query(Temporary_Table).delete()
+                    db.session.commit()
+                    return redirect('/marketplace')
+        else:
+            return redirect('login')
+    else:
+        return redirect('/login')
+
 
 @app.route('/reinitialisedb', methods = ['POST', 'GET'])
 def reinitialisedb():
     db.session.query(TrAcc).delete()
     db.session.query(StdAcc).delete()
-    db.session.query(Generated_Codes).delete()
+    all_codes = db.session.query(Generated_Codes).all()
+    for code in all_codes:
+        code.code = ''
     db.session.query(Record_Of_Items).delete()
     db.session.query(Temporary_Table).delete()
     db.session.query(Submitted_Cart).delete()
@@ -183,7 +238,7 @@ def reinitialisedb():
 
 @app.route('/display/<filename>', methods = ['POST', 'GET'])
 def display_image(filename):
-    return redirect(url_for('static', filename='images/' + filename), code=301)
+    return redirect(url_for('static', filename = 'images1/' + filename), code = 301)
 
 @app.route('/testadd', methods=['POST', 'GET'])
 def upload_image():
@@ -228,28 +283,13 @@ def additems():
                 new_item = Record_Of_Items(name = new_item_name, price = new_item_price, info = new_item_info, cat = new_item_cat, quantifier = new_item_quantifier, image = filename)
                 db.session.add(new_item)
                 db.session.commit()
-                return redirect('/marketplace')
+                return render_template('additems.html', item = None, feedback = "Item successfully added!")
             else:
-                return "Item already exists!"
+                return render_template('additems.html', item = None, feedback = "Item already exists!")
         else:
-            return render_template('additems.html', item = None)
+            return render_template('additems.html', item = None, feedback = '')
     else:
         return redirect('/')
-
-@app.route('/viewstudentcart', methods=['POST', 'GET'])
-def viewstudentcart():
-    if ('teacher' in session) or ('admin' in session):
-        if request.method == 'GET':
-            accounts = db.session.query(Temporary_Table).filter_by
-            items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
-            all_items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
-            total = 0
-            usertype = "teacher"
-            for item in all_items:
-                total += item.quantity * item.price
-            return render_template('viewstudentcart.html', items = items, total = total, usertype = usertype)
-    else:
-        return redirect('/login')
 
 @app.route('/increase_quantity', methods = ["POST", "GET"])
 def increase_quantity():
@@ -327,7 +367,7 @@ def delete_item(id):
 @app.route('/deleteEntry' , methods = ['POST','GET'])
 def deleteEntry():
     if request.method == 'POST':
-        if request.form['todo'] == 'x':
+        if request.form['todo'] == 'Delete':
             acc_user = request.form['usertype']
             acc_name = request.form['username']
             acc_pword = request.form['password']
@@ -352,7 +392,7 @@ def deleteEntry():
                     return redirect('/tablestudent')
                 except:
                     return 'No such User'
-        elif request.form['todo'] == 'viewstudentcart':
+        elif request.form['todo'] == 'View Current Cart':
             username = request.form['username']
             items = db.session.query(Temporary_Table).filter_by(acc = username)
             item_test = db.session.query(Temporary_Table).filter_by(acc = username).first()
@@ -361,7 +401,6 @@ def deleteEntry():
                 text = "Empty Cart"
             else:
                 text = ""
-            
             if 'admin' in session:
                 return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'admin')
             elif 'teacher' in session:
@@ -402,18 +441,29 @@ def submit_cart():
         check_for_existing_account = db.session.query(Submitted_Cart).filter_by(acc = local_account).first()
         check_for_existing_items = db.session.query(Temporary_Table).filter_by(acc = local_account).first()
         if check_for_existing_account:
-            return redirect('/checkout')
+            return render_template('checkout.html', items = items, feedback = "You have already submitted once.", total = 0)
         elif check_for_existing_items == None:
-            return "There are currently no items in the cart."
+            return render_template('checkout.html', feedback = "There are currently no items in the cart.", total = 0)
         else:
             for item in items:
                 new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
                 db.session.add(new_stuff)
                 db.session.commit()
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
-            return render_template('marketplace.html',items = cat)
+            db.session.query(Temporary_Table).filter_by(acc = local_account).delete()
+            db.session.commit()
+            return render_template('success.html')
     else:
         return redirect('/checkout')
+
+@app.route('/success', methods = ['POST', 'GET'])
+def success():
+    if request.method == 'POST':
+        if request.form['todo'] == 'marketplace':
+            return redirect('/marketplace')
+        elif request.form['todo'] == 'logout':
+            return redirect('/logout')
+    else:
+        return redirect('/login')
 
 @app.route('/logout', methods = ['POST', 'GET'])
 def logout():
@@ -433,7 +483,7 @@ def logout():
 def admin():
     if 'admin' in session:
         if request.method == 'POST':
-            if request.form['nav'] == 'Table of Student':
+            if request.form['nav'] == 'Table of Teams':
                 return redirect('/tablestudent')
             elif request.form['nav'] == 'Table of Teachers':
                 return redirect('/tableteacher')
@@ -441,9 +491,9 @@ def admin():
                 return redirect('/marketplace')
             elif request.form['nav'] == 'Passcodes':
                 return redirect('/passcodepage')
-            elif request.form['nav'] == 'Wipe DB':
+            elif request.form['nav'] == 'Reset Options':
                 return redirect('/wipedb')
-            elif request.form['nav'] == 'Reinitialise DB':
+            elif request.form['nav'] == 'Clear Everything':
                 return redirect('/reinitialisedb')
             elif request.form['nav'] == 'Create Promotion':
                 return redirect('/promotion/Fresh Produce')
@@ -513,10 +563,18 @@ def teacher():
 
 @app.route('/passcodepage', methods = ['POST', 'GET'])
 def passcodepage():
-    all_codes = db.session.query(Generated_Codes).all()
-    return render_template('passcodepage.html', generate_codes = all_codes)
+    if 'admin' in session:
+        all_codes = db.session.query(Generated_Codes).all()
+        return render_template('passcodepage.html', generated_codes = all_codes)
+    else:
+        return redirect('/')
 
-
+@app.route('/wipedbpage', methods = ['POST', 'GET'])
+def wipedbpage():
+    if 'admin' in session:
+        return render_template('wipedbpage.html')
+    else:
+        return redirect('/login')
 
 
 @app.route('/changeimage/<imageid>', methods=['POST', 'GET'])
@@ -537,7 +595,7 @@ def change_image(imageid):
         else:
             return render_template('changeimage.html', imageid = imageid)
     else:
-        redirect('/login')
+        return redirect('/login')
                    
 
 @app.route('/', methods = ["POST", "GET"])
@@ -570,11 +628,14 @@ def authenticate():
             cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
             return render_template('marketplace.html',items = cat)
     else:
-        redirect('/login')
+        return redirect('/login')
 
 @app.route('/login', methods=['POST', 'GET'])
 def loginpage():
     if request.method == "POST":
+        session.pop('admin', None)
+        session.pop('teacher', None)
+        session.pop('student', None)
         username = request.form['username']
         password = request.form['password']
         check = Admin.query.filter_by(name=username).first()
@@ -583,7 +644,7 @@ def loginpage():
             if check1 == None:
                 check2 = StdAcc.query.filter_by(name=username).first()
                 if check2 == None:
-                    return "No such account exists in records."
+                    return render_template('login.html', feedback = "No such account exists in records.")
                 else:
                     check2 = StdAcc.query.filter_by(name=username, pword = password).first()
                     if check2 == None:
@@ -594,14 +655,14 @@ def loginpage():
             else:
                 check1 = TrAcc.query.filter_by(name=username, pword = password).first()
                 if check1 == None:
-                    return "Please key in your username/password again."
+                    return render_template('login.html', feedback = 'Please key in the correct username/password.')
                 else:
                     session['teacher'] = username
                     return redirect('/teacher')
         else:
             check = Admin.query.filter_by(name=username, pword = password).first()
             if check == None:
-                return "Please key in your username/password again."
+                return render_template('login.html', feedback = 'Please key in the correct username/password.')
             else:
                 session['admin'] = username
                 return redirect('/admin')
@@ -685,8 +746,19 @@ def view_submitted_carts():
         local_account = session['teacher']
         local_teacher = db.session.query(TrAcc).filter_by(name = local_account).first()
         students = db.session.query(StdAcc).filter_by(assigned_teacher_id = local_teacher.id).all()
-        data = db.session.query(Temporary_Table).all()
-        return render_template('testviewstudent.html', students = students, data = data)
+        data = db.session.query(Submitted_Cart).all()
+        existing_students = []
+        for row in data:
+            existing_students.append(row.acc)
+        set_existing_students = set(existing_students)
+        all_total_amounts = []
+        for student in students:
+            student_items = db.session.query(Submitted_Cart).filter_by(acc = student.name)
+            total_price = 0
+            for item in student_items:
+                total_price += item.price * item.quantity
+            all_total_amounts.append(total_price)
+        return render_template('testviewstudent.html', students = students, data = data, set_existing_students = set_existing_students, all_total_amounts = all_total_amounts)
 
 @app.route('/tableteacher', methods = ["POST", 'GET'])
 def tableTeacher():

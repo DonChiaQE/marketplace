@@ -11,12 +11,14 @@
     <div class="container py-28">
         <div class="vstack screen">
             <div class="text-36">Teachers Page</div>
-            <form action="/teacher" method="POST" class="vstack space-28 mt-28">
-                <input name="nav" type="submit" value="Table of Student" class="w-256 bg-white rounded-3 shadow shadow-md p-28">
-                <input name="nav" type="submit" value="List of Submitted Carts" class="w-256 bg-white rounded-3 shadow shadow-md p-28">
-                <input name="nav" type="submit" value="List of Shopping Items" class="w-256 bg-white rounded-3 shadow shadow-md p-28">
-                <input name="nav" type="submit" value="Log Out" class="w-256 bg-white rounded-3 shadow shadow-md p-28">
-            </form>
+            <div class="container py-28">
+                <form action="/teacher" method="POST" class="align-self-stretch grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-28 p-16">
+                    <input name="nav" type="submit" value="Table of Student" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28">
+                    <input name="nav" type="submit" value="List of Submitted Carts" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28">
+                    <input name="nav" type="submit" value="List of Shopping Items" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28">
+                    <input name="nav" type="submit" value="Log Out" class="text-underline w-full color-red-600 bg-white rounded-3 shadow shadow-md p-28">
+                </form>
+            </div>
         </div>
     </div>
 
@@ -36,6 +38,12 @@
         --text-color: #2c3e50;
         --hover-color: #83A9BD;
         --title-color: #2c3e50;
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+        cursor: pointer;
     }
 </style>
 

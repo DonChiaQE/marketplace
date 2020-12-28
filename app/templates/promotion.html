@@ -20,66 +20,66 @@
 
 <body>
     <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
-            <div class="hidden md:unhidden">
-                <div class=" hstack">
-                    <a href="{{url_for('admin')}}">
-                        <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-                    </a>
-                    <a href="{{url_for('promotion', category='Fresh Produce')}}"  class="bg-white m-18 text-underline pb-1">Fresh Produce</a>
-                    <a href="{{url_for('promotion', category='Dairy')}}"  class="bg-white m-18 text-underline pb-1">Dairy</a>
-                    <a href="{{url_for('promotion', category='Meat')}}"  class="bg-white m-18 text-underline pb-1">Meat</a>
-                    <a href="{{url_for('promotion', category='Others')}}" class="bg-white m-18 text-underline pb-1">Others</a>
-                    <a href="{{url_for('logout')}}"  class="bg-white m-18 text-underline color-red-600 pb-1">Log Out</a>
+        <div class="hidden md:unhidden">
+            <div class=" hstack">
+                <a href="{{url_for('admin')}}">
+                    <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+                </a>
+                <a href="{{url_for('promotion', category='Fresh Produce')}}" class="bg-white m-18 text-underline pb-1">Fresh Produce</a>
+                <a href="{{url_for('promotion', category='Dairy')}}" class="bg-white m-18 text-underline pb-1">Dairy</a>
+                <a href="{{url_for('promotion', category='Meat')}}" class="bg-white m-18 text-underline pb-1">Meat</a>
+                <a href="{{url_for('promotion', category='Others')}}" class="bg-white m-18 text-underline pb-1">Others</a>
+                <a href="{{url_for('logout')}}" class="bg-white m-18 text-underline color-red-600 pb-1">Log Out</a>
 
-                </div>
             </div>
-
-            <div class="unhidden md:hidden group">
-                <div class="zstack w-40 h-40">
-                    <div class="group vstack space-5">
+        </div>
+        <form action="/promotion" method="POST">
+            <div class="unhidden md:hidden">
+                <div class="zstack w-40 h-40" onclick="hamburger()">
+                    <div class="vstack space-5">
                         <div class="h-2 w-36 bg-black rounded-full"></div>
                         <div class="h-2 w-36 bg-black rounded-full"></div>
                         <div class="h-2 w-36 bg-black rounded-full"></div>
                     </div>
-                    <div class="hidden group-touch:unhidden place-bl transform translate-y-100">
-                        <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
-                            <input type="submit" name="navbar" value="Fresh Produce" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Meat" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Others" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600" />
+                    <div class="hidden place-bl transform translate-y-100 bg-white" id="myLinks">
+                        <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg bg-white">
+                            <a href="{{url_for('admin')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Home</a>
+                            <a href="{{url_for('promotion', category='Fresh Produce')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Fresh Produce</a>
+                            <a href="{{url_for('promotion', category='Dairy')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Dairy</a>
+                            <a href="{{url_for('promotion', category='Meat')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Meat</a>
+                            <a href="{{url_for('promotion', category='Others')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Others</a>
+                            <a href="{{url_for('logout')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600">Log Out</a>
                         </div>
                     </div>
                 </div>
             </div>
+        </form>
 
 
         <div class="spacer"></div>
         <a href="{{url_for('addpromotion')}}">
-            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
+            <div class="text-underline ">Add Promotion</div>
         </a>
     </nav>
 
     <div id="message" class="fixed t-0" style="display: none;">
-        <div class="vstack px-24 h-64 noti-full bg-red-600">
+        <div class="vstack px-24 h-64 noti-full bg-red-300">
             <div class="">Added to Promotion List</div>
         </div>
     </div>
 
     <div class="container py-28">
-        <div class="align-self-stretch grid grid-cols-2 mx-18 sm:grid-cols-3 gap-18 md:gap-28 sm:p-8 md:grid-cols-4 my-18 " style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
+        <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-2 gap-28 md:grid-cols-4 my-18 px-28">
             {% for item in items %}
-            <form action="/promotionItems" , method="POST">
-                <div class="vstack h-320 bg-white rounded-3 shadow shadow-md p-28">
-                    <div class="w-112 h-112 bg-green-500 rounded-5"></div>
-                    <div class="vstack align-start mt-20 space-8 h-144">
-                        <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
-                        <div class="text-14 text-400 text-black">${{item.price}} {{item.quantifier}}</div>
-                        <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
+            <form class="w-full" action="/promotionItems" , method="POST">
+                <div class="vstack bg-white rounded-3 shadow shadow-md w-full p-28">
+                    <div class="vstack align-start space-28">
+                        <div class="text-48 text-500 text-black ellipsis w-full" style="font-size: 24px;">{{item.name}}</div>
+                        <div class="text-14 text-400 text-black w-full">${{item.price}} {{item.quantifier}}</div>
+                        <div class="text-14 text-200 text-gray-500 w-full">Exp: {{item.info}}</div>
                         <div class="spacer"></div>
                         <div class="hstack space-28 w-full">
-                            <div class="spacer"></div>
-                            <button class="text-underline" type="submit" name="promotionItem" value="{{item.id}}">Create Promotion</button>
+                            <button class="text-underline color-blue-600" type="submit" name="promotionItem" value="{{item.id}}">Create Promotion</button>
                             <div class="spacer"></div>
                         </div>
                     </div>
@@ -87,7 +87,6 @@
             </form>
             {% endfor %}
         </div>
-
     </div>
 </body>
 
@@ -118,4 +117,21 @@
     .noti-full {
         width: 100vw;
     }
+    
+    .ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>
+
+<script>
+    function hamburger() {
+        var x = document.getElementById("myLinks");
+        if (x.style.display === "block") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "block";
+        }
+    }
+</script>

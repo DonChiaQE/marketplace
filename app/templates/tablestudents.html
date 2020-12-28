@@ -26,30 +26,29 @@
     <div class="container py-28">
         <div class="vstack screen">
             <div class="text-36">Table of Teams</div>
-            <div class="vstack space-28 mt-28 ">
+            <div class="vstack space-28 mt-28 px-28">
                 <form action="/addStudent" method="POST">
-                    <input type="submit" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28" value="Add Student" />
+                    <input type="submit" class="text-underline w-256 bg-white rounded-3 shadow shadow-md p-28" value="Add Team" />
                 </form>
-                {% for student in students %}
-                <form action="/deleteEntry" method="POST">
-                    <div class="hstack p-28 w-full">
-                        <button type="submit" name="todo" value="viewstudentcart">
-                        <div class="vstack w-full">
-                            <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Username: {{student.name}}</div>
-                            <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Password: {{student.pword}}</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-28">
+                    {% for student in students %}
+                    <form action="deleteEntry" method="POST">
+                        <div class="vstack w-full align-start bg-white rounded-3 shadow shadow-md">
+                            <div class="w-full p-28 ellipsis">Username: {{student.name}}</div>
+                            <div class="w-full p-28 ellipsis">Password: {{student.pword}}</div>
                             {% for teacher in teachers if teacher.id == student.assigned_teacher_id %}
-                            <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Assigned To: {{teacher.name}}</div>
+                            <div class="w-full p-28 ellipsis">Assigned To: {{teacher.name}}</div>
                             {% endfor %}
+                            <input type="hidden" name='username' value="{{student.name}}" />
+                            <input type="hidden" name='usertype' value="StudentUser" />
+                            <input type="hidden" name='password' value="{{student.pword}}" />
+                            <input name="todo" type="submit" class="text-underline color-blue-700 bg-transparent p-28 " value="View Current Cart" />
+                            <input name="todo" type="submit" class="text-underline color-red-700 bg-transparent p-28 " value="Delete" />
                         </div>
-                        </button>
-                        <div class="spacer"></div>
-                        <input type="hidden" name='username' value="{{student.name}}" />
-                        <input type="hidden" name='usertype' value="StudentUser" />
-                        <input type="hidden" name='password' value="{{student.pword}}" />
-                        <input name="todo" type="submit" class="text-underline color-red-700 bg-transparent pl-36 text-36 " value="x" />
-                    </div>
-                </form>
-                {% endfor %}
+
+                    </form>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
@@ -73,8 +72,15 @@
     }
     
     .text-underline:hover {
+        text-decoration: underline;
         display: inline-block;
         cursor: pointer;
+    }
+    
+    .ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
 

@@ -20,26 +20,25 @@
     <div class="container py-28">
         <div class="vstack screen">
             <div class="text-36">Table of Teachers</div>
-            <div class="vstack space-28 mt-28 w-full">
+            <div class="vstack space-28 mt-28 w-full px-28">
                 <form action="/addTeacher" method="POST">
-                    <input type="submit" class="w-256 bg-white rounded-3 shadow shadow-md p-28" value="Add Teacher" />
+                    <input type="submit" class="w-256 bg-white rounded-3 shadow shadow-md p-28 text-underline " value="Add Teacher" />
                 </form>
-                {% for Teacher in Teachers %}
-                <form action="/deleteEntry" method="POST">
-                    <div class="hstack  w-256 p-28 w-full ">
-                        <div class="vstack w-full">
-                            <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Username: {{Teacher.name}}</div>
-                            <div class="w-full bg-white rounded-3 shadow shadow-md p-28 ">Password: {{Teacher.pword}}</div>
-                        </div>
-                        <div class="spacer"></div>
-                        <input type="hidden" name='username' value="{{Teacher.name}}" />
-                        <input type="hidden" name='usertype' value="TeacherUser" />
-                        <input type="hidden" name='password' value="{{Teacher.pword}}" />
-                        <input type="submit" name="todo" class=" color-red-700 bg-transparent pl-36 text-36 " value="x" />
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-28">
+                    {% for Teacher in Teachers %}
+                    <form action="/deleteEntry" method="POST">
+                        <div class="vstack w-full align-start bg-white rounded-3 shadow shadow-md">
+                            <div class="w-full bg-white p-28 ellipsis">Username: {{Teacher.name}}</div>
+                            <div class="w-full bg-white p-28 ellipsis">Password: {{Teacher.pword}}</div>
+                            <input type="hidden" name='username' value="{{Teacher.name}}" />
+                            <input type="hidden" name='usertype' value="TeacherUser" />
+                            <input type="hidden" name='password' value="{{Teacher.pword}}" />
+                            <input type="submit" name="todo" class="text-underline color-red-700 bg-transparent p-28 " value="Delete" />
 
-                    </div>
-                </form>
-                {% endfor %}
+                        </div>
+                    </form>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
@@ -60,6 +59,18 @@
         --text-color: #2c3e50;
         --hover-color: #83A9BD;
         --title-color: #2c3e50;
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+        cursor: pointer;
+    }
+    
+    .ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
 

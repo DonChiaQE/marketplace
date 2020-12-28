@@ -29,33 +29,18 @@
                     <input type="submit" name="navbar" value="Meat" class="bg-white m-18 text-underline pb-1" />
                     <input type="submit" name="navbar" value="Others" class="bg-white m-18 text-underline pb-1" />
                     <input type="submit" name="navbar" value="Log Out" class="bg-white m-18 text-underline color-red-600 pb-1" />
-                    <!--a href="marketplace" class="vstack align-start">
-                    <div class="m-18 text-underline">Fresh Produce</div>
-                </a>
-                <a href="marketplace" class="vstack align-start">
-                    <div class="m-18 text-underline">Dairy</div>
-                </a>
-                <a href="marketplace" class="vstack align-start">
-                    <div class="m-18 text-underline">Meat</div>
-                </a>
-                <a href="marketplace" class="vstack align-start">
-                    <div class="m-18 text-underline">Others</div>
-                </a>
-                <a href="login" class="vstack align-start">
-                    <div class="m-18 text-red-600 text-underline">Log Out</div>
-                </a-->
                 </div>
             </div>
         </form>
         <form action="/marketplace" method="POST">
-            <div class="unhidden md:hidden group">
-                <div class="zstack w-40 h-40">
-                    <div class="group vstack space-5">
+            <div class="unhidden md:hidden">
+                <div class="zstack w-40 h-40" onclick="hamburger()">
+                    <div class="vstack space-5">
                         <div class="h-2 w-36 bg-black rounded-full"></div>
                         <div class="h-2 w-36 bg-black rounded-full"></div>
                         <div class="h-2 w-36 bg-black rounded-full"></div>
                     </div>
-                    <div class="hidden group-touch:unhidden place-bl transform translate-y-100">
+                    <div class="hidden place-bl transform translate-y-100 bg-white" id="myLinks">
                         <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
                             <input type="submit" name="navbar" value="Fresh Produce" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
                             <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
@@ -76,13 +61,13 @@
     </nav>
     <div class="zstack">
         <div id="message" class="fixed t-0" style="display: none;">
-            <div class="vstack px-24 h-64 noti-full bg-red-600">
+            <div class="vstack px-24 h-64 noti-full bg-red-300">
                 <div class="">Added to cart!</div>
             </div>
         </div>
 
         <div class="container py-28" style="z-index: 1;">
-            <div class="align-self-stretch grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-12">
+            <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-12">
                 {% for item in items %} {% if item.promo_price == '-' or item.promo_price == None %}
                 <form action="/addtocart" , method="POST">
                     <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
@@ -92,7 +77,7 @@
                         {% endif %}
                         <div class="vstack align-start mt-20 space-8">
                             <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
-                            <div class="text-14 text-400 text-black">{{"$%.2f"|format(item.price)}} {{item.quantifier}}</div>
+                            <div class="text-14 text-400 text-black">{{"$%.2f"|format(item.price)}} {% if (item.quantifier != "") and (item.quantifier != None) %}{{item.quantifier}}{% endif %}</div>
                             {% if (item.info != "") and (item.info != None) %}
                             <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
                             {% endif %}
@@ -126,7 +111,7 @@
                                 <!--strikethrough promotional price-->
                                 <strike><div class="text-14 text-400 text-black">{{"$%.2f"|format(item.price)}}</div></strike>
                                 <!--promotional price here-->
-                                <div class="text-14 text-400 text-black">{{"$%.2f"|format(item.promo_price)}} {{item.quantifier}}</div>
+                                <div class="text-14 text-400 text-black">{{"$%.2f"|format(item.promo_price)}} {% if (item.quantifier != "") and (item.quantifier != None) %}{{item.quantifier}}{% endif %}</div>
                                 <div class="spacer"></div>
                             </div>
                             {% if (item.info != "") and (item.info != None) %}
@@ -206,3 +191,14 @@
         height: 100vh;
     }
 </style>
+
+<script>
+    function hamburger() {
+        var x = document.getElementById("myLinks");
+        if (x.style.display === "block") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "block";
+        }
+    }
+</script>

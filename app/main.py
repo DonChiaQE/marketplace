@@ -712,14 +712,24 @@ def shop_cat():
             elif request.form['navbar'] == 'Dairy':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
                 return render_template('protectedmarketplace.html',items = cat)
-            elif request.form['navbar'] == 'Meat':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
+            elif request.form['navbar'] == 'Breads':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Breads')
                 return render_template('protectedmarketplace.html',items = cat)
-            elif request.form['navbar'] == 'Others':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
+            elif request.form['navbar'] == 'Eggs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Eggs')
                 return render_template('protectedmarketplace.html',items = cat)
-            elif request.form['navbar'] == 'Home':
-                return render_template('teacher.html')
+            elif request.form['navbar'] == 'Fruits':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fruits')
+                return render_template('protectedmarketplace.html',items = cat)
+            elif request.form['navbar'] == 'Fish':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
+                return render_template('protectedmarketplace.html',items = cat)
+            elif request.form['navbar'] == 'Paper & Tissue':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper & Tissue')
+                return render_template('protectedmarketplace.html',items = cat)
+            elif request.form['navbar'] == 'Baking Needs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking Needs')
+                return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
         else:
@@ -734,11 +744,23 @@ def shop_cat():
             elif request.form['navbar'] == 'Dairy':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
                 return render_template('editpage.html',items = cat)
-            elif request.form['navbar'] == 'Meat':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
+            elif request.form['navbar'] == 'Breads':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Breads')
                 return render_template('editpage.html',items = cat)
-            elif request.form['navbar'] == 'Others':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
+            elif request.form['navbar'] == 'Eggs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Eggs')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Fruits':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fruits')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Fish':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Paper & Tissue':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper & Tissue')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Baking Needs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking Needs')
                 return render_template('editpage.html',items = cat)
             elif request.form['navbar'] == 'Home':
                 return redirect('/admin')

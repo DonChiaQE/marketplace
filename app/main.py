@@ -12,7 +12,7 @@ app.config['TESTING'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = "lkkajdghdadkglajkgajdisa931!.hl" # a secret key for your app
-UPLOAD_FOLDER = 'static/images1/'
+UPLOAD_FOLDER = 'static/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
@@ -237,7 +237,7 @@ def reinitialisedb():
 
 @app.route('/display/<filename>', methods = ['POST', 'GET'])
 def display_image(filename):
-    return redirect(url_for('static', filename = 'images1/' + filename), code = 301)
+    return redirect(url_for('static', filename = 'uploads/' + filename), code = 301)
 
 @app.route('/testadd', methods=['POST', 'GET'])
 def upload_image():

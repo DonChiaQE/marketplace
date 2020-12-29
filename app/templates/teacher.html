@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
+</head>
+
+<body>
+    <div class="container py-28">
+        <div class="vstack screen">
+            <div class="text-36">Teachers Page</div>
+            <div class="container py-28">
+                <form action="/teacher" method="POST" class="align-self-stretch grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-28 p-16">
+                    <input name="nav" type="submit" value="Table of Student" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28">
+                    <input name="nav" type="submit" value="List of Submitted Carts" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28">
+                    <input name="nav" type="submit" value="List of Shopping Items" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28">
+                    <input name="nav" type="submit" value="Log Out" class="text-underline w-full color-red-600 bg-white rounded-3 shadow shadow-md p-28">
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<style>
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+        cursor: pointer;
+    }
+</style>
+
+</html>

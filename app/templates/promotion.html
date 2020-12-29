@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {% if addedPromo == True %}
+    <script>
+        $(document).ready(function() {
+            $('#message').fadeIn('slow', function() {
+                $('#message').delay(2000).fadeOut();
+            });
+        });
+    </script>
+    {% endif %}
+</head>
+
+<body>
+    <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
+        <div class="hidden md:unhidden">
+            <div class=" hstack">
+                <a href="{{url_for('admin')}}">
+                    <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+                </a>
+                <a href="{{url_for('promotion', category='Rice')}}" class="bg-white m-18 text-underline pb-1">Rice</a>
+                <a href="{{url_for('promotion', category='Dairy')}}" class="bg-white m-18 text-underline pb-1">Dairy</a>
+                <a href="{{url_for('promotion', category='Breads')}}" class="bg-white m-18 text-underline pb-1">Breads</a>
+                <a href="{{url_for('promotion', category='Eggs')}}" class="bg-white m-18 text-underline pb-1">Eggs</a>
+                <a href="{{url_for('promotion', category='Fruits')}}" class="bg-white m-18 text-underline pb-1">Fruits</a>
+                <a href="{{url_for('promotion', category='Fish')}}" class="bg-white m-18 text-underline pb-1">Fish</a>
+                <a href="{{url_for('promotion', category='Paper & Tissue')}}" class="bg-white m-18 text-underline pb-1">Paper & Tissue</a>
+                <a href="{{url_for('promotion', category='Baking Needs')}}" class="bg-white m-18 text-underline pb-1">Baking Needs</a>
+                <a href="{{url_for('logout')}}" class="bg-white m-18 text-underline color-red-600 pb-1">Log Out</a>
+
+            </div>
+        </div>
+        <form action="/promotion" method="POST">
+            <div class="unhidden md:hidden">
+                <div class="zstack w-40 h-40" onclick="hamburger()">
+                    <div class="vstack space-5">
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                    </div>
+                    <div class="hidden place-bl transform translate-y-100 bg-white" id="myLinks">
+                        <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg bg-white">
+                            <a href="{{url_for('admin')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Home</a>
+                            <a href="{{url_for('promotion', category='Fresh Produce')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Fresh Produce</a>
+                            <a href="{{url_for('promotion', category='Dairy')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Dairy</a>
+                            <a href="{{url_for('promotion', category='Meat')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Meat</a>
+                            <a href="{{url_for('promotion', category='Others')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Others</a>
+                            <a href="{{url_for('logout')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+        <div class="spacer"></div>
+        <a href="{{url_for('addpromotion')}}">
+            <div class="text-underline ">Add Promotion</div>
+        </a>
+    </nav>
+
+    <div id="message" class="fixed t-0" style="display: none;">
+        <div class="vstack px-24 h-64 noti-full bg-red-300">
+            <div class="">Added to Promotion List</div>
+        </div>
+    </div>
+
+    <div class="container py-28">
+        <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-2 gap-28 md:grid-cols-4 my-18 px-28">
+            {% for item in items %}
+            <form class="w-full" action="/promotionItems" , method="POST">
+                <div class="vstack bg-white rounded-3 shadow shadow-md w-full p-28">
+                    <div class="vstack align-start space-28">
+                        <div class="text-48 text-500 text-black ellipsis w-full" style="font-size: 24px;">{{item.name}}</div>
+                        <div class="text-14 text-400 text-black w-full">${{item.price}} {{item.quantifier}}</div>
+                        <div class="text-14 text-200 text-gray-500 w-full">Exp: {{item.info}}</div>
+                        <div class="spacer"></div>
+                        <div class="hstack space-28 w-full">
+                            <button class="text-underline color-blue-600" type="submit" name="promotionItem" value="{{item.id}}">Create Promotion</button>
+                            <div class="spacer"></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>
+
+<style>
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+    
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+        cursor: pointer;
+    }
+    
+    .noti-full {
+        width: 100vw;
+    }
+    
+    .ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<script>
+    function hamburger() {
+        var x = document.getElementById("myLinks");
+        if (x.style.display === "block") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "block";
+        }
+    }
+</script>

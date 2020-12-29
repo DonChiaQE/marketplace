@@ -65,7 +65,7 @@
                                     <div class="hstack space-5">
 
                                         <div class="text-gray-500 text-18 mt-2"><b>Enter Promo Price: $</b></div>
-                                        <input class="vstack w-56 h-28 bg-gray-300 border border-1 border-gray-400 text-center" min="0" name="item{{item.id}}" type="number" />
+                                        <input class="vstack w-56 h-28 bg-gray-300 border border-1 border-gray-400 text-center" min="0" name="item{{item.id}}" type="number" required/>
                                     </div>
                                 </div>
                                 <div class="spacer"></div>
@@ -74,9 +74,9 @@
                                     <div class="spacer"></div>
                                 </div>
                                 <div class="spacer"></div>
-
+                                <a href="{{url_for('removePromoItem',item=item.id)}}">
                                 <svg class="w-28 h-28 mr-18 text-underline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-
+                                </a>
                             </div>
                         </div>
                         {% endfor %}

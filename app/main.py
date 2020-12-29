@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, flash, session
+from flask import Flask, render_template, url_for, request, redirect, flash, session, make_response, jsonify
 import sqlalchemy
 from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
@@ -625,8 +625,7 @@ def authenticate():
         if (check_passcode == None) or (total != 6):
             return render_template('authentication.html', feedback = 'Please key in the correct code.')
         else:
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
-            return render_template('marketplace.html',items = cat)
+            return redirect('/marketplace')
     else:
         return redirect('/login')
 
@@ -868,7 +867,12 @@ def addpromotion():
     else:
         return redirect(url_for('promotion', category = "Fresh Produce"))
 
-
+@app.route('/removePromoItem/<item>', methods=['POST', 'GET'])
+def removePromoItem(item):
+    itemID_list = session['promo_items']
+    itemID_list.pop(itemID_list.index(item))
+    session['promo_item'] = itemID_list
+    return redirect('/addpromotion')
 
 
 
@@ -888,12 +892,21 @@ def publishpromotion():
     else:
         pass
 
+
 @app.route('/promoNoti', methods=['POST', 'GET'])
 def promoNoti():
+    req = request.get_json()
     items = db.session.query(Record_Of_Items).filter(Record_Of_Items.promo_price.isnot(None)).count()
-    if items > 0:
-        promo = True
-        return jsonify({ 'promo': promo})
+    if 'promoSent' not in session:
+        if items > 0:
+            res = make_response(jsonify({"message":"promoTrue"}), 200)
+            session['promoSent'] = True
+        else:
+            res = make_response(jsonify({"message":"promoFalse"}), 200)
+    else:
+        res = make_response(jsonify({"message":"promoSeen"}), 200)
+    return res
+        
     
 
         

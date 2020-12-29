@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+</head>
+
+<body>
+    <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
+
+        <a href="{{url_for('shop_cat')}}">
+            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+        </a>
+        <div class="spacer"></div>
+
+    </nav>
+
+    <div class="container py-28">
+        <div class="hstack">
+            <form action="/changeimage/{{imageid}}" method="POST" enctype="multipart/form-data">
+                <div class="vstack p-48 h-auto bg-white shadow shadow-md rounded-24">
+                    <div class="vstack align-start space-24">
+                        <div class="vstack w-full">
+                            <div class="spacer"></div>
+                            <div class="color-gray-900 text-28">Change Image</div>
+                            <div class="spacer"></div>
+                        </div>
+                        <dl>
+                            <p>
+                                <input type="file" name="changedimage" autocomplete="off" required>
+                            </p>
+                        </dl>
+                    </div>
+                    <div class="zstack pt-36 w-256">
+                        <input type="submit" class="hstack w-full h-48 bg-white border-1 bg-gray-900 rounded-20 shadow shadow-xl button-form color-white" value="Confirm" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<style>
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+    
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+    }
+</style>

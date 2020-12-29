@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+</head>
+
+<body>
+    <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
+        <a href="{{url_for('tableTeacher')}}">
+            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+        </a>
+
+
+        <div class="spacer"></div>
+
+    </nav>
+
+    <div class="container py-28 vstack">
+        <div class="hstack">
+            <div class="vstack p-48 w-320 h-auto bg-white shadow shadow-md rounded-24">
+                <form action='/newacc' method='POST'>
+                    <div class="vstack align-start space-24">
+                        <div class="vstack w-full">
+                            <div class="spacer"></div>
+                            <div class="color-gray-900 text-28">Add Teachers</div>
+                            <div class="spacer"></div>
+                        </div>
+                        <input type="text" name="username" placeholder="Teacher Name" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
+                        <input type="text" name="password" placeholder="Password" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
+                        <input type="hidden" name="usertype" value="TeacherUser" />
+                    </div>
+                    <div class="zstack pt-36 w-256">
+                        <input type="submit" class="text-underline hstack w-full h-48 bg-white border-1 bg-gray-900 rounded-20 shadow shadow-xl button-form color-white" value="Add" />
+                    </div>
+                </form>
+            </div>
+            </form>
+        </div>
+        <div class="py-28">
+            {{feedback}}
+        </div>
+    </div>
+</body>
+
+</html>
+
+<style>
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+    
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+        cursor: pointer;
+    }
+</style>

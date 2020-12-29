@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {% if addedToCart == True %}
+    <script>
+        $(document).ready(function() {
+            $('#message').fadeIn('slow', function() {
+                $('#message').delay(2000).fadeOut();
+            });
+        });
+    </script>
+    {% endif %}
+</head>
+
+<body>
+    <div class="h-screen zstack">
+        <div class="vstack w-320 shadow-lg shadow rounded-24 p-28 align-start space-16">
+            <div class="hstack">
+                <div class="text-24 bold">Promotion!</div>
+                <div class="spacer"></div>
+                <svg class="w-18 h-18 color-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+            </div>
+            <div class="text-16 regular">Pasar brand tomatoes are on sale right now! Prices have dropped from $2 to $1!</div>
+        </div>
+    </div>
+</body>
+
+</html>

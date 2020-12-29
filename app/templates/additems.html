@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+</head>
+
+<body>
+    <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
+
+        <a href="{{url_for('shop_cat')}}">
+            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+        </a>
+
+        <div class="spacer"></div>
+
+    </nav>
+
+    <div class="container py-28">
+        <div class="hstack">
+            <form action="/additems" method="POST" enctype="multipart/form-data">
+                <div class="vstack md:p-48 p-28 bg-white shadow shadow-md rounded-24 w-full">
+                    <div class="vstack align-start space-24">
+                        <div class="vstack">
+                            <div class="spacer"></div>
+                            <div class="color-gray-900 text-28">Add Item</div>
+                            <div class="spacer"></div>
+                        </div>
+                        <dl>
+                            <p>
+                                <input type="file" name="itemimage" autocomplete="off">
+                            </p>
+                        </dl>
+                        <input type="text" name="itemname" value="{{item.name}}" placeholder="Item Name" class="border border-black border-1 w-256 h-60 p-10 rounded-full" required />
+                        <input type="text" name="itemprice" value="{{item.price}}" placeholder="Item Price" class="border border-black border-1 w-256 h-60 p-10 rounded-full" required />
+                        <input type="text" name="iteminfo" value="{{item.info}}" placeholder="Item Expiry Date" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
+                        <select required name='itemcat' id='Teacher'>
+                            <option value="" selected disabled hidden>Choose Category</option>
+                            <option value="Fresh Produce">Fresh Produce</option>
+                            <option value="Dairy">Dairy</option>
+                            <option value="Meat">Meat</option>
+                            <option value="Others">Others</option>
+                        </select>
+                        <select name='itemquantifier' id='Teacher'>
+                            <option value="">None</option>
+                            <option value="per pkt">per pkt</option>
+                            <option value="per kg">per kg</option>
+                        </select>
+                    </div>
+                    <div class="vstack pt-36 w-full">
+                        <input type="submit" class="text-underline hstack w-full h-48 bg-white border-1 bg-gray-900 rounded-20 shadow shadow-xl button-form color-white" value="Confirm" />
+                    </div>
+                    <div class="color-gray-900 text-20 pt-28">{{feedback}}</div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<style>
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+    
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+        cursor: pointer;
+    }
+</style>

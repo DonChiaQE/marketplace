@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {% if msg == 'PromoPub' %}
+    <script>
+        $(document).ready(function() {
+            $('#msgPub').fadeIn('slow', function() {
+                $('#message').delay(2000).fadeOut();
+            });
+        });
+    </script>
+
+    {% elif msg == 'PromoRes' %}
+    <script>
+        $(document).ready(function() {
+            $('#msgRes').fadeIn('slow', function() {
+                $('#message').delay(2000).fadeOut();
+            });
+        });
+    </script>
+    {% endif %}
+</head>
+
+<body>
+    <div id="msgPub" class="fixed t-0" style="display: none;">
+        <div class="vstack px-24 h-64 noti-full bg-red-600">
+            <div class="">Promotion has been published</div>
+        </div>
+    </div>
+
+    <div id="msgRes" class="fixed t-0" style="display: none;">
+        <div class="vstack px-24 h-64 noti-full bg-red-600">
+            <div class="">Promotion has been reseted</div>
+        </div>
+    </div>
+
+    <div class="container py-28">
+        <div class="vstack screen">
+            <div class="text-36">Admin Page</div>
+            <div class="container py-28">
+                <form class="align-self-stretch grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-28 p-16" action="/admin" method="POST">
+                    <input type="submit" name='nav' value="Table of Teams" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28">
+                    <input type="submit" name='nav' value="Table of Teachers" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28">
+                    <input type="submit" name='nav' value="Edit Shopping Items" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28">
+                    <input type="submit" name='nav' value="Passcodes" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28"> {% if promoReset == True %}
+                    <input type="submit" name='nav' value="View Promotion" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28">
+                    <input type="submit" name='nav' value="Reset Promotion" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28"> {% else %}
+                    <input type="submit" name='nav' value="Create Promotion" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28"> {% endif %}
+                    <input type="submit" name='nav' value="Reset Options" class="text-underline w-full bg-white rounded-3 shadow shadow-md p-28">
+                    <input type="submit" name='nav' value="Clear Everything" class="bg-red-600 color-white text-underline w-full rounded-3 shadow shadow-md p-28">
+                    <input type="submit" name='nav' value="Log Out" class="text-underline w-full color-red-600 bg-white rounded-3 shadow shadow-md p-28">
+                </form>
+            </div>
+</body>
+
+<style>
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    
+     :root {
+        --bg-color: #F2F2F2;
+        --text-color: #2c3e50;
+        --hover-color: #83A9BD;
+        --title-color: #2c3e50;
+    }
+    
+    .text-underline:hover {
+        text-decoration: underline;
+        display: inline-block;
+        cursor: pointer;
+    }
+</style>
+
+</html>

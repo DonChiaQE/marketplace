@@ -13,7 +13,7 @@ app.config['TESTING'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = "lkkajdghdadkglajkgajdisa931!.hl" # a secret key for your app
-UPLOAD_FOLDER = 'static/images1/'
+UPLOAD_FOLDER = 'static/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
@@ -238,7 +238,7 @@ def reinitialisedb():
 
 @app.route('/display/<filename>', methods = ['POST', 'GET'])
 def display_image(filename):
-    return redirect(url_for('static', filename = 'images1/' + filename), code = 301)
+    return redirect(url_for('static', filename = 'uploads/' + filename), code = 301)
 
 @app.route('/testadd', methods=['POST', 'GET'])
 def upload_image():
@@ -496,7 +496,7 @@ def admin():
             elif request.form['nav'] == 'Clear Everything':
                 return redirect('/reinitialisedb')
             elif request.form['nav'] == 'Create Promotion':
-                return redirect('/promotion/Fresh Produce')
+                return redirect('/promotion/Rice')
             elif request.form['nav'] == 'View Promotion':
                 displayItem = []
                 items = db.session.query(Record_Of_Items).all()
@@ -673,66 +673,100 @@ def loginpage():
 def shop_cat():
     if ("student" in session):
         if request.method == 'POST':
-            if request.form['navbar'] == 'Fresh Produce':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            if request.form['navbar'] == 'Rice':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Dairy':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
                 return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Meat':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
+            elif request.form['navbar'] == 'Breads':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Breads')
                 return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Others':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
+            elif request.form['navbar'] == 'Eggs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Eggs')
+                return render_template('marketplace.html',items = cat)
+            elif request.form['navbar'] == 'Fruits':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fruits')
+                return render_template('marketplace.html',items = cat)
+            elif request.form['navbar'] == 'Fish':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
+                return render_template('marketplace.html',items = cat)
+            elif request.form['navbar'] == 'Paper & Tissue':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper & Tissue')
+                return render_template('marketplace.html',items = cat)
+            elif request.form['navbar'] == 'Baking Needs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking Needs')
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
         else:
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
             return render_template('marketplace.html',items = cat)
 
     elif ("teacher" in session):
         if request.method == 'POST':
-            if request.form['navbar'] == 'Fresh Produce':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            if request.form['navbar'] == 'Rice':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
                 return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Dairy':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
                 return render_template('protectedmarketplace.html',items = cat)
-            elif request.form['navbar'] == 'Meat':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
+            elif request.form['navbar'] == 'Breads':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Breads')
                 return render_template('protectedmarketplace.html',items = cat)
-            elif request.form['navbar'] == 'Others':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
+            elif request.form['navbar'] == 'Eggs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Eggs')
                 return render_template('protectedmarketplace.html',items = cat)
-            elif request.form['navbar'] == 'Home':
-                return render_template('teacher.html')
+            elif request.form['navbar'] == 'Fruits':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fruits')
+                return render_template('protectedmarketplace.html',items = cat)
+            elif request.form['navbar'] == 'Fish':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
+                return render_template('protectedmarketplace.html',items = cat)
+            elif request.form['navbar'] == 'Paper & Tissue':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper & Tissue')
+                return render_template('protectedmarketplace.html',items = cat)
+            elif request.form['navbar'] == 'Baking Needs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking Needs')
+                return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
         else:
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
             return render_template('protectedmarketplace.html',items = cat)
 
     elif ("admin" in session):
         if request.method == 'POST':
-            if request.form['navbar'] == 'Fresh Produce':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            if request.form['navbar'] == 'Rice':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
                 return render_template('editpage.html',items = cat)
             elif request.form['navbar'] == 'Dairy':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
                 return render_template('editpage.html',items = cat)
-            elif request.form['navbar'] == 'Meat':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
+            elif request.form['navbar'] == 'Breads':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Breads')
                 return render_template('editpage.html',items = cat)
-            elif request.form['navbar'] == 'Others':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
+            elif request.form['navbar'] == 'Eggs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Eggs')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Fruits':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fruits')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Fish':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Paper & Tissue':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper & Tissue')
+                return render_template('editpage.html',items = cat)
+            elif request.form['navbar'] == 'Baking Needs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking Needs')
                 return render_template('editpage.html',items = cat)
             elif request.form['navbar'] == 'Home':
                 return redirect('/admin')
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
         else:
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
             return render_template('editpage.html',items = cat)
 
     else:
@@ -819,22 +853,37 @@ def promotion(category):
                 addedPromo = True
                 session.pop('addedPromo', None)
     
-            if category == 'Fresh Produce':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            if category == 'Fruits':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fruits')
                 return render_template('promotion.html', items = cat, addedPromo = addedPromo)
             elif category == 'Dairy':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
                 return render_template('promotion.html',items = cat, addedPromo = addedPromo)
-            elif category == 'Meat':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Meat')
+            elif category == 'Paper & Tissue':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper & Tissue')
                 return render_template('promotion.html',items = cat, addedPromo = addedPromo)
-            elif category == 'Others':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Others')
+            elif category == 'Fish':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
+                return render_template('promotion.html',items = cat, addedPromo = addedPromo)
+            elif category == 'Baking Needs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking Needs')
+                return render_template('promotion.html',items = cat, addedPromo = addedPromo)
+            elif category == 'Fish':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
+                return render_template('promotion.html',items = cat, addedPromo = addedPromo)
+            elif category == 'Eggs':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Eggs')
+                return render_template('promotion.html',items = cat, addedPromo = addedPromo)
+            elif category == 'Breads':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Breads')
+                return render_template('promotion.html',items = cat, addedPromo = addedPromo)
+            elif category == 'Rice':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
                 return render_template('promotion.html',items = cat, addedPromo = addedPromo)
             elif category == 'Log Out':
                 return redirect('/logout')
         else:
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fresh Produce')
+            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
             return render_template('promotion.html',items = cat)
 
 @app.route('/promotionItems', methods=['POST', 'GET'])
@@ -865,7 +914,7 @@ def addpromotion():
 
         return render_template('addpromotion.html', items = items)
     else:
-        return redirect(url_for('promotion', category = "Fresh Produce"))
+        return redirect(url_for('promotion', category = "Rice"))
 
 @app.route('/removePromoItem/<item>', methods=['POST', 'GET'])
 def removePromoItem(item):

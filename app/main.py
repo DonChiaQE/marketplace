@@ -3,7 +3,7 @@ import sqlalchemy
 from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required, UserMixin
-import os
+import os, glob
 from werkzeug.utils import secure_filename
 import random
 import json
@@ -26,6 +26,7 @@ class TrAcc(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), default = '-')
     pword = db.Column(db.String(200), default = '-')
+    passcode = db.Column(db.String(6), default = '')
     assigned_students = db.relationship('StdAcc', backref="assigned_teacher")
 
 class StdAcc(db.Model):
@@ -104,26 +105,16 @@ def generate_code():
                 random_character = random.choice(random_number_list)
                 temp_code.append(random_character)
             generated_code =  str(''.join(temp_code))
-            codeid = request.form['codeid']
-            locate_code = db.session.query(Generated_Codes).filter_by(id = codeid).first()
-            locate_code.code = generated_code
+            locate_code = db.session.query(TrAcc).filter_by(name = session['teacher']).first()
+            locate_code.passcode = generated_code
             db.session.commit()
-            all_codes = db.session.query(Generated_Codes).all()
-            return render_template('passcodepage.html', generated_codes = all_codes)
-        elif request.form['forest'] == 'clearall':
-            all_codes = db.session.query(Generated_Codes).all()
-            for code in all_codes:
-                code.code = ''
-            db.session.commit()
-            return render_template('passcodepage.html', generated_codes = all_codes)
+            return render_template('passcodepage.html', passcode = generated_code)
         else:
             generated_code = ''
-            codeid = request.form['codeid']
-            locate_code = db.session.query(Generated_Codes).filter_by(id = codeid).first()
-            locate_code.code = ''
+            locate_code = db.session.query(TrAcc).filter_by(name = session['teacher']).first()
+            locate_code.passcode = ''
             db.session.commit()
-            all_codes = db.session.query(Generated_Codes).all()
-            return render_template('passcodepage.html', generated_codes = all_codes)
+            return render_template('passcodepage.html', passcode = generated_code)
     else:
         return redirect('/login')
 
@@ -187,6 +178,8 @@ def removeallobjects():
                 elif request.form['objectss'] == 'removeallitems':
                     db.session.query(Record_Of_Items).delete()
                     db.session.commit()
+                    for file in glob.glob("static/uploads/*"):
+                        os.remove(file)
                     return redirect('/wipedbpage')
                 elif request.form['objectss'] == 'removeallsubmitted':
                     db.session.query(Submitted_Cart).delete()
@@ -225,16 +218,19 @@ def removeallobjects():
 
 @app.route('/reinitialisedb', methods = ['POST', 'GET'])
 def reinitialisedb():
-    db.session.query(TrAcc).delete()
-    db.session.query(StdAcc).delete()
-    all_codes = db.session.query(Generated_Codes).all()
-    for code in all_codes:
-        code.code = ''
-    db.session.query(Record_Of_Items).delete()
-    db.session.query(Temporary_Table).delete()
-    db.session.query(Submitted_Cart).delete()
-    db.session.commit()
-    return redirect('/admin')
+    if 'admin' in session:
+        db.session.query(TrAcc).delete()
+        db.session.query(StdAcc).delete()
+        #all_codes = db.session.query(Generated_Codes).all()
+        #for code in all_codes:
+        #    code.code = ''
+        db.session.query(Record_Of_Items).delete()
+        db.session.query(Temporary_Table).delete()
+        db.session.query(Submitted_Cart).delete()
+        db.session.commit()
+        return redirect('/admin')
+    else:
+        return redirect('/login')
 
 @app.route('/display/<filename>', methods = ['POST', 'GET'])
 def display_image(filename):
@@ -266,6 +262,11 @@ def upload_image():
 @app.route('/additems', methods=["POST", 'GET'])
 def additems():
     if 'admin' in session:
+        all_items_categories = db.session.query(Record_Of_Items)
+        categories = []
+        for cate in all_items_categories:
+            categories.append(cate.cat)
+        legit_categories = set(categories)
         if request.method == 'POST':
             new_item_name = request.form['itemname']
             new_item_price = request.form['itemprice']
@@ -283,11 +284,11 @@ def additems():
                 new_item = Record_Of_Items(name = new_item_name, price = new_item_price, info = new_item_info, cat = new_item_cat, quantifier = new_item_quantifier, image = filename)
                 db.session.add(new_item)
                 db.session.commit()
-                return render_template('additems.html', item = None, feedback = "Item successfully added!")
+                return render_template('additems.html', item = None, feedback = "Item successfully added!", categories = legit_categories)
             else:
-                return render_template('additems.html', item = None, feedback = "Item already exists!")
+                return render_template('additems.html', item = None, feedback = "Item already exists!", categories = legit_categories)
         else:
-            return render_template('additems.html', item = None, feedback = '')
+            return render_template('additems.html', item = None, feedback = '', categories = legit_categories)
     else:
         return redirect('/')
 
@@ -306,14 +307,19 @@ def increase_quantity():
 @app.route('/decrease_quantity', methods = ["POST", "GET"])
 def decrease_quantity():
     if request.method == "POST":
-        name = request.form.get('Minus')
-        local_account = session['student']
-        item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = name).first()
-        if item.quantity == 1:
+        if request.form['decremove'] == 'decrease':
+            name = request.form.get('Minus')
+            local_account = session['student']
+            item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = name).first()
+            if item.quantity == 1:
+                pass
+            else:
+                item.quantity -=1
+                db.session.commit()
+        elif request.form['decremove'] == 'remove':
+            name = request.form.get('Minus')
+            local_account = session['student']
             Temporary_Table.query.filter_by(acc = local_account, name=name).delete()
-            db.session.commit()
-        else:
-            item.quantity -=1
             db.session.commit()
         return redirect('/checkout')
     else:
@@ -352,12 +358,13 @@ def delete_item(id):
             if item == None:
                 return "Item doesn't exist."
             else:
+                os.remove("static/uploads/" + item.image)
                 Record_Of_Items.query.filter_by(id = id).delete()
-            try:
-                db.session.commit()
-                return redirect('/marketplace')
-            except:
-                return 'There was an issue updating your task.'
+                try:
+                    db.session.commit()
+                    return redirect('/marketplace')
+                except:
+                    return 'There was an issue updating your task.'
         else:
             return redirect('/marketplace')
     else:
@@ -401,10 +408,13 @@ def deleteEntry():
                 text = "Empty Cart"
             else:
                 text = ""
+            total = 0
+            for item in items:
+                total += (item.quantity * item.price)
             if 'admin' in session:
-                return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'admin')
+                return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'admin', total = total)
             elif 'teacher' in session:
-                return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'teacher')
+                return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'teacher', total = total)
         
 
 @app.route('/addtocart', methods=['POST', 'GET'])
@@ -449,8 +459,7 @@ def submit_cart():
                 new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
                 db.session.add(new_stuff)
                 db.session.commit()
-            db.session.query(Temporary_Table).filter_by(acc = local_account).delete()
-            db.session.commit()
+            session.pop('student', None)
             return render_template('success.html')
     else:
         return redirect('/checkout')
@@ -489,8 +498,6 @@ def admin():
                 return redirect('/tableteacher')
             elif request.form['nav'] == 'Edit Shopping Items':
                 return redirect('/marketplace')
-            elif request.form['nav'] == 'Passcodes':
-                return redirect('/passcodepage')
             elif request.form['nav'] == 'Reset Options':
                 return redirect('/wipedb')
             elif request.form['nav'] == 'Clear Everything':
@@ -550,6 +557,8 @@ def teacher():
                 return redirect('/tablestudent')
             elif request.form['nav'] == 'List of Submitted Carts':
                 return redirect('/viewsubmittedcarts')
+            elif request.form['nav'] == 'Passcodes':
+                return redirect('/passcodepage')
             elif request.form['nav'] == 'List of Shopping Items':
                 return redirect('/marketplace')
             elif request.form['nav'] == 'Log Out':
@@ -563,9 +572,10 @@ def teacher():
 
 @app.route('/passcodepage', methods = ['POST', 'GET'])
 def passcodepage():
-    if 'admin' in session:
-        all_codes = db.session.query(Generated_Codes).all()
-        return render_template('passcodepage.html', generated_codes = all_codes)
+    if 'teacher' in session:
+        local_account = session['teacher']
+        teacher_passcode = db.session.query(TrAcc).filter_by(name = local_account).first().passcode
+        return render_template('passcodepage.html', passcode = teacher_passcode)
     else:
         return redirect('/')
 
@@ -618,7 +628,7 @@ def redirect_to_login():
 def authenticate():
     if request.method == 'POST':
         passcode = request.form['passcode']
-        check_passcode = db.session.query(Generated_Codes).filter_by(code = passcode).first()
+        check_passcode = db.session.query(TrAcc).filter_by(passcode = passcode).first()
         total = 0
         for i in passcode:
             total +=1
@@ -691,11 +701,11 @@ def shop_cat():
             elif request.form['navbar'] == 'Fish':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
                 return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Paper & Tissue':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper & Tissue')
+            elif request.form['navbar'] == 'Paper':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper')
                 return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Baking Needs':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking Needs')
+            elif request.form['navbar'] == 'Baking':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking')
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
@@ -723,11 +733,11 @@ def shop_cat():
             elif request.form['navbar'] == 'Fish':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
                 return render_template('protectedmarketplace.html',items = cat)
-            elif request.form['navbar'] == 'Paper & Tissue':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper & Tissue')
+            elif request.form['navbar'] == 'Paper':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper')
                 return render_template('protectedmarketplace.html',items = cat)
-            elif request.form['navbar'] == 'Baking Needs':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking Needs')
+            elif request.form['navbar'] == 'Baking':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking')
                 return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
@@ -755,11 +765,11 @@ def shop_cat():
             elif request.form['navbar'] == 'Fish':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
                 return render_template('editpage.html',items = cat)
-            elif request.form['navbar'] == 'Paper & Tissue':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper & Tissue')
+            elif request.form['navbar'] == 'Paper':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper')
                 return render_template('editpage.html',items = cat)
-            elif request.form['navbar'] == 'Baking Needs':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking Needs')
+            elif request.form['navbar'] == 'Baking':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking')
                 return render_template('editpage.html',items = cat)
             elif request.form['navbar'] == 'Home':
                 return redirect('/admin')
@@ -859,14 +869,14 @@ def promotion(category):
             elif category == 'Dairy':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
                 return render_template('promotion.html',items = cat, addedPromo = addedPromo)
-            elif category == 'Paper & Tissue':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper & Tissue')
+            elif category == 'Paper':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper')
                 return render_template('promotion.html',items = cat, addedPromo = addedPromo)
             elif category == 'Fish':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
                 return render_template('promotion.html',items = cat, addedPromo = addedPromo)
-            elif category == 'Baking Needs':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking Needs')
+            elif category == 'Baking':
+                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking')
                 return render_template('promotion.html',items = cat, addedPromo = addedPromo)
             elif category == 'Fish':
                 cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')

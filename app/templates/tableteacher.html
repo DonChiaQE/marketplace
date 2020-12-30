@@ -30,6 +30,7 @@
                         <div class="vstack w-full align-start bg-white rounded-3 shadow shadow-md">
                             <div class="w-full bg-white p-28 ellipsis">Username: {{Teacher.name}}</div>
                             <div class="w-full bg-white p-28 ellipsis">Password: {{Teacher.pword}}</div>
+                            <div class="w-full bg-white p-28 ellipsis">Passcode: {% if Teacher.passcode %}{{Teacher.passcode}}{% endif %}</div>
                             <input type="hidden" name='username' value="{{Teacher.name}}" />
                             <input type="hidden" name='usertype' value="TeacherUser" />
                             <input type="hidden" name='password' value="{{Teacher.pword}}" />

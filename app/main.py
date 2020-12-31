@@ -642,9 +642,6 @@ def authenticate():
 @app.route('/login', methods=['POST', 'GET'])
 def loginpage():
     if request.method == "POST":
-        session.pop('admin', None)
-        session.pop('teacher', None)
-        session.pop('student', None)
         username = request.form['username']
         password = request.form['password']
         check = Admin.query.filter_by(name=username).first()
@@ -676,6 +673,9 @@ def loginpage():
                 session['admin'] = username
                 return redirect('/admin')
     else:
+        session.pop('admin', None)
+        session.pop('teacher', None)
+        session.pop('student', None)
         return render_template('login.html')
 
 

@@ -933,7 +933,11 @@ def removePromoItem(item):
     session['promo_item'] = itemID_list
     return redirect('/addpromotion')
 
-
+@app.route('/poggers', methods = ['POST'])
+def poggers():
+    db.session.query(Generated_Codes).delete()
+    db.session.commit()
+    return redirect('/wipedb')
 
 
 @app.route('/publishpromotion', methods=['POST', 'GET'])
@@ -966,4 +970,5 @@ def promoNoti():
         res = make_response(jsonify({"message":"promoSeen"}), 200)
     return res
 
-app.run(host='0.0.0.0', port=8080)
+if __name__ == '__main__':
+    app.run(debug=True) 

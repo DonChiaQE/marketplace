@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 
 <body onload="request_promo()">
@@ -143,7 +144,7 @@
                 {{feedback}}
                 <div class="w-full space-28 my-28 h-full px-16 md:px-28">
                     <form class="w-full" action="/submitcart" method="POST">
-                        <button class="hstack w-full h-64 bg-white shadow shadow-xl px-48 buttons">
+                    <button class="hstack w-full h-64 bg-white shadow shadow-xl px-48 buttons">
                       <div class="">Checkout</div>
                       <div class="spacer"></div>
                       <div class=""><b>{{"$%.2f"|format(total)}}</b></div>

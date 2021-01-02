@@ -144,7 +144,7 @@
                 {{feedback}}
                 <div class="w-full space-28 my-28 h-full px-16 md:px-28">
                     <form class="w-full" action="/submitcart" method="POST">
-                    <button class="hstack w-full h-64 bg-white shadow shadow-xl px-48 buttons">
+                        <button class="hstack w-full h-64 bg-white shadow shadow-xl px-48 buttons">
                       <div class="">Checkout</div>
                       <div class="spacer"></div>
                       <div class=""><b>{{"$%.2f"|format(total)}}</b></div>
@@ -154,17 +154,18 @@
             </div>
         </div>
 
-        <div id="promo_notif" style="display: none;">
-            <div class="hstack">
-                <div class="vstack w-full h-320 m-28 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
+        <div id="promo_notif" style="position: fixed; z-index: 2; left: 50%;
+        transform: translate(-50%, 0); display: none;">
+            <div class="px-12 pt-12">
+                <div class="vstack w-full h-320 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
                     <div class="hstack">
                         <div class="text-48 bold">Promotion!</div>
                         <div class="spacer"></div>
                         <button onclick="promo(false)">
-                    <svg class="w-28 h-28 color-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                    </button>
+                        <svg class="w-28 h-28 color-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        </button>
                     </div>
                     <div class="text-28 regular">Wait, there's a new promotion! Come check out the exciting deals at the <a href="url_for('shop_cat')">marketplace!</a></div>
                 </div>

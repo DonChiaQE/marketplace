@@ -143,13 +143,13 @@
                 </div>
                 {{feedback}}
                 <div class="w-full space-28 my-28 h-full px-16 md:px-28">
-                    <form class="w-full" action="/submitcart" method="POST">
-                        <button class="hstack w-full h-64 bg-white shadow shadow-xl px-48 buttons">
+                    <!--form class="w-full" action="/submitcart" method="POST"-->
+                    <button onclick="submito();" class="hstack w-full h-64 bg-white shadow shadow-xl px-48 buttons">
                       <div class="">Checkout</div>
                       <div class="spacer"></div>
                       <div class=""><b>{{"$%.2f"|format(total)}}</b></div>
                     </button>
-                    </form>
+                    <!--/form-->
                 </div>
             </div>
         </div>
@@ -263,5 +263,46 @@
         } else {
             x.style.display = "block";
         }
+    }
+
+    function submito()
+    {
+        swal({
+            title: "Are you sure?",
+            text: "Once submitted, you will not be able to submit again.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+                rendertemplate();
+            } else {
+              
+            }
+          });
+    }
+
+    function rendertemplate()
+    {
+        $.ajax({
+            url:"/submitcart",
+            type: "POST",
+            success: function(response){
+                var havesubmit = '{{gotsubmit}}'
+                var haveitems = '{{gotitems}}'
+                if (havesubmit === 'True') {
+                    swal("You have already submitted once!"
+                      );
+                }
+                else if (haveitems === 'False'){
+                    swal("There are currently no items in the cart."
+                      );
+                }
+                else{
+                    document.write(response)
+                }
+            }
+        })
     }
 </script>

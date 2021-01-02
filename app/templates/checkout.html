@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 
 <body onload="request_promo()">
@@ -20,8 +21,8 @@
                     <input type="submit" name="navbar" value="Eggs" class="bg-white m-18 text-underline pb-1" />
                     <input type="submit" name="navbar" value="Fruits" class="bg-white m-18 text-underline pb-1" />
                     <input type="submit" name="navbar" value="Fish" class="bg-white m-18 text-underline pb-1" />
-                    <input type="submit" name="navbar" value="Paper & Tissue" class="bg-white m-18 text-underline pb-1" />
-                    <input type="submit" name="navbar" value="Baking Needs" class="bg-white m-18 text-underline pb-1" />
+                    <input type="submit" name="navbar" value="Paper" class="bg-white m-18 text-underline pb-1" />
+                    <input type="submit" name="navbar" value="Baking" class="bg-white m-18 text-underline pb-1" />
                     <input type="submit" name="navbar" value="Log Out" class="bg-white m-18 text-underline color-red-600 pb-1" />
                 </div>
             </div>
@@ -42,8 +43,8 @@
                             <input type="submit" name="navbar" value="Eggs" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
                             <input type="submit" name="navbar" value="Fruits" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
                             <input type="submit" name="navbar" value="Fish" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Paper & Tissue" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Baking Needs" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Paper" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Baking" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
                             <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600" />
                         </div>
                     </div>
@@ -60,24 +61,18 @@
     <div class="zstack">
         <div class="container py-28">
             <div class="w-full vstack md:space-28 h-auto">
-                <div class="w-full px-16 md:px-28" id="example-1">
+                <div class="w-full px-16 md:px-28 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 mb-24" id="example-1">
                     {% for item in items %} {% if item.promo_price == '-' or item.promo_price == None %}
                     <div>
-                        <div class="vstack space-28 my-28 w-full">
-                            <div class="hstack w-full h-128 bg-white shadow shadow-md">
-                                <div class="spacer"></div>
-                                {% if item.image %}
-                                <img src="{{ url_for('display_image', filename=item.image) }}"> {% else %}
-                                <div class="w-80 h-80 bg-gray-200 rounded-12"></div>
-                                {% endif %}
-                                <div class="spacer"></div>
-                                <div class="spacer"></div>
+                        <div class="vstack space-28">
+                            <div class="hstack w-full h-128 bg-white shadow shadow-md px-24">
                                 <div class="vstack align-start h-80">
                                     <div class="color-black mb-2 w-144 ellipsis text-14">{{item.name}}</div>
                                     <div class="color-gray-500 text-12 mt-2">{{"$%.2f"|format(item.price)}}</div>
                                     <div class="spacer"></div>
                                     <div class="hstack space-5">
                                         <form action="/decrease_quantity" , method="POST">
+                                            <input type="hidden" name="decremove" value="decrease">
                                             <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item.name}}">-</button>
                                         </form>
                                         <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item.quantity}}</div>
@@ -88,26 +83,23 @@
                                     </div>
                                 </div>
                                 <div class="spacer"></div>
-                                <div class="spacer"></div>
                                 <div class="vstack h-80">
                                     <div class="spacer"></div>
-                                    <div class="text-black">{{item.quantity * item.price}}</div>
+                                    <div class="text-black"><b>{{"$%.2f"|format(item.quantity * item.price)}}</b></div>
                                 </div>
                                 <div class="spacer"></div>
+                                <form action="/decrease_quantity" , method="POST">
+                                    <input type="hidden" name="Minus" value="{{item.name}}">
+                                    <input type="hidden" name="decremove" value="remove">
+                                    <input type="submit" name='nav' value="Remove" class="bg-red-600 color-white text-underline w-60 rounded-3 shadow shadow-md p-8">
+                                </form>
                             </div>
                         </div>
                     </div>
                     {% else %}
                     <div>
-                        <div class="vstack space-28 my-28 w-full">
-                            <div class="hstack w-full h-128 bg-white shadow shadow-md">
-                                <div class="spacer"></div>
-                                {% if item.image %}
-                                <img src="{{ url_for('display_image', filename=item.image) }}"> {% else %}
-                                <div class="w-80 h-80 bg-gray-200 rounded-12"></div>
-                                {% endif %}
-                                <div class="spacer"></div>
-                                <div class="spacer"></div>
+                        <div class="vstack space-28">
+                            <div class="hstack w-full h-128 bg-white shadow shadow-md px-24">
                                 <div class="vstack align-start h-80">
                                     <div class="text-blackm mb-2">{{item.name}}</div>
                                     <div class="text-14 text-400 text-black"><strike>{{"$%.2f"|format(item.price)}}</strike> {{"$%.2f"|format(item.promo_price)}}</div>
@@ -126,36 +118,49 @@
                                 <div class="spacer"></div>
                                 <div class="vstack h-80">
                                     <div class="spacer"></div>
-                                    <div class="text-black">${{item.quantity * item.promo_price}}</div>
+                                    <div class="text-black"><b>{{"$%.2f"|format(item.quantity * item.promo_price)}}</b></div>
                                 </div>
                                 <div class="spacer"></div>
+                                <form action="/decrease_quantity" , method="POST">
+                                    <input type="hidden" name="Minus" value="{{item.name}}">
+                                    <input type="hidden" name="decremove" value="remove">
+                                    <input type="submit" name='nav' value="Remove" class="bg-red-600 color-white text-underline w-60 rounded-3 shadow shadow-md p-8">
+                                </form>
                             </div>
                         </div>
+                        <div class="spacer"></div>
+                        <div class="spacer"></div>
+                        <div class="vstack h-80">
+                            <div class="spacer"></div>
+                            <div class="text-black">$20</div>
+                        </div>
+                        <div class="spacer"></div>
                     </div>
                     {% endif %} {% endfor %}
 
 
-                    <div class="w-full space-28 my-28 h-full bg-green-900">
-                        <form class="w-full" action="/submitcart" method="POST">
-                            <button class="hstack w-full h-64 bg-white shadow shadow-xl px-48 buttons">
-                          <div class="">Checkout</div>
-                          <div class="spacer"></div>
-                          <div class=""><b>${{total}}</b></div>
-                        </button>
-                        </form>
-                    </div>
+
                 </div>
                 {{feedback}}
+                <div class="w-full space-28 my-28 h-full px-16 md:px-28">
+                    <form class="w-full" action="/submitcart" method="POST">
+                    <button class="hstack w-full h-64 bg-white shadow shadow-xl px-48 buttons">
+                      <div class="">Checkout</div>
+                      <div class="spacer"></div>
+                      <div class=""><b>{{"$%.2f"|format(total)}}</b></div>
+                    </button>
+                    </form>
+                </div>
             </div>
         </div>
 
-    <div id="promo_notif" style="display: none;">
-        <div class="hstack">
-            <div class="vstack w-full h-320 m-28 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
-                <div class="hstack">
-                    <div class="text-48 bold">Promotion!</div>
-                    <div class="spacer"></div>
-                    <button onclick="promo(false)">
+        <div id="promo_notif" style="display: none;">
+            <div class="hstack">
+                <div class="vstack w-full h-320 m-28 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
+                    <div class="hstack">
+                        <div class="text-48 bold">Promotion!</div>
+                        <div class="spacer"></div>
+                        <button onclick="promo(false)">
                     <svg class="w-28 h-28 color-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
@@ -166,7 +171,7 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 
 </html>
 
@@ -216,28 +221,27 @@
 </style>
 
 <script>
-
     function request_promo() {
-    var promoRequest = "yes";
+        var promoRequest = "yes";
 
-    fetch('/promoNoti',{
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify(promoRequest),
-        cache:"no-cache",
-        headers: new Headers({
-            "content-type" : "application/json"
-        })
-    })
-    .then(function(response) {
-        response.json().then(function (data) {
-            console.log(data.message)
-            if (data.message == "promoTrue") {
-                $('#promo_notif').show()
-            }
-            
-        })
-    })
+        fetch('/promoNoti', {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify(promoRequest),
+                cache: "no-cache",
+                headers: new Headers({
+                    "content-type": "application/json"
+                })
+            })
+            .then(function(response) {
+                response.json().then(function(data) {
+                    console.log(data.message)
+                    if (data.message == "promoTrue") {
+                        $('#promo_notif').show()
+                    }
+
+                })
+            })
 
     };
     var checkPromo = setInterval(request_promo, 60000)

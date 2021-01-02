@@ -10,7 +10,7 @@
 
 <body>
     <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
-        <a href="{{url_for('admin')}}">
+        <a href="{{url_for('teacher')}}">
             <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
         </a>
 
@@ -24,44 +24,13 @@
                 <div class="vstack space-28">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-28 px-28">
                         <form class="vstack space-16 w-full bg-white rounded-3 p-28" action="/generatecode" , method="POST">
-                            <div class="hstack w-full h-28 bg-gray-300 border border-1 border-gray-400 text-center">{% for code in generated_codes %} {% if code.id ==1 %} {{code.code}} {% else %} {% endif %} {% endfor %}</div>
+                            <div class="hstack w-full h-28 bg-gray-300 border border-1 border-gray-400 text-center">{% if passcode != None %}{{passcode}}{% endif %}</div>
                             <div class="hstack space-28">
                                 <button type="submit" class="text-underline w-full bg-red-600 rounded-3 shadow shadow-md p-16 color-white" name="forest" value="clear">Clear</button>
                                 <button type="submit" class="text-underline w-full bg-gray-600 rounded-3 shadow shadow-md p-16 color-white" name="forest" value="generate">Generate</button>
                             </div>
-                            <input type="hidden" name="codeid" value="1">
-                        </form>
-                        <form class="vstack space-16 w-full bg-white rounded-3 p-28" action="/generatecode" , method="POST">
-                            <div class="hstack w-full h-28 bg-gray-300 border border-1 border-gray-400 text-center">{% for code in generated_codes %} {% if code.id ==2 %} {{code.code}} {% else %} {% endif %} {% endfor %}</div>
-                            <div class="hstack space-28">
-                                <button type="submit" class="text-underline w-full bg-red-600 rounded-3 shadow shadow-md p-16 color-white" name="forest" value="clear">Clear</button>
-                                <button type="submit" class="text-underline w-full bg-gray-600 rounded-3 shadow shadow-md p-16 color-white" name="forest" value="generate">Generate</button>
-                            </div>
-                            <input type="hidden" name="codeid" value="2">
-                        </form>
-                        <form class="vstack space-16 w-full bg-white rounded-3 p-28" action="/generatecode" , method="POST">
-                            <div class="hstack w-full h-28 bg-gray-300 border border-1 border-gray-400 text-center">{% for code in generated_codes %} {% if code.id ==3 %} {{code.code}} {% else %} {% endif %} {% endfor %}</div>
-                            <div class="hstack space-28">
-                                <button type="submit" class="text-underline w-full bg-red-600 rounded-3 shadow shadow-md p-16 color-white" name="forest" value="clear">Clear</button>
-                                <button type="submit" class="text-underline w-full bg-gray-600 rounded-3 shadow shadow-md p-16 color-white" name="forest" value="generate">Generate</button>
-                            </div>
-                            <input type="hidden" name="codeid" value="3">
-                        </form>
-                        <form class="vstack space-16 w-full bg-white rounded-3 p-28" action="/generatecode" , method="POST">
-                            <div class="hstack w-full h-28 bg-gray-300 border border-1 border-gray-400 text-center">{% for code in generated_codes %} {% if code.id ==4 %} {{code.code}} {% else %} {% endif %} {% endfor %}</div>
-                            <div class="hstack space-28">
-                                <button type="submit" class="text-underline w-full bg-red-600 rounded-3 shadow shadow-md p-16 color-white" name="forest" value="clear">Clear</button>
-                                <button type="submit" class="text-underline w-full bg-gray-600 rounded-3 shadow shadow-md p-16 color-white" name="forest" value="generate">Generate</button>
-                            </div>
-                            <input type="hidden" name="codeid" value="4">
                         </form>
                     </div>
-                    <form class="hidden md:unhidden px-28" action="/generatecode" , method="POST">
-                        <button type="submit" class="text-underline w-full md:w-320 bg-white color-red-600 rounded-3 shadow shadow-md p-28" name="forest" value="clearall">Clear All</button>
-                    </form>
-                    <form class="unhidden w-full md:hidden px-28" action="/generatecode" , method="POST">
-                        <button type="submit" class="text-underline w-full bg-white color-red-600 rounded-3 shadow shadow-md p-28" name="forest" value="clearall">Clear All</button>
-                    </form>
                 </div>
             </div>
         </div>

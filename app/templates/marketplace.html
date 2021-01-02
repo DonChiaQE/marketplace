@@ -29,8 +29,8 @@
                     <input type="submit" name="navbar" value="Eggs" class="bg-white m-18 text-underline pb-1" />
                     <input type="submit" name="navbar" value="Fruits" class="bg-white m-18 text-underline pb-1" />
                     <input type="submit" name="navbar" value="Fish" class="bg-white m-18 text-underline pb-1" />
-                    <input type="submit" name="navbar" value="Paper & Tissue" class="bg-white m-18 text-underline pb-1" />
-                    <input type="submit" name="navbar" value="Baking Needs" class="bg-white m-18 text-underline pb-1" />
+                    <input type="submit" name="navbar" value="Paper" class="bg-white m-18 text-underline pb-1" />
+                    <input type="submit" name="navbar" value="Baking" class="bg-white m-18 text-underline pb-1" />
                     <input type="submit" name="navbar" value="Log Out" class="bg-white m-18 text-underline color-red-600 pb-1" />
                 </div>
             </div>
@@ -45,15 +45,15 @@
                     </div>
                     <div class="hidden place-bl transform translate-y-100" id="myLinks">
                         <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
-                            <input type="submit" name="navbar" value="Rice" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Breads" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Eggs" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Fruits" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Fish" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Paper & Tissue" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Baking Needs" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full color-red-600" />
+                            <input type="submit" name="navbar" value="Rice" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Breads" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Eggs" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Fruits" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Fish" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Paper" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Baking" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
+                            <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600" />
                         </div>
                     </div>
                 </div>
@@ -156,12 +156,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                         </button>
-                        </div>
-                        <div class="text-28 regular">Wait, there's a new promotion! Come check out the exciting deals at the <a href="url_for('shop_cat')">marketplace!</a></div>
                     </div>
+                    <div class="text-28 regular">Wait, there's a new promotion! Come check out the exciting deals at the <a href="url_for('shop_cat')">marketplace!</a></div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
 </body>
@@ -202,26 +202,26 @@
 
 <script>
     function request_promo() {
-    var promoRequest = "yes";
+        var promoRequest = "yes";
 
-    fetch('/promoNoti',{
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify(promoRequest),
-        cache:"no-cache",
-        headers: new Headers({
-            "content-type" : "application/json"
-        })
-    })
-    .then(function(response) {
-        response.json().then(function (data) {
-            
-            if (data.message == "promoTrue") {
-                $('#promo_notif').show()
-            }
-            
-        })
-    })
+        fetch('/promoNoti', {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify(promoRequest),
+                cache: "no-cache",
+                headers: new Headers({
+                    "content-type": "application/json"
+                })
+            })
+            .then(function(response) {
+                response.json().then(function(data) {
+
+                    if (data.message == "promoTrue") {
+                        $('#promo_notif').show()
+                    }
+
+                })
+            })
 
     };
     var checkPromo = setInterval(request_promo, 60000)
@@ -233,7 +233,7 @@
             $('#promo_notif').hide();
         }
     };
-    
+
     function hamburger() {
         var x = document.getElementById("myLinks");
         if (x.style.display === "block") {

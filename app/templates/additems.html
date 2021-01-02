@@ -31,7 +31,7 @@
                         </div>
                         <dl>
                             <p>
-                                <input type="file" name="itemimage" autocomplete="off">
+                                Image of Item: <input type="file" name="itemimage" autocomplete="off">
                             </p>
                         </dl>
                         <input type="text" name="itemname" value="{{item.name}}" placeholder="Item Name" class="border border-black border-1 w-256 h-60 p-10 rounded-full" required />
@@ -39,10 +39,9 @@
                         <input type="text" name="iteminfo" value="{{item.info}}" placeholder="Item Expiry Date" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
                         <select required name='itemcat' id='Teacher'>
                             <option value="" selected disabled hidden>Choose Category</option>
-                            <option value="Fresh Produce">Fresh Produce</option>
-                            <option value="Dairy">Dairy</option>
-                            <option value="Meat">Meat</option>
-                            <option value="Others">Others</option>
+                            {% for cat in categories %}
+                            <option value="{{cat}}">{{cat}}</option>
+                            {% endfor %}
                         </select>
                         <select name='itemquantifier' id='Teacher'>
                             <option value="">None</option>

@@ -449,11 +449,14 @@ def submit_cart():
         local_account = session['student']
         items = db.session.query(Temporary_Table).filter_by(acc = local_account)
         check_for_existing_account = db.session.query(Submitted_Cart).filter_by(acc = local_account).first()
+        gotsubmit = check_for_existing_account
         check_for_existing_items = db.session.query(Temporary_Table).filter_by(acc = local_account).first()
         if check_for_existing_account:
-            return render_template('checkout.html', items = items, feedback = "You have already submitted once.", total = 0)
+            gotsubmit = True
+            return render_template('checkout.html', items = items, feedback = "You have already submitted once.", total = 0, gotsubmit = gotsubmit)
         elif check_for_existing_items == None:
-            return render_template('checkout.html', feedback = "There are currently no items in the cart.", total = 0)
+            gotitems = False
+            return render_template('checkout.html', feedback = "There are currently no items in the cart.", total = 0, gotitems = gotitems)
         else:
             for item in items:
                 new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
@@ -932,13 +935,6 @@ def removePromoItem(item):
     itemID_list.pop(itemID_list.index(item))
     session['promo_item'] = itemID_list
     return redirect('/addpromotion')
-
-@app.route('/poggers', methods = ['POST'])
-def poggers():
-    db.session.query(Generated_Codes).delete()
-    db.session.commit()
-    return redirect('/wipedb')
-
 
 @app.route('/publishpromotion', methods=['POST', 'GET'])
 def publishpromotion():

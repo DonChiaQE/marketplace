@@ -30,18 +30,22 @@
                         </div>
                         <input type="text" name="itemname" value="{{item.name}}" placeholder="Item Name" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
                         <input type="text" name="itemprice" value="{{item.price}}" placeholder="Item Price" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
-                        <input type="text" name="iteminfo" value="{{item.info}}" placeholder="Item Expiry Date" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
-                        <select name='itemcat' id='Teacher'>
-                            <option {% if item.cat == "Fresh Produce" %}selected = "selected" {% endif %} value="Fresh Produce">Fresh Produce</option>
-                            <option {% if item.cat == "Dairy" %}selected = "selected" {% endif %} value="Dairy">Dairy</option>
-                            <option {% if item.cat == "Meat" %}selected = "selected" {% endif %} value="Meat">Meat</option>
-                            <option {% if item.cat == "Others" %}selected = "selected" {% endif %} value="Others">Others</option>
-                        </select>
-                        <select name='itemquantifier' id='Teacher'>
+                        <select name='itemquantifier' id='quantifier' onchange = "ShowHideDiv()">
                             <option {% if item.quantifier == "" %}selected = "selected" {% endif %} value="">None</option>
                             <option {% if item.quantifier == "per pkt" %}selected = "selected" {% endif %} value="per pkt">per pkt</option>
                             <option {% if item.quantifier == "per kg" %}selected = "selected" {% endif %} value="per kg">per kg</option>
+                            <option {% if item.quantifier %}{% if item.quantifier[:3] == "for" %}selected = "selected" {% endif %}{% endif %} value="for">for</option>
                         </select>
+                        <div id="quanextend" style="display: none">
+                            <input name="quanextend" type="text" value="{% if item.quantifier %}{{item.quantifier[4:]}}{% endif %}" placeholder="Quantity" class="border border-black border-1 w-256 h-60 p-10 rounded-full"/>
+                        </div>
+                        <input type="text" name="iteminfo" value="{{item.info}}" placeholder="Item Expiry Date" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
+                        <select required name='itemcat'>
+                            {% for cat in categories %}
+                            <option value="{{cat}}" {% if item.cat == cat %} selected = "selected" {% endif %} >{{cat}}</option>
+                            {% endfor %}
+                        </select>
+                        
                     </div>
                     <div class="vstack pt-36 w-full">
                         <input type="submit" class="w-full h-48 bg-white border-1 bg-gray-900 rounded-20 shadow shadow-xl button-form color-white" value="Confirm" />
@@ -75,3 +79,12 @@
         display: inline-block;
     }
 </style>
+
+<script>
+    function ShowHideDiv() {
+        var quantifier = document.getElementById("quantifier");
+        var quanextend = document.getElementById("quanextend");
+        quanextend.style.display = quantifier.value == "for" ? "block" : "none";
+    }
+    window.onload = ShowHideDiv;
+</script>

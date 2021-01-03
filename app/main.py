@@ -827,8 +827,9 @@ def view_submitted_carts():
             total_price = 0
             for item in student_items:
                 total_price += item.price * item.quantity
-            all_total_amounts.append(total_price)
-        return render_template('testviewstudent.html', students = students, data = data, set_existing_students = set_existing_students, all_total_amounts = all_total_amounts)
+            student.totalamount = total_price
+        db.session.commit()
+        return render_template('testviewstudent.html', students = students, data = data, set_existing_students = set_existing_students)
 
 @app.route('/tableteacher', methods = ["POST", 'GET'])
 def tableTeacher():

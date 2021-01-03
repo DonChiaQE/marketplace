@@ -36,7 +36,8 @@
                         </dl>
                         <input type="text" name="itemname" value="{{item.name}}" placeholder="Item Name" class="border border-black border-1 w-256 h-60 p-10 rounded-full" required />
                         <input type="text" name="itemprice" value="{{item.price}}" placeholder="Item Price" class="border border-black border-1 w-256 h-60 p-10 rounded-full" required />
-                        <select name='itemquantifier' id='quantifier' onchange = "ShowHideDiv()">
+                        <select required name='itemquantifier' id='quantifier' onchange = "ShowHideDiv()">
+                            <option value="" selected disabled hidden>Choose Quantifier</option>
                             <option value="">None</option>
                             <option value="per pkt">per pkt</option>
                             <option value="per kg">per kg</option>

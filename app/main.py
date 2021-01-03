@@ -86,13 +86,24 @@ def update(id):
             item.info = request.form['iteminfo']
             item.cat = request.form['itemcat']
             item.quantifier = request.form['itemquantifier']
+            if item.quantifier[:3] == 'for':
+                quanextend = request.form['quanextend']
+                item.quantifier = item.quantifier + " " + quanextend
+            else:
+                pass
             try:
                 db.session.commit()
                 return redirect('/marketplace')
             except:
                 return 'There was an issue updating your task.'
         else:
-            return render_template("edititems.html", item = item)
+            all_items_categories = db.session.query(Record_Of_Items)
+            categories = []
+            for cate in all_items_categories:
+                categories.append(cate.cat)
+            categories.sort()
+            legit_categories = set(categories)
+            return render_template("edititems.html", item = item, categories = legit_categories)
     else:
         return redirect('/login')
 
@@ -266,6 +277,7 @@ def additems():
         categories = []
         for cate in all_items_categories:
             categories.append(cate.cat)
+        categories.sort()
         legit_categories = set(categories)
         if request.method == 'POST':
             new_item_name = request.form['itemname']
@@ -281,6 +293,11 @@ def additems():
                     new_item_image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 else:
                     filename = None
+                if new_item_quantifier == 'for':
+                    new_item_quanextend = request.form['quanextend']
+                    new_item_quantifier = new_item_quantifier + " " + new_item_quanextend
+                else:
+                    pass
                 new_item = Record_Of_Items(name = new_item_name, price = new_item_price, info = new_item_info, cat = new_item_cat, quantifier = new_item_quantifier, image = filename)
                 db.session.add(new_item)
                 db.session.commit()
@@ -358,7 +375,8 @@ def delete_item(id):
             if item == None:
                 return "Item doesn't exist."
             else:
-                os.remove("static/uploads/" + item.image)
+                if item.image:
+                    os.remove("static/uploads/" + item.image)
                 Record_Of_Items.query.filter_by(id = id).delete()
                 try:
                     db.session.commit()
@@ -617,7 +635,13 @@ def redirect_to_login():
         if request.form['manipulate'] == 'Edit':
             id = request.form['itemid']
             item = db.session.query(Record_Of_Items).filter_by(id=id).first()
-            return render_template('edititems.html', item = item)
+            all_items_categories = db.session.query(Record_Of_Items)
+            categories = []
+            for cate in all_items_categories:
+                categories.append(cate.cat)
+            categories.sort()
+            legit_categories = set(categories)
+            return render_template('edititems.html', item = item, categories = legit_categories)
         elif request.form['manipulate'] == 'Delete':
             id = request.form['itemid']
             return redirect(url_for('delete_item', id = id), code=307)

@@ -37,15 +37,15 @@
                     </div>
                     <div class="hidden place-bl transform translate-y-100 bg-white" id="myLinks">
                         <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
-                            <input type="submit" name="navbar" value="Rice" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Breads" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Eggs" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Fruits" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Fish" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Paper" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Baking" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600" />
+                            <input type="submit" name="navbar" value="Rice" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Breads" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Eggs" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Fruits" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Fish" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Paper" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Baking" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full color-red-600 bg-white" />
                         </div>
                     </div>
                 </div>
@@ -154,17 +154,18 @@
             </div>
         </div>
 
-        <div id="promo_notif" style="display: none;">
-            <div class="hstack">
-                <div class="vstack w-full h-320 m-28 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
+        <div id="promo_notif" style="position: fixed; z-index: 2; left: 50%;
+        transform: translate(-50%, 0); display: none;">
+            <div class="px-12 pt-12">
+                <div class="vstack w-full h-320 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
                     <div class="hstack">
                         <div class="text-48 bold">Promotion!</div>
                         <div class="spacer"></div>
                         <button onclick="promo(false)">
-                    <svg class="w-28 h-28 color-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                    </button>
+                        <svg class="w-28 h-28 color-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        </button>
                     </div>
                     <div class="text-28 regular">Wait, there's a new promotion! Come check out the exciting deals at the <a href="url_for('shop_cat')">marketplace!</a></div>
                 </div>

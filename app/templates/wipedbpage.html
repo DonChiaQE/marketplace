@@ -27,11 +27,13 @@
                         <div>
                             <div class="hstack space-5">
                                 <!--<form class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-28">-->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-28">
                                     <button onclick="testing(value);" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallcurrent">Clear All Students' Current Cart</button>
                                     <button onclick="testing(value);" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallsubmitted">Clear All Submitted Carts</button>
                                     <button onclick="testing(value);" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallstudents">Clear All Student Accounts</button>
                                     <button onclick="testing(value);" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallteachers">Clear All Teacher Accounts</button>
                                     <button onclick="testing(value);" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="objectss" value="removeallitems">Clear All Existing Items</button>
+                                </div>
                                 <!--</form>-->
                             </div>
                         </div>
@@ -39,42 +41,39 @@
                 </div>
             </div>
 
-<script>
+            <script>
+                function testing(duh) {
+                    swal({
+                            title: "Are you sure?",
+                            text: "Once deleted, you will not be able to recover them!",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                deletus(duh);
+                                swal("Your files have been deleted!", {
+                                    icon: "success",
+                                });
 
-    function testing(duh)
-    {
-        swal({
-            title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover them!",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-                deletus(duh);
-              swal("Your files have been deleted!", {
-                icon: "success",
-              });
-              
-            } else {
-              
-            }
-          });
-    }
+                            } else {
 
-    function deletus(objectss)
-    {
-        $.ajax({
-            url:"/removeallobjects",
-            type: "POST",
-            data : {
-                objectss: objectss,
-                page: 'wipedbpage',
+                            }
+                        });
                 }
-        })
-    }
-</script>
+
+                function deletus(objectss) {
+                    $.ajax({
+                        url: "/removeallobjects",
+                        type: "POST",
+                        data: {
+                            objectss: objectss,
+                            page: 'wipedbpage',
+                        }
+                    })
+                }
+            </script>
 </body>
 
 <style>

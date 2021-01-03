@@ -36,17 +36,21 @@
                         </dl>
                         <input type="text" name="itemname" value="{{item.name}}" placeholder="Item Name" class="border border-black border-1 w-256 h-60 p-10 rounded-full" required />
                         <input type="text" name="itemprice" value="{{item.price}}" placeholder="Item Price" class="border border-black border-1 w-256 h-60 p-10 rounded-full" required />
+                        <select name='itemquantifier' id='quantifier' onchange = "ShowHideDiv()">
+                            <option value="">None</option>
+                            <option value="per pkt">per pkt</option>
+                            <option value="per kg">per kg</option>
+                            <option value="for">for</option>
+                        </select>
+                        <div id="quanextend" style="display: none">
+                            <input name="quanextend" type="text" placeholder="Quantity" class="border border-black border-1 w-256 h-60 p-10 rounded-full"/>
+                        </div>
                         <input type="text" name="iteminfo" value="{{item.info}}" placeholder="Item Expiry Date" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
                         <select required name='itemcat' id='Teacher'>
                             <option value="" selected disabled hidden>Choose Category</option>
                             {% for cat in categories %}
                             <option value="{{cat}}">{{cat}}</option>
                             {% endfor %}
-                        </select>
-                        <select name='itemquantifier' id='Teacher'>
-                            <option value="">None</option>
-                            <option value="per pkt">per pkt</option>
-                            <option value="per kg">per kg</option>
                         </select>
                     </div>
                     <div class="vstack pt-36 w-full">
@@ -83,3 +87,11 @@
         cursor: pointer;
     }
 </style>
+<script>
+    function ShowHideDiv() {
+        var quantifier = document.getElementById("quantifier");
+        var quanextend = document.getElementById("quanextend");
+        quanextend.style.display = quantifier.value == "for" ? "block" : "none";
+    }
+
+</script>

@@ -33,6 +33,7 @@ class StdAcc(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), default = '-')
     pword = db.Column(db.String(200), default = '-')
+    totalamount = db.Column(db.Integer, default = 0)
     assigned_teacher_id = db.Column(db.Integer, db.ForeignKey('tr_acc.id'))
 
 class Record_Of_Items(db.Model):
@@ -821,14 +822,14 @@ def view_submitted_carts():
         for row in data:
             existing_students.append(row.acc)
         set_existing_students = set(existing_students)
-        all_total_amounts = []
         for student in students:
             student_items = db.session.query(Submitted_Cart).filter_by(acc = student.name)
             total_price = 0
             for item in student_items:
                 total_price += item.price * item.quantity
-            all_total_amounts.append(total_price)
-        return render_template('testviewstudent.html', students = students, data = data, set_existing_students = set_existing_students, all_total_amounts = all_total_amounts)
+            student.totalamount = total_price
+        db.session.commit()
+        return render_template('testviewstudent.html', students = students, data = data, set_existing_students = set_existing_students)
 
 @app.route('/tableteacher', methods = ["POST", 'GET'])
 def tableTeacher():

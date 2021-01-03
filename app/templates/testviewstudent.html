@@ -37,7 +37,7 @@
                         </div>
                         {% endfor %} {% endif %}
                     </div>
-                    <div class="mt-28">Total Amount Spent: {{ "$%.2f"|format(all_total_amounts[student.id - 1]) }}</div>
+                    <div class="mt-28">Total Amount Spent: {{ "$%.2f"|format(student.totalamount) }}</div>
                 </div>
                 {% endfor %}
             </div>

@@ -828,6 +828,18 @@ def filterCat(cat):
 
     return items_promo, items
 
+def filterAllCat():
+    if 'student' in session:
+        student = db.session.query(StdAcc).filter_by(name = session['student']).first()
+        teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
+    else:
+        teacher = db.session.query(TrAcc).filter_by(name = session['teacher']).first()
+
+    items_promo = db.session.query(Record_Of_Items,Promo_Items)\
+    .filter(Record_Of_Items.id == Promo_Items.itemID)\
+    .filter(Promo_Items.promo_no == teacher.promo_state).all()
+
+    return items_promo
 
 @app.route('/marketplace',methods=['GET','POST'])
 def shop_cat():
@@ -835,33 +847,42 @@ def shop_cat():
         if request.method == 'POST':
             if request.form['navbar'] == 'Rice':
                 items = filterCat('Rice')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Dairy':
                 items = filterCat('Dairy')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Breads':
                 items = filterCat('Breads')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Eggs':
                 items = filterCat('Eggs')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Fruits':
                 items = filterCat('Fruits')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Fish':
                 items = filterCat('Fish')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Paper':
                 items = filterCat('Paper')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Baking':
                 items = filterCat('Baking')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
         else:
+            items_promomo = filterAllCat()
             items = filterCat('Rice')
-            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+            return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
 
     elif ("teacher" in session):
         if request.method == 'POST':
@@ -1089,6 +1110,7 @@ def removePromoItem(item):
 def publishpromotion():
     if request.method == 'POST':
         itemID_list = session['promo_items']
+        print(session['promo_no'])
         check_promo = db.session.query(Promo_Items)\
                 .filter(Promo_Items.promo_no == session['promo_no']).delete()
         insert_entries = []

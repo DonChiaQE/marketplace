@@ -175,7 +175,10 @@
         </div>
     </div>
     </div>
-
+    <div id="text" style="display: none;">
+        <p style="display: block;">Items on promotion:<br></p>{% for item in items_promo %}
+        <p>{{item[0].name}}<br></p>{%endfor%}
+    </div>
 </html>
 
 <style>
@@ -307,4 +310,72 @@
             }
         })
     }
+    
+        function request_promo() {
+    
+            fetch('/promoNoti', {
+                    method: "POST",
+                    credentials: "include",
+                    body: JSON.stringify(""),
+                    cache: "no-cache",
+                    headers: new Headers({
+                        "content-type": "application/json"
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var text = document.getElementById("text").innerText;
+                    console.log(text);
+                    if (data.message == "promoSent1") {
+    
+                        swal({
+                                title: "New Promotion!",
+                                text: String(text),
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            }); 
+                    }
+                    else if (data.message == "promoSent2") {
+    
+                        swal({
+                                title: "New Promotion!",
+                                text: String(text),
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            }); 
+                    } 
+                    else if (data.message == "promoSent3") {
+    
+                        swal({
+                                title: "New Promotion!",
+                                text: String(text),
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            }); 
+                    }
+                });
+    
+        };
+        
+        var checkPromo = setInterval(request_promo, 60000)
+    
+        function promo(state) {
+            var promoNotRead = true
+            if (state == false) {
+                var promoNotRead = false
+                $('#promo_notif').hide();
+            }
+        };
+    
+        function hamburger() {
+            var x = document.getElementById("myLinks");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
 </script>

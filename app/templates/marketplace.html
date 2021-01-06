@@ -168,7 +168,7 @@
     </div>
     </div>
     <div id="text" style="display: none;">
-        <p style="display: block;">Items on promotion:<br></p>{% for item in items_promo %}
+        <p style="display: block;">Items on promotion:<br></p>{% for item in items_promomo %}
         <p>{{item[0].name}}<br></p>{%endfor%}
     </div>
 </body>
@@ -222,9 +222,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                var promo_sent = "promoSent" + "{{items_promo[0][1].promo_no | tojson}}";
-                var length = "{{items_promo | length | tojson}}";
-                var text = document.getElementById("text").innerText; 
+                var text = document.getElementById("text").innerText;
                 console.log(text);
                 if (data.message == "promoSent1") {
 
@@ -260,7 +258,7 @@
 
     };
     
-    //var checkPromo = setInterval(request_promo, 60000)
+    var checkPromo = setInterval(request_promo, 60000)
 
     function promo(state) {
         var promoNotRead = true

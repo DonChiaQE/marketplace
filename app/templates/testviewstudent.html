@@ -37,7 +37,12 @@
                         </div>
                         {% endfor %} {% endif %}
                     </div>
-                    <div class="mt-28">Total Amount Spent: {{ "$%.2f"|format(student.totalamount) }}</div>
+                    <div class="mt-28">Total Amount Spent: {{ "$%.2f"|format(student.totalamount) }}
+                        <form action="/removesubmittedcart" method="POST">
+                            <input type="hidden" name="username" value="{{student.name}}">
+                            <input type="submit" name='nav' value="Remove Cart" class="bg-red-600 color-white text-underline w-60 rounded-3 shadow shadow-md p-8">
+                        </form>
+                    </div>
                 </div>
                 {% endfor %}
             </div>

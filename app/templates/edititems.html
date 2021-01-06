@@ -39,7 +39,7 @@
                         <div id="quanextend" style="display: none">
                             <input name="quanextend" type="text" value="{% if item.quantifier %}{{item.quantifier[4:]}}{% endif %}" placeholder="Quantity" class="border border-black border-1 w-256 h-60 p-10 rounded-full"/>
                         </div>
-                        <input type="text" name="iteminfo" value="{{item.info}}" placeholder="Item Expiry Date" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
+                        <input type="date" name="iteminfo" value="{{item.info}}" placeholder="Item Expiry Date" class="border border-black border-1 w-256 h-60 p-10 rounded-full" />
                         <select required name='itemcat'>
                             {% for cat in categories %}
                             <option value="{{cat}}" {% if item.cat == cat %} selected = "selected" {% endif %} >{{cat}}</option>

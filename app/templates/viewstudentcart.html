@@ -24,12 +24,21 @@
                 <div class="vstack bg-gray-200 p-28 space-28 align-start rounded-28 mx-8">
                     <div class="text-28">{{username}}</div>
                     <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {% for item in items_promo %}
+                        <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
+                            <div class="text-20">{{item[0].name}}</div>
+                            <div class="text-14">Price: {{"$%.2f"|format(item[0].price)}}</div>
+                            <div class="text-14">Quantity: {{item[1].quantity}}</div>
+                            <div class="text-14 bold">Total: {{  "$%.2f"|format(item[1].quantity * item[0].price)  }}</div>
+                            <div class="spacer"></div>
+                        </div>
+                        {% endfor %}
                         {% for item in items %}
                         <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
-                            <div class="text-20">{{item.name}}</div>
-                            <div class="text-14">Price: {{"$%.2f"|format(item.price)}}</div>
-                            <div class="text-14">Quantity: {{item.quantity}}</div>
-                            <div class="text-14 bold">Total: {{  "$%.2f"|format(item.quantity * item.price)  }}</div>
+                            <div class="text-20">{{item[0].name}}</div>
+                            <div class="text-14">Price: {{"$%.2f"|format(item[0].price)}}</div>
+                            <div class="text-14">Quantity: {{item[1].quantity}}</div>
+                            <div class="text-14 bold">Total: {{  "$%.2f"|format(item[1].quantity * item[0].price)  }}</div>
                             <div class="spacer"></div>
                         </div>
                         {% endfor %}
@@ -39,6 +48,7 @@
                 </div>
                 <form class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-28" action="/deleteEntry" , method="POST">
                     <input type="hidden" name="username" value="{{username}}">
+                    <input type="hidden" name="userid" value="{{userid}}">
                     <button type="submit" class="text-underline color-green-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="todo" value="View Current Cart">Refresh</button>
                 </form>
             </div>

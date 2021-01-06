@@ -46,15 +46,15 @@
                     </div>
                     <div class="hidden place-bl transform translate-y-100" id="myLinks">
                         <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
-                            <input type="submit" name="navbar" value="Rice" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Breads" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Eggs" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Fruits" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Fish" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Paper" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Baking" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600" />
+                            <input type="submit" name="navbar" value="Rice" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Breads" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Eggs" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Fruits" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Fish" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Paper" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Baking" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white" />
+                            <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full color-red-600 bg-white" />
                         </div>
                     </div>
                 </div>
@@ -148,9 +148,10 @@
             </div>
         </div>
 
-        <div id="promo_notif" style="display: none; z-index: 2;">
-            <div class="hstack">
-                <div class="vstack w-full h-320 m-28 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
+        <div id="promo_notif" style="position: fixed; z-index: 2; left: 50%;
+        transform: translate(-50%, 0); display: none;">
+            <div class="px-12 pt-12">
+                <div class="vstack w-full h-320 bg-white shadow-lg shadow rounded-24 p-48 align-start space-16">
                     <div class="hstack">
                         <div class="text-48 bold">Promotion!</div>
                         <div class="spacer"></div>
@@ -166,8 +167,10 @@
         </div>
     </div>
     </div>
-    <p id="text" style="display: block;">Items on promotion:\n{% for item in items_promo %}{{item[0].name}}\n{%endfor%}</p>
-    
+    <div id="text" style="display: none;">
+        <p style="display: block;">Items on promotion:<br></p>{% for item in items_promomo %}
+        <p>{{item[0].name}}<br></p>{%endfor%}
+    </div>
 </body>
 
 </html>
@@ -219,10 +222,10 @@
             })
             .then(response => response.json())
             .then(data => {
-                var text = $('#text').html(); 
-                console.log(data.message)
+                var text = document.getElementById("text").innerText;
+                console.log(text);
                 if (data.message == "promoSent1") {
-                    console.log(data.message);
+
                     swal({
                             title: "New Promotion!",
                             text: String(text),
@@ -232,7 +235,7 @@
                         }); 
                 }
                 else if (data.message == "promoSent2") {
-                    console.log(data.message);
+
                     swal({
                             title: "New Promotion!",
                             text: String(text),
@@ -242,7 +245,7 @@
                         }); 
                 } 
                 else if (data.message == "promoSent3") {
-                    console.log(data.message);
+
                     swal({
                             title: "New Promotion!",
                             text: String(text),
@@ -250,9 +253,7 @@
                             buttons: true,
                             dangerMode: true,
                         }); 
-                } 
-
-                
+                }
             });
 
     };

@@ -37,6 +37,7 @@ class StdAcc(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), default = '-')
     pword = db.Column(db.String(200), default = '-')
+    totalamount = db.Column(db.Integer)
     assigned_teacher_id = db.Column(db.Integer, db.ForeignKey('tr_acc.id'))
     totalamount = db.Column(db.Integer, default = 0)
     cart = db.relationship('Cart_Items', backref="student")
@@ -208,7 +209,7 @@ def removeallobjects():
                     db.session.commit()
                     return redirect('/wipedbpage')
                 elif request.form['objectss'] == 'removeallcurrent':
-                    db.session.query(Temporary_Table).delete()
+                    db.session.query(Cart_Items).delete()
                     db.session.commit()
                     return redirect('/wipedbpage')
             else:
@@ -229,7 +230,7 @@ def removeallobjects():
                     db.session.commit()
                     return redirect('/marketplace')
                 elif request.form['objectss'] == 'removeallcurrent':
-                    db.session.query(Temporary_Table).delete()
+                    db.session.query(Cart_Items).delete()
                     db.session.commit()
                     return redirect('/marketplace')
         else:
@@ -247,7 +248,7 @@ def reinitialisedb():
         #for code in all_codes:
         #    code.code = ''
         db.session.query(Record_Of_Items).delete()
-        db.session.query(Temporary_Table).delete()
+        db.session.query(Cart_Items).delete()
         db.session.query(Submitted_Cart).delete()
         db.session.commit()
         return redirect('/admin')
@@ -448,20 +449,45 @@ def deleteEntry():
                     return 'No such User'
         elif request.form['todo'] == 'View Current Cart':
             username = request.form['username']
-            items = db.session.query(Temporary_Table).filter_by(acc = username)
-            item_test = db.session.query(Temporary_Table).filter_by(acc = username).first()
+            userid = request.form['userid']
+            items = db.session.query(Cart_Items).filter_by(acc_id = userid)
+
+            student = db.session.query(StdAcc).filter_by(name = username).first()
+            check_for_existing_items = db.session.query(Cart_Items).filter_by(acc_id = student.id).first()
+            teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
+            items_promo = db.session.query(Record_Of_Items,Promo_Items, Cart_Items)\
+                .filter(Record_Of_Items.id == Cart_Items.itemID)\
+                .filter(Promo_Items.itemID == Record_Of_Items.id)\
+                .filter(Promo_Items.promo_no == teacher.promo_state)\
+                .filter(Cart_Items.acc_id == student.id).all()
+            
+            try:
+                items = db.session.query(Record_Of_Items, Cart_Items)\
+                    .filter(Record_Of_Items.id == Cart_Items.itemID)\
+                    .filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
+                    .filter(Cart_Items.acc_id == student.id).all()
+
+            except:
+                items = db.session.query(Record_Of_Items, Cart_Items)\
+                    .filter(Record_Of_Items.id == Cart_Items.itemID)\
+                    .filter(Cart_Items.acc_id == student.id).all()
+            
+            total = 0
+            for item in items_promo:
+                total += item[2].quantity * item[1].promo_price
+
+            for item in items:
+                total += item[1].quantity * item[0].price
+
             text = ""
-            if item_test == None:
+            if check_for_existing_items == None:
                 text = "Empty Cart"
             else:
                 text = ""
-            total = 0
-            for item in items:
-                total += (item.quantity * item.price)
             if 'admin' in session:
-                return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'admin', total = total)
+                return render_template('viewstudentcart.html', items = items, items_promo = items_promo, username = username, text = text, usertype = 'admin', total = total, userid = userid)
             elif 'teacher' in session:
-                return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'teacher', total = total)
+                return render_template('viewstudentcart.html', items = items, items_promo = items_promo, username = username, text = text, usertype = 'teacher', total = total, userid = userid)
         
 
 @app.route('/addtocart', methods=['POST', 'GET'])
@@ -802,6 +828,18 @@ def filterCat(cat):
 
     return items_promo, items
 
+def filterAllCat():
+    if 'student' in session:
+        student = db.session.query(StdAcc).filter_by(name = session['student']).first()
+        teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
+    else:
+        teacher = db.session.query(TrAcc).filter_by(name = session['teacher']).first()
+
+    items_promo = db.session.query(Record_Of_Items,Promo_Items)\
+    .filter(Record_Of_Items.id == Promo_Items.itemID)\
+    .filter(Promo_Items.promo_no == teacher.promo_state).all()
+
+    return items_promo
 
 @app.route('/marketplace',methods=['GET','POST'])
 def shop_cat():
@@ -809,33 +847,42 @@ def shop_cat():
         if request.method == 'POST':
             if request.form['navbar'] == 'Rice':
                 items = filterCat('Rice')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Dairy':
                 items = filterCat('Dairy')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Breads':
                 items = filterCat('Breads')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Eggs':
                 items = filterCat('Eggs')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Fruits':
                 items = filterCat('Fruits')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Fish':
                 items = filterCat('Fish')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Paper':
                 items = filterCat('Paper')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Baking':
                 items = filterCat('Baking')
-                return render_template('marketplace.html',items_promo = items[0], items=items[1])
+                items_promomo = filterAllCat()
+                return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
         else:
+            items_promomo = filterAllCat()
             items = filterCat('Rice')
-            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+            return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
 
     elif ("teacher" in session):
         if request.method == 'POST':
@@ -907,7 +954,7 @@ def shop_cat():
         return render_template('login.html')
 
 
-@app.route('/viewsubmittedcarts', methods = ['post', 'get'])
+@app.route('/viewsubmittedcarts', methods = ['POST', 'GET'])
 def view_submitted_carts():
     if 'teacher' in session:
         local_account = session['teacher']
@@ -918,7 +965,6 @@ def view_submitted_carts():
         for row in data:
             existing_students.append(row.acc)
         set_existing_students = set(existing_students)
-        all_total_amounts = []
         for student in students:
             student_items = db.session.query(Submitted_Cart).filter_by(acc = student.name)
             total_price = 0
@@ -1064,6 +1110,7 @@ def removePromoItem(item):
 def publishpromotion():
     if request.method == 'POST':
         itemID_list = session['promo_items']
+        print(session['promo_no'])
         check_promo = db.session.query(Promo_Items)\
                 .filter(Promo_Items.promo_no == session['promo_no']).delete()
         insert_entries = []

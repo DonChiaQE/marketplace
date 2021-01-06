@@ -42,6 +42,9 @@
                 {% endfor %}
             </div>
         </div>
+        <form class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-28" action="/viewsubmittedcarts" , method="POST">
+            <button type="submit" class="text-underline color-green-600 w-128 bg-white rounded-3 shadow shadow-md p-28" name="todo" value="View Current Cart">Refresh</button>
+        </form>
     </div>
 </body>
 

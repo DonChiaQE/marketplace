@@ -822,7 +822,6 @@ def view_submitted_carts():
         for row in data:
             existing_students.append(row.acc)
         set_existing_students = set(existing_students)
-        all_total_amounts = []
         for student in students:
             student_items = db.session.query(Submitted_Cart).filter_by(acc = student.name)
             total_price = 0

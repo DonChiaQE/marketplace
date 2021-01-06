@@ -5,30 +5,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 
 <body>
     <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
-        <div class="hidden md:unhidden">
-            <div class=" hstack">
-                <a href="{{url_for('admin')}}">
-                    <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-                </a>
-            </div>
-        </div>
-
-        <div class="unhidden md:hidden group">
-            <div class="zstack w-40 h-40">
-                <a href="{{url_for('admin')}}">
-                    <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-                </a>
-            </div>
-        </div>
+        <a href="{{url_for('teacher')}}">
+            <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+        </a>
 
         <div class="spacer"></div>
+
     </nav>
-    
+    <div class="container py-28">
+        <div class="vstack screen">
+            {% if current_promo != None %}
+            <div class="text-30">Current Promotion: {{current_promo}}</div>
+            {% else %}
+            <div class="text-30">There are no promotion running now.</div>
+            {% endif %}
+        </div>
+   </div>
     <div class="container py-28">
         <div class="vstack md:hstack md:space-28 h-auto">
             <div id="example-1" class=" vstack space-28">
@@ -42,21 +40,31 @@
                         </div>
                         {% else %}
                         {% for item in promo_dis1 %}
-                        <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
+                        <div class="vstack space-8 align-start w-full md:w-224 h-auto bg-white shadow shadow-md p-16">
                             <div class="text-20">{{item[0].name}}</div>
                             <div class="text-14">Original Price: {{"$%.2f"|format(item[0].price)}}</div>
                             <div class="text-14">Promo Price: {{"$%.2f"|format(item[1].promo_price)}}</div>
                             <div class="spacer"></div>
                         </div>
                         {% endfor %}
-                        <a href="{{url_for('setPromoNo', promo_no=1)}}">
-                            <div class="text-20">Click here to reselect items for promotion.</div>
-                            </a>
+                    
                         {% endif %}
                     </div>
                     
                 </div>
                 
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-20">
+        <div class="vstack screen">
+            <div class="container py-20">
+                <div class="hstack space-5">
+                    <!--<form class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-28">-->
+                        <button onclick="confirmation(value);" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" value="1">Launch Promotion 1</button>
+                    <!--</form>-->
+                </div>
             </div>
         </div>
     </div>
@@ -70,28 +78,36 @@
                     
                         {% if promo_dis2.count() == 0 %}
                 
-                        <div class="text-20">There is no available promotion. 
-                            <a href="{{url_for('setPromoNo', promo_no=2)}}">Click here to add promotion</a>
-                        </div>
+                        <div class="text-20">There is no available promotion. </div>
 
                         <div class="spacer"></div>
                         {% else %}
                         {% for item in promo_dis2 %}
-                        <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
+                        <div class="vstack space-8 align-start w-full md:w-224 h-auto bg-white shadow shadow-md p-16">
                             <div class="text-20">{{item[0].name}}</div>
                             <div class="text-14">Original Price: {{"$%.2f"|format(item[0].price)}}</div>
                             <div class="text-14">Promo Price: {{"$%.2f"|format(item[1].promo_price)}}</div>
                             <div class="spacer"></div>
                         </div>
                         {% endfor %}
-                        <a href="{{url_for('setPromoNo', promo_no=2)}}">
-                            <div class="text-20">Click here to reselect items for promotion.</div>
-                            </a>
+
                         {% endif %}
                         
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-20">
+        <div class="vstack screen">
+            <div class="container py-20">
+                <div class="hstack space-5">
+                    <!--<form class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-28">-->
+                        <button onclick="confirmation(value);" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" value="2">Launch Promotion 2</button>
+                    <!--</form>-->
+                </div>
             </div>
         </div>
     </div>
@@ -108,16 +124,14 @@
                         </div>
                         {% else %}
                         {% for item in promo_dis3 %}
-                        <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
+                        <div class="vstack space-8 align-start w-full md:w-224 h-auto bg-white shadow shadow-md p-16">
                             <div class="text-20">{{item[0].name}}</div>
                             <div class="text-14">Original Price: {{"$%.2f"|format(item[0].price)}}</div>
                             <div class="text-14">Promo Price: {{"$%.2f"|format(item[1].promo_price)}}</div>
                             <div class="spacer"></div>
                         </div>
                         {% endfor %}
-                        <a href="{{url_for('setPromoNo', promo_no=3)}}">
-                            <div class="text-20">Click here to reselect items for promotion.</div>
-                            </a>
+                        
                         {% endif %}
                     </div>
                 </div>
@@ -126,27 +140,69 @@
         </div>
     </div>
 
+    <div class="container py-20">
+        <div class="vstack screen">
+            <div class="container py-20">
+                <div class="hstack space-5">
+                    <!--<form class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-28">-->
+                        <button onclick="confirmation(value);" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" value="3">Launch Promotion 3</button>
+                    <!--</form>-->
+                </div>
+            </div>
+        </div>
     </div>
 
+    </div>
+
+<script>
+
+    function confirmation(num)
+    {
+        swal({
+            title: "Launch Promotion " + num + "?",
+            text: "This will change the prices provided to the teams. \n \
+            You can view the new prices in \"List of Shopping Items\" Tab at the menu.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((promoPub) => {
+            if (promoPub) {
+                sendState(num);
+                swal({
+                title: "Promotions have been published!", 
+                icon: "success",
+                }).then(function() {
+                window.location.href = '/teacher'; 
+                })
+              
+            } else {
+              
+            };
+            
+          });
+    }
+
+    function sendState(state)
+    {
+        $.ajax({
+            url:"/setTeacherPromoState",
+            type: "POST",
+            data : {
+                promo_state: state
+                }
+        })
+    }
+</script>
 </body>
 
-</html>
-
 <style>
-    .buttons:active {
-        box-shadow: var(--shadow-sm);
-    }
-    
-    .buttons:hover {
-        cursor: pointer;
-    }
-    
-    .text-12 {
-        font-size: 12px;
-    }
-    
-    .text-center {
-        text-align: center;
+    body {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--text-color);
+        background-color: var(--bg-color);
     }
     
      :root {
@@ -156,62 +212,11 @@
         --title-color: #2c3e50;
     }
     
-    body {
-        font-family: Avenir, Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        color: var(--text-color);
-        background-color: var(--bg-color);
-    }
-    
     .text-underline:hover {
         text-decoration: underline;
         display: inline-block;
         cursor: pointer;
     }
-    
-    input:invalid {
-        border: red solid 3px;
-    }
 </style>
 
-<script>
-    var example1 = new Vue({
-        el: '#example-1',
-        data: {
-            items: [{
-                name: 'Pasar Tomato',
-                price: '$2',
-                info: '6 per pack'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }, {
-                name: 'Celery',
-                price: '$4',
-                info: 'Single celery'
-            }]
-        }
-    })
-</script>
+</html>

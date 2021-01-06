@@ -793,7 +793,7 @@ def filterCat(cat):
     .filter(Record_Of_Items.cat == cat).all()
 
     try:
-        items = db.session.query(Record_Of_Items).filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
+        items = db.session.query(Record_Of_Items).filter(Record_Of_Items.id.notin_([j[1].itemID for j in items_promo]))\
                 .filter(Record_Of_Items.cat == cat).all()
 
     except:
@@ -1084,7 +1084,7 @@ def promoNoti():
     req = request.get_json()
     student = db.session.query(StdAcc).filter_by(name = session['student']).first()
     teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
-    promo_sent = 'promoSent'
+    promo_sent = 'promoSent' + str(teacher.promo_state)
 
     if promo_sent not in session:
         res = make_response(jsonify({"message":promo_sent}), 200)

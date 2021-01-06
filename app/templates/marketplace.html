@@ -219,11 +219,10 @@
             })
             .then(response => response.json())
             .then(data => {
-                var promo_sent = "promoSent";
                 var text = $('#text').html(); 
-                console.log(text);
-                if (data.message == promo_sent) {
-                    
+                console.log(data.message)
+                if (data.message == "promoSent1") {
+                    console.log(data.message);
                     swal({
                             title: "New Promotion!",
                             text: String(text),
@@ -232,6 +231,28 @@
                             dangerMode: true,
                         }); 
                 }
+                else if (data.message == "promoSent2") {
+                    console.log(data.message);
+                    swal({
+                            title: "New Promotion!",
+                            text: String(text),
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        }); 
+                } 
+                else if (data.message == "promoSent3") {
+                    console.log(data.message);
+                    swal({
+                            title: "New Promotion!",
+                            text: String(text),
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        }); 
+                } 
+
+                
             });
 
     };

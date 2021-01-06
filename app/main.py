@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, flash, session, make_response, jsonify
 import sqlalchemy
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, load_only
+from sqlalchemy.sql import exists
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required, UserMixin
 import os, glob
@@ -23,20 +24,26 @@ class Admin(db.Model):
     pword = db.Column(db.String(200), default = '-')
 
 class TrAcc(db.Model):
+    __tablename__ = 'tr_acc'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), default = '-')
     pword = db.Column(db.String(200), default = '-')
     passcode = db.Column(db.String(6), default = '')
+    promo_state = db.Column(db.Integer,default = '-')
     assigned_students = db.relationship('StdAcc', backref="assigned_teacher")
 
 class StdAcc(db.Model):
+    __tablename__ = 'std_acc'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), default = '-')
     pword = db.Column(db.String(200), default = '-')
     totalamount = db.Column(db.Integer)
     assigned_teacher_id = db.Column(db.Integer, db.ForeignKey('tr_acc.id'))
+    totalamount = db.Column(db.Integer, default = 0)
+    cart = db.relationship('Cart_Items', backref="student")
 
 class Record_Of_Items(db.Model):
+    __tablename__ = 'record_of_items'
     id = db.Column(db.Integer,primary_key = True)
     name = db.Column(db.String(200),default = '-')
     info = db.Column(db.String(200),default = '-')
@@ -44,18 +51,22 @@ class Record_Of_Items(db.Model):
     cat = db.Column(db.String(200),default = '-')
     image = db.Column(db.String(200),default = '')
     quantifier = db.Column(db.String(200),default='')
-    promo_price = db.Column(db.Integer,default = '-')
-    
+    promo_items = db.relationship('Promo_Items', backref="item")
+    cart_items = db.relationship('Cart_Items', backref="item")
 
-class Temporary_Table(db.Model):
-    id = db.Column(db.Integer,primary_key = True)
-    acc = db.Column(db.String(200),default = '-')
-    name = db.Column(db.String(200),default = '-')
-    info = db.Column(db.String(200),default = '-')
-    price = db.Column(db.Integer,default = '-')
-    quantity = db.Column(db.Integer,default = 1)
-    cat = db.Column(db.String(200),default = '-')
+class Promo_Items(db.Model):
+    __tablename__ = 'promo_items'
+    id = db.Column(db.Integer, primary_key=True)
+    itemID = db.Column(db.Integer, db.ForeignKey('record_of_items.id'))
+    promo_no = db.Column(db.Integer,default = '-')
     promo_price = db.Column(db.Integer,default = '-')
+
+class Cart_Items(db.Model):
+    __tablename__ = 'cart_items'
+    id = db.Column(db.Integer,primary_key = True)
+    acc_id = db.Column(db.Integer, db.ForeignKey('std_acc.id'))
+    itemID = db.Column(db.Integer, db.ForeignKey('record_of_items.id'))
+    quantity = db.Column(db.Integer,default = '-')
 
 class Submitted_Cart(db.Model):
     id = db.Column(db.Integer,primary_key = True)
@@ -346,16 +357,27 @@ def decrease_quantity():
 @app.route('/checkout', methods=['POST', 'GET'])
 def checkout():
     if "student" in session:
-        items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
-        all_items = db.session.query(Temporary_Table).filter_by(acc = session['student'])
-        total = 0
-        for item in all_items:
-            if item.promo_price == '-' or item.promo_price == None:
-                total += item.quantity * item.price
-            else:
-                total += item.quantity * item.promo_price
+        student = db.session.query(StdAcc).filter_by(name = session['student']).first()
+        teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
+        items_promo = db.session.query(Record_Of_Items,Promo_Items, Cart_Items)\
+            .filter(Record_Of_Items.id == Cart_Items.itemID)\
+            .filter(Promo_Items.itemID == Record_Of_Items.id)\
+            .filter(Promo_Items.promo_no == teacher.promo_state)\
+            .filter(Cart_Items.acc_id == student.id).all()
 
-        return render_template('checkout.html',items = items, total = total)
+        items = db.session.query(Record_Of_Items, Cart_Items)\
+            .filter(Record_Of_Items.id == Cart_Items.itemID)\
+            .filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
+            .filter(Cart_Items.acc_id == student.id).all()
+
+        total = 0
+        for item in items_promo:
+            total += item[2].quantity * item[1].promo_price
+
+        for item in items:
+            total += item[1].quantity * item[0].promo_price
+
+        return render_template('checkout.html',items = items, items_promo = items_promo, total = total)
     else:
         return render_template('login.html')
 
@@ -439,26 +461,23 @@ def deleteEntry():
 @app.route('/addtocart', methods=['POST', 'GET'])
 def add_to_cart():
     if request.method == "POST":
-        name = request.form['Add2Cart']
+        idx = request.form['Add2Cart']
         local_account = session['student']
-        check = db.session.query(Temporary_Table).filter_by(name = name, acc = local_account).first()
+        student = db.session.query(StdAcc).filter_by(name = local_account).first()
+        check = db.session.query(Cart_Items).filter_by(itemID = idx, acc_id = student.id).first()
         if check:
-            item = db.session.query(Temporary_Table).filter_by(acc = session['student'], name = name).first()
-            item.quantity +=1
+            check.quantity +=1
             db.session.commit()
-            cat = item.cat
-            items = db.session.query(Record_Of_Items).filter_by(cat = cat)
+            items = filterCat("Rice")
             addedToCart = True
-            return render_template('marketplace.html',items = items, addedToCart = addedToCart)
+            return render_template('marketplace.html',items_promo = items[0], items=items[1])
         else:
-            item = db.session.query(Record_Of_Items).filter_by(name = name).first()
-            add_to_cart_item = Temporary_Table(acc = local_account, name = name, info = item.info, price = item.price, quantity = 1, cat = item.cat, promo_price = item.promo_price)
+            add_to_cart_item = Cart_Items(student = student, itemID = idx, quantity = 1)
             db.session.add(add_to_cart_item)
             db.session.commit()
-            cat = item.cat
-            items = db.session.query(Record_Of_Items).filter_by(cat = cat)
+            items = filterCat("Rice")
             addedToCart = True
-            return render_template('marketplace.html',items = items, addedToCart = addedToCart)
+            return render_template('marketplace.html',items_promo = items[0], items=items[1])
     else:
         return "Error encountered. Please login again."
 
@@ -527,13 +546,7 @@ def admin():
             elif request.form['nav'] == 'Create Promotion':
                 return redirect('/promotion/Rice')
             elif request.form['nav'] == 'View Promotion':
-                displayItem = []
-                items = db.session.query(Record_Of_Items).all()
-                for item in items:
-                    if item.promo_price != '-' and item.promo_price != None:
-                        displayItem.append(item)
-                return render_template('viewpromotion.html', items = displayItem)
-           
+                return redirect('/viewpromotion')
             elif request.form['nav'] == 'Reset Promotion':
                 items = db.session.query(Record_Of_Items).all()
                 for item in items:
@@ -549,7 +562,7 @@ def admin():
             elif request.form['nav'] == 'Log Out':
                 return redirect('/logout')
         else:
-            
+            '''
             items = db.session.query(Record_Of_Items).all()
             promoReset = False
             msg = None
@@ -563,8 +576,8 @@ def admin():
                 if (item.promo_price != '-') and (item.promo_price != None):
                     promoReset = True
                     break
-            
-            return render_template('admin.html', promoReset = promoReset, msg = msg)
+            '''
+            return render_template('admin.html')
 
     else:
         return render_template('login.html')
@@ -583,6 +596,8 @@ def teacher():
                 return redirect('/passcodepage')
             elif request.form['nav'] == 'List of Shopping Items':
                 return redirect('/marketplace')
+            elif request.form['nav'] == 'Launch Promotion':
+                return redirect('/viewpromotion')
             elif request.form['nav'] == 'Log Out':
                 return redirect('/logout')
         else:
@@ -601,12 +616,18 @@ def passcodepage():
     else:
         return redirect('/')
 
+@app.route('/teacherpromo')
+def teacherpromo():
+    if 'teacher' in session:
+        return render_template('teacherpromo.html')
+
 @app.route('/wipedbpage', methods = ['POST', 'GET'])
 def wipedbpage():
     if 'admin' in session:
         return render_template('wipedbpage.html')
     else:
         return redirect('/login')
+
 
 
 @app.route('/changeimage/<imageid>', methods=['POST', 'GET'])
@@ -706,72 +727,89 @@ def loginpage():
         session.pop('student', None)
         return render_template('login.html')
 
+def filterCat(cat):
+    if 'student' in session:
+        student = db.session.query(StdAcc).filter_by(name = session['student']).first()
+        teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
+    else:
+        teacher = db.session.query(TrAcc).filter_by(name = session['teacher']).first()
+
+    items_promo = db.session.query(Record_Of_Items,Promo_Items)\
+    .filter(Record_Of_Items.id == Promo_Items.itemID)\
+    .filter(Promo_Items.promo_no == teacher.promo_state)\
+    .filter(Record_Of_Items.cat == cat).all()
+
+    items = db.session.query(Record_Of_Items).filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
+            .filter(Record_Of_Items.cat == cat).all()
+
+    return items_promo, items
+
 
 @app.route('/marketplace',methods=['GET','POST'])
 def shop_cat():
     if ("student" in session):
         if request.method == 'POST':
             if request.form['navbar'] == 'Rice':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
+                items = filterCat('Rice')
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Dairy':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
+                items = filterCat('Dairy')
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Breads':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Breads')
+                items = filterCat('Breads')
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Eggs':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Eggs')
+                items = filterCat('Eggs')
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Fruits':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fruits')
+                items = filterCat('Fruits')
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Fish':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
+                items = filterCat('Fish')
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Paper':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper')
+                items = filterCat('Paper')
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Baking':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking')
+                items = filterCat('Baking')
                 return render_template('marketplace.html',items = cat)
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
         else:
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
-            return render_template('marketplace.html',items = cat)
+            items = filterCat('Rice')
+            return render_template('marketplace.html',items_promo = items[0], items=items[1])
 
     elif ("teacher" in session):
         if request.method == 'POST':
             if request.form['navbar'] == 'Rice':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
+                items = filterCat('Rice')
                 return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Dairy':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Dairy')
+                items = filterCat('Dairy')
                 return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Breads':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Breads')
+                items = filterCat('Rice')
                 return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Eggs':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Eggs')
+                items = filterCat('Eggs')
                 return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Fruits':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fruits')
+                items = filterCat('Fruits')
                 return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Fish':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Fish')
+                items = filterCat('Fish')
                 return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Paper':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Paper')
+                items = filterCat('Paper')
                 return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Baking':
-                cat = db.session.query(Record_Of_Items).filter_by(cat = 'Baking')
+                items = filterCat('Baking')
                 return render_template('protectedmarketplace.html',items = cat)
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
         else:
-            cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
-            return render_template('protectedmarketplace.html',items = cat)
+            items = filterCat('Rice')
+            return render_template('protectedmarketplace.html',items_promo = items[0], items=items[1])
 
     elif ("admin" in session):
         if request.method == 'POST':
@@ -805,7 +843,7 @@ def shop_cat():
                 return redirect('/logout')
         else:
             cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
-            return render_template('editpage.html',items = cat)
+            return render_template('editpage.html', items = cat)
 
     else:
         return render_template('login.html')
@@ -883,9 +921,10 @@ def add_student():
 
 
 @app.route('/promotion/<category>', methods=['POST', 'GET'])
-def promotion(category):
+def promotion(category, promo_no=None):
     if 'admin' in session:
         if request.method == 'GET':
+
             addedPromo = False
             if 'addedPromo' in session:
                 addedPromo = True
@@ -924,6 +963,8 @@ def promotion(category):
             cat = db.session.query(Record_Of_Items).filter_by(cat = 'Rice')
             return render_template('promotion.html',items = cat)
 
+
+
 @app.route('/promotionItems', methods=['POST', 'GET'])
 def promotionItems():
     if request.method == 'POST':
@@ -939,8 +980,6 @@ def promotionItems():
         return redirect(url_for('promotion', category= cat.cat))
 
 
-
-
 @app.route('/addpromotion', methods=['POST', 'GET'])
 def addpromotion():
     if 'admin' in session and 'promo_items' in session:
@@ -949,10 +988,11 @@ def addpromotion():
         for itemID in itemID_list:
             item = db.session.query(Record_Of_Items).filter_by(id = itemID).first()
             items.append(item)
-
+        
         return render_template('addpromotion.html', items = items)
     else:
         return redirect(url_for('promotion', category = "Rice"))
+
 
 @app.route('/removePromoItem/<item>', methods=['POST', 'GET'])
 def removePromoItem(item):
@@ -965,14 +1005,17 @@ def removePromoItem(item):
 def publishpromotion():
     if request.method == 'POST':
         itemID_list = session['promo_items']
+        check_promo = db.session.query(Promo_Items)\
+                .filter(Promo_Items.promo_no == session['promo_no']).delete()
+        insert_entries = []
         for idx in itemID_list:
             promo_price = request.form.get(("item" + idx))
-            item = db.session.query(Record_Of_Items).filter_by(id = int(idx)).first()
-            item.promo_price = promo_price
+            insert_entries.append(Promo_Items(itemID = idx, promo_no=session['promo_no'],promo_price=promo_price))
+        
+        db.session.bulk_save_objects(insert_entries)
         db.session.commit()
-        flash('New Promotion')
-        session['published_promo'] = True
-        return redirect('/admin')
+
+        return redirect('/viewpromotion')
     else:
         pass
 
@@ -991,5 +1034,69 @@ def promoNoti():
         res = make_response(jsonify({"message":"promoSeen"}), 200)
     return res
 
+
+@app.route('/viewpromotion', methods=['POST', 'GET'])
+def viewpromotion():
+        if request.method == 'GET':
+            promo_dis1 = db.session.query(Record_Of_Items,Promo_Items)\
+                .filter(Promo_Items.promo_no == 1)\
+                .filter(Record_Of_Items.id == Promo_Items.itemID)
+
+            promo_dis2 = db.session.query(Record_Of_Items,Promo_Items)\
+                .filter(Promo_Items.promo_no == 2)\
+                .filter(Record_Of_Items.id == Promo_Items.itemID)
+
+            promo_dis3 = db.session.query(Record_Of_Items,Promo_Items)\
+                .filter(Promo_Items.promo_no == 3)\
+                .filter(Record_Of_Items.id == Promo_Items.itemID)
+
+            if 'admin' in session:
+                return render_template('viewpromotion.html',promo_dis1= promo_dis1,\
+                    promo_dis2= promo_dis2, promo_dis3=promo_dis3)
+        
+            elif 'teacher' in session:
+                teacher = db.session.query(TrAcc).filter_by(name = session['teacher']).first()
+                return render_template('teacherpromo.html', current_promo = teacher.promo_state, promo_dis1= promo_dis1,\
+                    promo_dis2= promo_dis2, promo_dis3=promo_dis3)
+
+
+@app.route('/setPromoNo/<promo_no>', methods=['POST', 'GET'])
+def setPromoNo(promo_no):
+    if 'admin' in session:
+        if 'promo_no' not in session or session['promo_no'] != promo_no:
+            session['promo_no'] = promo_no
+
+        return redirect(url_for('promotion',category='Rice'))
+
+@app.route('/setTeacherPromoState', methods=['POST', 'GET'])
+def setTeacherPromoState():
+    if 'teacher' in session:
+        promoState = request.form.get('promo_state')
+        teacher = db.session.query(TrAcc).filter_by(name = session['teacher']).first()
+        teacher.promo_state = promoState
+        db.session.commit()
+        return redirect('/teacher')
+
+
+@app.route('/test', methods=['POST', 'GET'])
+def test():
+    items = db.session.query(Record_Of_Items).all()
+    listOfItems = []
+
+    for item in items:
+        if db.session.query(Promo_Items).filter_by(itemID = item.id):
+            objTuple = db.session.query(Record_Of_Items,Promo_Items)\
+                .filter(Record_Of_Items.id == Promo_Items.itemID)\
+                .filter(Record_Of_Items.id == item.id).first()
+        else:
+            objTuple = (item, None)
+
+        listOfItems.append(objTuple)
+
+    return render_template('test.html', items_promo = listOfItems)
+
+    
+
+
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True)

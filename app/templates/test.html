@@ -1,0 +1,6 @@
+{%for item in items_promo%}
+<p>name: {{item[0].name}} price: {{item[0].price}} 
+    {%if item[1].promo_price != None %} 
+    promo_price: {{item[1].promo_price}}
+    {% endif %}</p>
+{% endfor %}

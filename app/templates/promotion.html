@@ -37,25 +37,28 @@
 
             </div>
         </div>
-        <div class="unhidden md:hidden">
-            <div class="zstack w-40 h-40" onclick="hamburger()">
-                <div class="vstack space-5">
-                    <div class="h-2 w-36 bg-black rounded-full"></div>
-                    <div class="h-2 w-36 bg-black rounded-full"></div>
-                    <div class="h-2 w-36 bg-black rounded-full"></div>
-                </div>
-                <div class="hidden place-bl transform translate-y-100" id="myLinks">
-                    <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg bg-white">
-                        <a href="{{url_for('admin')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Home</a>
-                        <a href="{{url_for('promotion', category='Rice')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Rice</a>
-                        <a href="{{url_for('promotion', category='Dairy')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Dairy</a>
-                        <a href="{{url_for('promotion', category='Breads')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Breads</a>
-                        <a href="{{url_for('promotion', category='Eggs')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Eggs</a>
-                        <a href="{{url_for('promotion', category='Fruits')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Fruits</a>
-                        <a href="{{url_for('promotion', category='Fish')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Fish</a>
-                        <a href="{{url_for('promotion', category='Paper')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Paper</a>
-                        <a href="{{url_for('promotion', category='Baking')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Baking</a>
-                        <a href="{{url_for('logout')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full">Log Out</a>
+        <form action="/promotion" method="POST">
+            <div class="unhidden md:hidden">
+                <div class="zstack w-40 h-40" onclick="hamburger()">
+                    <div class="vstack space-5">
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                        <div class="h-2 w-36 bg-black rounded-full"></div>
+                    </div>
+                    <div class="hidden place-bl transform translate-y-100 bg-white" id="myLinks">
+                        <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg bg-white">
+                            <a href="{{url_for('viewpromotion')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Home</a>
+
+                            <a href="{{url_for('promotion', category='Rice')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Rice</a>
+                            <a href="{{url_for('promotion', category='Dairy')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Dairy</a>
+                            <a href="{{url_for('promotion', category='Breads')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Breads</a>
+                            <a href="{{url_for('promotion', category='Eggs')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Eggs</a>
+                            <a href="{{url_for('promotion', category='Fruits')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Fruits</a>
+                            <a href="{{url_for('promotion', category='Fish')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Fish</a>
+                            <a href="{{url_for('promotion', category='Paper')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Paper</a>
+                            <a href="{{url_for('promotion', category='Baking')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full">Baking</a>
+                            <a href="{{url_for('logout')}}" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600">Log Out</a>
+                        </div>
                     </div>
                 </div>
             </div>

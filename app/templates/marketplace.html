@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     {% if addedToCart == True %}
     <script>
         $(document).ready(function() {
@@ -165,7 +166,9 @@
             </div>
         </div>
     </div>
-
+    </div>
+    <p id="text" style="display: block;">Items on promotion:\n{% for item in items_promo %}{{item[0].name}}\n{%endfor%}</p>
+    
 </body>
 
 </html>
@@ -205,52 +208,37 @@
 <script>
     
     function request_promo() {
-        var promoRequest = "yes";
 
         fetch('/promoNoti', {
                 method: "POST",
                 credentials: "include",
-                body: JSON.stringify(promoRequest),
+                body: JSON.stringify(""),
                 cache: "no-cache",
                 headers: new Headers({
                     "content-type": "application/json"
                 })
             })
-            .then(function(response) {
-                response.json().then(function(data) {
-
-                    if (data.message == "promoSent") {
-                        swal({
-                            title: "Launch Promotion " + num + "?",
-                            text: "This will change the prices provided to the teams. \n \
-                            You can view the new prices in \"List of Shopping Items\" Tab at the menu.",
+            .then(response => response.json())
+            .then(data => {
+                var promo_sent = "promoSent" + "{{items_promo[0][1].promo_no | tojson}}";
+                var length = "{{items_promo | length | tojson}}";
+                var text = $('#text').html(); 
+                console.log(text);
+                if (data.message == promo_sent) {
+                    
+                    swal({
+                            title: "New Promotion!",
+                            text: String(text),
                             icon: "warning",
                             buttons: true,
                             dangerMode: true,
-                        })
-                        .then((promoPub) => {
-                            if (promoPub) {
-                                sendState(num);
-                                swal({
-                                title: "Promotions have been published!", 
-                                icon: "success",
-                                }).then(function() {
-                                window.location.href = '/marketplace/Rice'; 
-                                })
-                            
-                            } else {
-                            
-                            };
-            
+                        }); 
+                }
             });
-                    }
-
-                })
-            })
 
     };
     
-    var checkPromo = setInterval(request_promo, 60000)
+    //var checkPromo = setInterval(request_promo, 60000)
 
     function promo(state) {
         var promoNotRead = true

@@ -1109,12 +1109,13 @@ def promoNoti():
     req = request.get_json()
     student = db.session.query(StdAcc).filter_by(name = session['student']).first()
     teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
+    promo_sent = 'promoSent' + str(teacher.promo_state)
 
-    if 'promoSent' not in session and teacher.promo_state != None:
-        res = make_response(jsonify({"message":"promoSent"}), 200)
-        session['promoSent'] = True
+    if promo_sent not in session:
+        res = make_response(jsonify({"message":promo_sent}), 200)
+        session[promo_sent] = True
     else:
-        res = None
+        res = make_response(jsonify({"message":"NoPromo"}), 200)
 
     return res
 

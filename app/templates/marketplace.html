@@ -219,8 +219,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                var promo_sent = "promoSent" + "{{items_promo[0][1].promo_no | tojson}}";
-                var length = "{{items_promo | length | tojson}}";
+                var promo_sent = "promoSent";
                 var text = $('#text').html(); 
                 console.log(text);
                 if (data.message == promo_sent) {
@@ -237,7 +236,7 @@
 
     };
     
-    //var checkPromo = setInterval(request_promo, 60000)
+    var checkPromo = setInterval(request_promo, 60000)
 
     function promo(state) {
         var promoNotRead = true

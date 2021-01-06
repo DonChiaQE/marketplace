@@ -62,55 +62,21 @@
         <div class="container py-28">
             <div class="w-full vstack md:space-28 h-auto">
                 <div class="w-full px-16 md:px-28 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 mb-24" id="example-1">
-                    {% for item in items %} {% if item.promo_price == '-' or item.promo_price == None %}
+                    {% for item in items_promo %}
                     <div>
                         <div class="vstack space-28">
                             <div class="hstack w-full h-128 bg-white shadow shadow-md px-24">
                                 <div class="vstack align-start h-80">
-                                    <div class="color-black mb-2 w-144 ellipsis text-14">{{item.name}}</div>
-                                    <div class="color-gray-500 text-12 mt-2">{{"$%.2f"|format(item.price)}}</div>
+                                    <div class="text-blackm mb-2">{{item[0].name}}</div>
+                                    <div class="text-14 text-400 text-black"><strike>{{"$%.2f"|format(item[0].price)}}</strike> {{"$%.2f"|format(item[1].promo_price)}}</div>
                                     <div class="spacer"></div>
                                     <div class="hstack space-5">
                                         <form action="/decrease_quantity" , method="POST">
-                                            <input type="hidden" name="decremove" value="decrease">
-                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item.name}}">-</button>
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item[0].id}}">-</button>
                                         </form>
-                                        <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item.quantity}}</div>
+                                        <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item[2].quantity}}</div>
                                         <form action="/increase_quantity" , method="POST">
-                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item.name}}">+</button>
-                                        </form>
-                                        <div class="spacer"></div>
-                                    </div>
-                                </div>
-                                <div class="spacer"></div>
-                                <div class="vstack h-80">
-                                    <div class="spacer"></div>
-                                    <div class="text-black"><b>{{"$%.2f"|format(item.quantity * item.price)}}</b></div>
-                                </div>
-                                <div class="spacer"></div>
-                                <form action="/decrease_quantity" , method="POST">
-                                    <input type="hidden" name="Minus" value="{{item.name}}">
-                                    <input type="hidden" name="decremove" value="remove">
-                                    <input type="submit" name='nav' value="Remove" class="bg-red-600 color-white text-underline w-60 rounded-3 shadow shadow-md p-8">
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div>
-                        <div class="vstack space-28">
-                            <div class="hstack w-full h-128 bg-white shadow shadow-md px-24">
-                                <div class="vstack align-start h-80">
-                                    <div class="text-blackm mb-2">{{item.name}}</div>
-                                    <div class="text-14 text-400 text-black"><strike>{{"$%.2f"|format(item.price)}}</strike> {{"$%.2f"|format(item.promo_price)}}</div>
-                                    <div class="spacer"></div>
-                                    <div class="hstack space-5">
-                                        <form action="/decrease_quantity" , method="POST">
-                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item.name}}">-</button>
-                                        </form>
-                                        <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item.quantity}}</div>
-                                        <form action="/increase_quantity" , method="POST">
-                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item.name}}">+</button>
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item[0].id}}">+</button>
                                         </form>
                                     </div>
                                 </div>
@@ -118,7 +84,7 @@
                                 <div class="spacer"></div>
                                 <div class="vstack h-80">
                                     <div class="spacer"></div>
-                                    <div class="text-black"><b>{{"$%.2f"|format(item.quantity * item.promo_price)}}</b></div>
+                                    <div class="text-black"><b>{{"$%.2f"|format(item[2].quantity * item[1].promo_price)}}</b></div>
                                 </div>
                                 <div class="spacer"></div>
                                 <form action="/decrease_quantity" , method="POST">
@@ -136,7 +102,43 @@
                         </div>
                         <div class="spacer"></div>
                     </div>
-                    {% endif %} {% endfor %}
+
+                    {% endfor %}
+                    {% for item in items %}
+                    <div>
+                        <div class="vstack space-28">
+                            <div class="hstack w-full h-128 bg-white shadow shadow-md px-24">
+                                <div class="vstack align-start h-80">
+                                    <div class="color-black mb-2 w-144 ellipsis text-14">{{item[0].name}}</div>
+                                    <div class="color-gray-500 text-12 mt-2">{{"$%.2f"|format(item[0].price)}}</div>
+                                    <div class="spacer"></div>
+                                    <div class="hstack space-5">
+                                        <form action="/decrease_quantity" , method="POST">
+                                            <input type="hidden" name="decremove" value="decrease">
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item[0].id}}">-</button>
+                                        </form>
+                                        <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item[1].quantity}}</div>
+                                        <form action="/increase_quantity" , method="POST">
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item[0].id}}">+</button>
+                                        </form>
+                                        <div class="spacer"></div>
+                                    </div>
+                                </div>
+                                <div class="spacer"></div>
+                                <div class="vstack h-80">
+                                    <div class="spacer"></div>
+                                    <div class="text-black"><b>{{"$%.2f"|format(item[1].quantity * item[0].price)}}</b></div>
+                                </div>
+                                <div class="spacer"></div>
+                                <form action="/decrease_quantity" , method="POST">
+                                    <input type="hidden" name="Minus" value="{{item[0].id}}">
+                                    <input type="hidden" name="decremove" value="remove">
+                                    <input type="submit" name='nav' value="Remove" class="bg-red-600 color-white text-underline w-60 rounded-3 shadow shadow-md p-8">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
 
 
 
@@ -173,7 +175,10 @@
         </div>
     </div>
     </div>
-
+    <div id="text" style="display: none;">
+        <p style="display: block;">Items on promotion:<br></p>{% for item in items_promo %}
+        <p>{{item[0].name}}<br></p>{%endfor%}
+    </div>
 </html>
 
 <style>
@@ -305,4 +310,72 @@
             }
         })
     }
+    
+        function request_promo() {
+    
+            fetch('/promoNoti', {
+                    method: "POST",
+                    credentials: "include",
+                    body: JSON.stringify(""),
+                    cache: "no-cache",
+                    headers: new Headers({
+                        "content-type": "application/json"
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var text = document.getElementById("text").innerText;
+                    console.log(text);
+                    if (data.message == "promoSent1") {
+    
+                        swal({
+                                title: "New Promotion!",
+                                text: String(text),
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            }); 
+                    }
+                    else if (data.message == "promoSent2") {
+    
+                        swal({
+                                title: "New Promotion!",
+                                text: String(text),
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            }); 
+                    } 
+                    else if (data.message == "promoSent3") {
+    
+                        swal({
+                                title: "New Promotion!",
+                                text: String(text),
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            }); 
+                    }
+                });
+    
+        };
+        
+        var checkPromo = setInterval(request_promo, 60000)
+    
+        function promo(state) {
+            var promoNotRead = true
+            if (state == false) {
+                var promoNotRead = false
+                $('#promo_notif').hide();
+            }
+        };
+    
+        function hamburger() {
+            var x = document.getElementById("myLinks");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
 </script>

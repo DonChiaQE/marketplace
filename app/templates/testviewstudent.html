@@ -37,11 +37,14 @@
                         </div>
                         {% endfor %} {% endif %}
                     </div>
-                    <div class="mt-28">Total Amount Spent: {{ "$%.2f"|format(all_total_amounts[student.id - 1]) }}</div>
+                    <div class="mt-28">Total Amount Spent: {{ "$%.2f"|format(student.totalamount) }}</div>
                 </div>
                 {% endfor %}
             </div>
         </div>
+        <form class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-28" action="/viewsubmittedcarts" , method="POST">
+            <button type="submit" class="text-underline color-green-600 w-128 bg-white rounded-3 shadow shadow-md p-28" name="todo" value="View Current Cart">Refresh</button>
+        </form>
     </div>
 </body>
 

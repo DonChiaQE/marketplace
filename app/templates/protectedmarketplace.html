@@ -62,25 +62,54 @@
     </nav>
     <div class="container py-28">
         <div class="align-self-stretch grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-12">
-            {% for item in items %}
-            <form action="/" , method="POST">
-                <div class="vstack h-448 bg-white rounded-3 shadow shadow-md py-28 px-24">
-                    {% if item.image %}
-                    <img src="{{ url_for('display_image', filename=item.image) }}"> {% else %}
-                    <div class="w-112 h-112 bg-green-500 rounded-5"></div>
-                    {% endif %}
-                    <div class="vstack align-start mt-20 space-8">
-                        <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
-                        <div class="text-14 text-400 text-black">{{"$%.2f"|format(item.price)}} {% if (item.quantifier != "") and (item.quantifier != None) %}{{item.quantifier}}{% endif %}</div>
-                        {% if (item.info != "") and (item.info != None) %}
-                        <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
+            {% for item in items_promo %}
+                    <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
+                        {% if item[0].image %}
+                        <img src="{{ url_for('display_image', filename=item[0].image) }}"> {% else %}
+                        <div class="w-112 h-112 bg-green-500 rounded-5"></div>
                         {% endif %}
+                        <div class="vstack align-start mt-20 space-8">
+                            <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item[0].name}}</div>
+                            <div class="hstack space-8">
+                                <!--strikethrough promotional price-->
+                                <strike><div class="text-14 text-400 text-black">{{"$%.2f"|format(item[0].price)}}</div></strike>
+                                <!--promotional price here-->
+                                <div class="text-14 text-400 text-black">{{"$%.2f"|format(item[1].promo_price)}} {% if (item[0].quantifier != "") and (item[0].quantifier != None) %}{{item[0].quantifier}}{% endif %}</div>
+                                <div class="spacer"></div>
+                            </div>
+                            {% if (item[0].info != "") and (item[0].info != None) %}
+                            <div class="text-14 text-200 text-gray-500">Exp: {{item[0].info}}</div>
+                            {% endif %}
+                            <div class="spacer"></div>
+                        </div>
                         <div class="spacer"></div>
+                       
+
                     </div>
-                    <div class="spacer"></div>
-                </div>
-            </form>
-            {% endfor %}
+        
+                {% endfor %}
+
+                {% for item in items %} 
+            
+                    <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
+                        {% if item.image %}
+                        <img src="{{ url_for('display_image', filename=item.image) }}"> {% else %}
+                        <div class="w-112 h-112 bg-green-500 rounded-5"></div>
+                        {% endif %}
+                        <div class="vstack align-start mt-20 space-8">
+                            <div class="text-48 text-500 text-black" style="font-size: 24px;">{{item.name}}</div>
+                            <div class="text-14 text-400 text-black">{{"$%.2f"|format(item.price)}} {% if (item.quantifier != "") and (item.quantifier != None) %}{{item.quantifier}}{% endif %}</div>
+                            {% if (item.info != "") and (item.info != None) %}
+                            <div class="text-14 text-200 text-gray-500">Exp: {{item.info}}</div>
+                            {% endif %}
+                            <div class="spacer"></div>
+                        </div>
+                        <div class="spacer"></div>
+
+
+                    </div>
+       
+                {% endfor %}
         </div>
     </div>
 </body>

@@ -39,6 +39,7 @@
                             {% for teacher in teachers if teacher.id == student.assigned_teacher_id %}
                             <div class="w-full p-28 ellipsis">Assigned To: {{teacher.name}}</div>
                             {% endfor %}
+                            <input type="hidden" name='userid' value="{{student.id}}" />
                             <input type="hidden" name='username' value="{{student.name}}" />
                             <input type="hidden" name='usertype' value="StudentUser" />
                             <input type="hidden" name='password' value="{{student.pword}}" />

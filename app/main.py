@@ -442,8 +442,9 @@ def deleteEntry():
                     return 'No such User'
         elif request.form['todo'] == 'View Current Cart':
             username = request.form['username']
-            items = db.session.query(Temporary_Table).filter_by(acc = username)
-            item_test = db.session.query(Temporary_Table).filter_by(acc = username).first()
+            userid = request.form['userid']
+            items = db.session.query(Cart_Items).filter_by(acc_id = userid)
+            item_test = db.session.query(Cart_Items).filter_by(acc_id = userid).first()
             text = ""
             if item_test == None:
                 text = "Empty Cart"
@@ -739,8 +740,13 @@ def filterCat(cat):
     .filter(Promo_Items.promo_no == teacher.promo_state)\
     .filter(Record_Of_Items.cat == cat).all()
 
-    items = db.session.query(Record_Of_Items).filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
-            .filter(Record_Of_Items.cat == cat).all()
+    try:
+        items = db.session.query(Record_Of_Items).filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
+                .filter(Record_Of_Items.cat == cat).all()
+
+    except:
+        items = db.session.query(Record_Of_Items)\
+                .filter(Record_Of_Items.cat == cat).all()
 
     return items_promo, items
 
@@ -748,33 +754,32 @@ def filterCat(cat):
 @app.route('/marketplace',methods=['GET','POST'])
 def shop_cat():
     if ("student" in session):
-        if request.method == 'POST':
-            if request.form['navbar'] == 'Rice':
-                items = filterCat('Rice')
-                return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Dairy':
-                items = filterCat('Dairy')
-                return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Breads':
-                items = filterCat('Breads')
-                return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Eggs':
-                items = filterCat('Eggs')
-                return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Fruits':
-                items = filterCat('Fruits')
-                return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Fish':
-                items = filterCat('Fish')
-                return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Paper':
-                items = filterCat('Paper')
-                return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Baking':
-                items = filterCat('Baking')
-                return render_template('marketplace.html',items = cat)
-            elif request.form['navbar'] == 'Log Out':
-                return redirect('/logout')
+        if request.form['navbar'] == 'Rice':
+            items = filterCat('Rice')
+            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+        elif request.form['navbar'] == 'Dairy':
+            items = filterCat('Dairy')
+            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+        elif request.form['navbar'] == 'Breads':
+            items = filterCat('Breads')
+            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+        elif request.form['navbar'] == 'Eggs':
+            items = filterCat('Eggs')
+            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+        elif request.form['navbar'] == 'Fruits':
+            items = filterCat('Fruits')
+            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+        elif request.form['navbar'] == 'Fish':
+            items = filterCat('Fish')
+            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+        elif request.form['navbar'] == 'Paper':
+            items = filterCat('Paper')
+            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+        elif request.form['navbar'] == 'Baking':
+            items = filterCat('Baking')
+            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+        elif request.form['navbar'] == 'Log Out':
+            return redirect('/logout')
         else:
             items = filterCat('Rice')
             return render_template('marketplace.html',items_promo = items[0], items=items[1])
@@ -783,28 +788,28 @@ def shop_cat():
         if request.method == 'POST':
             if request.form['navbar'] == 'Rice':
                 items = filterCat('Rice')
-                return render_template('protectedmarketplace.html',items = cat)
+                return render_template('protectedmarketplace.html',items_promo = items[0], items=items[1])
             elif request.form['navbar'] == 'Dairy':
                 items = filterCat('Dairy')
-                return render_template('protectedmarketplace.html',items = cat)
+                return render_template('protectedmarketplace.html',items_promo = items[0], items=items[1])
             elif request.form['navbar'] == 'Breads':
                 items = filterCat('Rice')
-                return render_template('protectedmarketplace.html',items = cat)
+                return render_template('protectedmarketplace.html',items_promo = items[0], items=items[1])
             elif request.form['navbar'] == 'Eggs':
                 items = filterCat('Eggs')
-                return render_template('protectedmarketplace.html',items = cat)
+                return render_template('protectedmarketplace.html',items_promo = items[0], items=items[1])
             elif request.form['navbar'] == 'Fruits':
                 items = filterCat('Fruits')
-                return render_template('protectedmarketplace.html',items = cat)
+                return render_template('protectedmarketplace.html',items_promo = items[0], items=items[1])
             elif request.form['navbar'] == 'Fish':
                 items = filterCat('Fish')
-                return render_template('protectedmarketplace.html',items = cat)
+                return render_template('protectedmarketplace.html',items_promo = items[0], items=items[1])
             elif request.form['navbar'] == 'Paper':
                 items = filterCat('Paper')
-                return render_template('protectedmarketplace.html',items = cat)
+                return render_template('protectedmarketplace.html',items_promo = items[0], items=items[1])
             elif request.form['navbar'] == 'Baking':
                 items = filterCat('Baking')
-                return render_template('protectedmarketplace.html',items = cat)
+                return render_template('protectedmarketplace.html',items_promo = items[0], items=items[1])
             elif request.form['navbar'] == 'Log Out':
                 return redirect('/logout')
         else:

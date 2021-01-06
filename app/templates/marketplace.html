@@ -170,7 +170,7 @@
     <div id="text" style="display: none;">
         <p style="display: block;">Items on promotion:<br></p>{% for item in items_promo %}
         <p>{{item[0].name}}<br></p>{%endfor%}
-        </div>
+    </div>
 </body>
 
 </html>
@@ -226,11 +226,31 @@
                 var length = "{{items_promo | length | tojson}}";
                 var text = document.getElementById("text").innerText; 
                 console.log(text);
-                if (data.message == promo_sent) {
-                    
+                if (data.message == "promoSent1") {
+
                     swal({
                             title: "New Promotion!",
-                            text: text,
+                            text: String(text),
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        }); 
+                }
+                else if (data.message == "promoSent2") {
+
+                    swal({
+                            title: "New Promotion!",
+                            text: String(text),
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        }); 
+                } 
+                else if (data.message == "promoSent3") {
+
+                    swal({
+                            title: "New Promotion!",
+                            text: String(text),
                             icon: "warning",
                             buttons: true,
                             dangerMode: true,

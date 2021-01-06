@@ -819,7 +819,7 @@ def filterCat(cat):
     .filter(Record_Of_Items.cat == cat).all()
 
     try:
-        items = db.session.query(Record_Of_Items).filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
+        items = db.session.query(Record_Of_Items).filter(Record_Of_Items.id.notin_([j[1].itemID for j in items_promo]))\
                 .filter(Record_Of_Items.cat == cat).all()
 
     except:

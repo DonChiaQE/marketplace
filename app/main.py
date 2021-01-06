@@ -357,7 +357,7 @@ def decrease_quantity():
 
 @app.route('/removesubmittedcart', methods = ['POST', 'GET'])
 def removesubmittedcart():
-    if ("teacher" in session) or ("admin" in session):
+    if "teacher" in session:
         name = request.form['username']
         db.session.query(Submitted_Cart).filter_by(acc = name).delete()
         db.session.commit()
@@ -502,20 +502,21 @@ def deleteEntry():
 def add_to_cart():
     if request.method == "POST":
         idx = request.form['Add2Cart']
+        itemcat = db.session.query(Record_Of_Items).filter_by(id = idx).first()
         local_account = session['student']
         student = db.session.query(StdAcc).filter_by(name = local_account).first()
         check = db.session.query(Cart_Items).filter_by(itemID = idx, acc_id = student.id).first()
         if check:
             check.quantity +=1
             db.session.commit()
-            items = filterCat("Rice")
+            items = filterCat(itemcat.cat)
             addedToCart = True
             return render_template('marketplace.html',items_promo = items[0], items=items[1])
         else:
             add_to_cart_item = Cart_Items(student = student, itemID = idx, quantity = 1)
             db.session.add(add_to_cart_item)
             db.session.commit()
-            items = filterCat("Rice")
+            items = filterCat(itemcat.cat)
             addedToCart = True
             return render_template('marketplace.html',items_promo = items[0], items=items[1])
     else:

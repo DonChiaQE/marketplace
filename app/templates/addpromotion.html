@@ -10,50 +10,46 @@
 
 <body>
     <nav class="sticky t-0 shadow shadow-lg hstack w-full p-12 bg-white">
-        <form action="/marketplace" method="POST">
-            <div class="hidden md:unhidden">
-                <div class=" hstack">
-                    <a href="{{url_for('admin')}}">
-                        <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-                    </a>
-                    <a href="{{url_for('promotion', category='Rice')}}" class="bg-white m-18 text-underline pb-1">Rice</a>
-                    <a href="{{url_for('promotion', category='Dairy')}}" class="bg-white m-18 text-underline pb-1">Dairy</a>
-                    <a href="{{url_for('promotion', category='Breads')}}" class="bg-white m-18 text-underline pb-1">Breads</a>
-                    <a href="{{url_for('promotion', category='Eggs')}}" class="bg-white m-18 text-underline pb-1">Eggs</a>
-                    <a href="{{url_for('promotion', category='Fruits')}}" class="bg-white m-18 text-underline pb-1">Fruits</a>
-                    <a href="{{url_for('promotion', category='Fish')}}" class="bg-white m-18 text-underline pb-1">Fish</a>
-                    <a href="{{url_for('promotion', category='Paper & Tissue')}}" class="bg-white m-18 text-underline pb-1">Paper & Tissue</a>
-                    <a href="{{url_for('promotion', category='Baking Needs')}}" class="bg-white m-18 text-underline pb-1">Baking Needs</a>
-                    <a href="{{url_for('logout')}}" class="bg-white m-18 text-underline color-red-600 pb-1">Log Out</a>
-                </div>
-            </div>
-        </form>
-        <form action="/marketplace" method="POST">
-            <div class="unhidden md:hidden">
-                <div class="zstack w-40 h-40" onclick="hamburger()">
-                    <div class="vstack space-5">
-                        <div class="h-2 w-36 bg-black rounded-full"></div>
-                        <div class="h-2 w-36 bg-black rounded-full"></div>
-                        <div class="h-2 w-36 bg-black rounded-full"></div>
-                    </div>
-                    <div class="hidden group-touch:unhidden place-bl transform translate-y-100">
-                        <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg">
+        <div class="hidden md:unhidden">
+            <div class=" hstack">
+                <a href="{{url_for('admin')}}">
+                    <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+                </a>
+                <a href="{{url_for('promotion', category='Rice')}}" class="bg-white m-18 text-underline pb-1">Rice</a>
+                <a href="{{url_for('promotion', category='Dairy')}}" class="bg-white m-18 text-underline pb-1">Dairy</a>
+                <a href="{{url_for('promotion', category='Breads')}}" class="bg-white m-18 text-underline pb-1">Breads</a>
+                <a href="{{url_for('promotion', category='Eggs')}}" class="bg-white m-18 text-underline pb-1">Eggs</a>
+                <a href="{{url_for('promotion', category='Fruits')}}" class="bg-white m-18 text-underline pb-1">Fruits</a>
+                <a href="{{url_for('promotion', category='Fish')}}" class="bg-white m-18 text-underline pb-1">Fish</a>
+                <a href="{{url_for('promotion', category='Paper')}}" class="bg-white m-18 text-underline pb-1">Paper</a>
+                <a href="{{url_for('promotion', category='Baking')}}" class="bg-white m-18 text-underline pb-1">Baking</a>
+                <a href="{{url_for('logout')}}" class="bg-white m-18 text-underline color-red-600 pb-1">Log Out</a>
 
-                            <input type="submit" name="navbar" value="Rice" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Dairy" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Breads" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Eggs" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Fruits" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Fish" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Paper & Tissue" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Baking Needs" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full" />
-                            <input type="submit" name="navbar" value="Log Out" class="text-underline vstack align-start space-6 pl-24 py-28 touch:bg-gray-200 w-full color-red-600" />
-                        </div>
+            </div>
+        </div>
+        <div class="unhidden md:hidden">
+            <div class="zstack w-40 h-40" onclick="hamburger()">
+                <div class="vstack space-5">
+                    <div class="h-2 w-36 bg-black rounded-full"></div>
+                    <div class="h-2 w-36 bg-black rounded-full"></div>
+                    <div class="h-2 w-36 bg-black rounded-full"></div>
+                </div>
+                <div class="hidden place-bl transform translate-y-100" id="myLinks">
+                    <div class="vstack w-192 rounded-5 overflow-hidden shadow shadow-px shadow-xs shadow-lg bg-white">
+                        <a href="{{url_for('admin')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Home</a>
+                        <a href="{{url_for('promotion', category='Rice')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Rice</a>
+                        <a href="{{url_for('promotion', category='Dairy')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Dairy</a>
+                        <a href="{{url_for('promotion', category='Breads')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Breads</a>
+                        <a href="{{url_for('promotion', category='Eggs')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Eggs</a>
+                        <a href="{{url_for('promotion', category='Fruits')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Fruits</a>
+                        <a href="{{url_for('promotion', category='Fish')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Fish</a>
+                        <a href="{{url_for('promotion', category='Paper')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Paper</a>
+                        <a href="{{url_for('promotion', category='Baking')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full bg-white">Baking</a>
+                        <a href="{{url_for('logout')}}" class="text-underline vstack align-start space-6 pl-24 py-12 touch:bg-gray-200 w-full">Log Out</a>
                     </div>
                 </div>
             </div>
-        </form>
-
+        </div>
 
         <div class="spacer"></div>
     </nav>
@@ -83,7 +79,7 @@
                                 </div>
                                 <div class="spacer"></div>
                                 <a href="{{url_for('removePromoItem',item=item.id)}}">
-                                <svg class="w-28 h-28 mr-18 text-underline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    <svg class="w-28 h-28 mr-18 text-underline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                 </a>
                             </div>
                         </div>

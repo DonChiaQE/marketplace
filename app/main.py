@@ -209,7 +209,7 @@ def removeallobjects():
                     db.session.commit()
                     return redirect('/wipedbpage')
                 elif request.form['objectss'] == 'removeallcurrent':
-                    db.session.query(Temporary_Table).delete()
+                    db.session.query(Cart_Items).delete()
                     db.session.commit()
                     return redirect('/wipedbpage')
             else:
@@ -230,7 +230,7 @@ def removeallobjects():
                     db.session.commit()
                     return redirect('/marketplace')
                 elif request.form['objectss'] == 'removeallcurrent':
-                    db.session.query(Temporary_Table).delete()
+                    db.session.query(Cart_Items).delete()
                     db.session.commit()
                     return redirect('/marketplace')
         else:
@@ -248,7 +248,7 @@ def reinitialisedb():
         #for code in all_codes:
         #    code.code = ''
         db.session.query(Record_Of_Items).delete()
-        db.session.query(Temporary_Table).delete()
+        db.session.query(Cart_Items).delete()
         db.session.query(Submitted_Cart).delete()
         db.session.commit()
         return redirect('/admin')
@@ -451,19 +451,43 @@ def deleteEntry():
             username = request.form['username']
             userid = request.form['userid']
             items = db.session.query(Cart_Items).filter_by(acc_id = userid)
-            item_test = db.session.query(Cart_Items).filter_by(acc_id = userid).first()
+
+            student = db.session.query(StdAcc).filter_by(name = username).first()
+            check_for_existing_items = db.session.query(Cart_Items).filter_by(acc_id = student.id).first()
+            teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
+            items_promo = db.session.query(Record_Of_Items,Promo_Items, Cart_Items)\
+                .filter(Record_Of_Items.id == Cart_Items.itemID)\
+                .filter(Promo_Items.itemID == Record_Of_Items.id)\
+                .filter(Promo_Items.promo_no == teacher.promo_state)\
+                .filter(Cart_Items.acc_id == student.id).all()
+            
+            try:
+                items = db.session.query(Record_Of_Items, Cart_Items)\
+                    .filter(Record_Of_Items.id == Cart_Items.itemID)\
+                    .filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
+                    .filter(Cart_Items.acc_id == student.id).all()
+
+            except:
+                items = db.session.query(Record_Of_Items, Cart_Items)\
+                    .filter(Record_Of_Items.id == Cart_Items.itemID)\
+                    .filter(Cart_Items.acc_id == student.id).all()
+            
+            total = 0
+            for item in items_promo:
+                total += item[2].quantity * item[1].promo_price
+
+            for item in items:
+                total += item[1].quantity * item[0].price
+
             text = ""
-            if item_test == None:
+            if check_for_existing_items == None:
                 text = "Empty Cart"
             else:
                 text = ""
-            total = 0
-            for item in items:
-                total += (item.quantity * item.price)
             if 'admin' in session:
-                return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'admin', total = total)
+                return render_template('viewstudentcart.html', items = items, items_promo = items_promo, username = username, text = text, usertype = 'admin', total = total, userid = userid)
             elif 'teacher' in session:
-                return render_template('viewstudentcart.html',items = items, username = username, text = text, usertype = 'teacher', total = total)
+                return render_template('viewstudentcart.html', items = items, items_promo = items_promo, username = username, text = text, usertype = 'teacher', total = total, userid = userid)
         
 
 @app.route('/addtocart', methods=['POST', 'GET'])
@@ -909,7 +933,7 @@ def shop_cat():
         return render_template('login.html')
 
 
-@app.route('/viewsubmittedcarts', methods = ['post', 'get'])
+@app.route('/viewsubmittedcarts', methods = ['POST', 'GET'])
 def view_submitted_carts():
     if 'teacher' in session:
         local_account = session['teacher']

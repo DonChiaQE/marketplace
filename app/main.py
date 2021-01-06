@@ -33,6 +33,7 @@ class StdAcc(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), default = '-')
     pword = db.Column(db.String(200), default = '-')
+    totalamount = db.Column(db.Integer)
     assigned_teacher_id = db.Column(db.Integer, db.ForeignKey('tr_acc.id'))
 
 class Record_Of_Items(db.Model):
@@ -477,7 +478,7 @@ def submit_cart():
             return render_template('checkout.html', feedback = "There are currently no items in the cart.", total = 0, gotitems = gotitems)
         else:
             for item in items:
-                new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = 1, cat = item.cat)
+                new_stuff = Submitted_Cart(acc = local_account, name = item.name, info = item.info, price = item.price, quantity = item.quantity, cat = item.cat)
                 db.session.add(new_stuff)
                 db.session.commit()
             session.pop('student', None)

@@ -355,6 +355,14 @@ def decrease_quantity():
     else:
         return "Error encountered. Please login again."
 
+@app.route('/removesubmittedcart', methods = ['POST', 'GET'])
+def removesubmittedcart():
+    if "teacher" in session:
+        name = request.form['username']
+        db.session.query(Submitted_Cart).filter_by(acc = name).delete()
+        db.session.commit()
+        return redirect('/viewsubmittedcarts')
+
 @app.route('/checkout', methods=['POST', 'GET'])
 def checkout():
     if "student" in session:
@@ -494,20 +502,21 @@ def deleteEntry():
 def add_to_cart():
     if request.method == "POST":
         idx = request.form['Add2Cart']
+        itemcat = db.session.query(Record_Of_Items).filter_by(id = idx).first()
         local_account = session['student']
         student = db.session.query(StdAcc).filter_by(name = local_account).first()
         check = db.session.query(Cart_Items).filter_by(itemID = idx, acc_id = student.id).first()
         if check:
             check.quantity +=1
             db.session.commit()
-            items = filterCat("Rice")
+            items = filterCat(itemcat.cat)
             addedToCart = True
             return render_template('marketplace.html',items_promo = items[0], items=items[1])
         else:
             add_to_cart_item = Cart_Items(student = student, itemID = idx, quantity = 1)
             db.session.add(add_to_cart_item)
             db.session.commit()
-            items = filterCat("Rice")
+            items = filterCat(itemcat.cat)
             addedToCart = True
             return render_template('marketplace.html',items_promo = items[0], items=items[1])
     else:
@@ -520,10 +529,8 @@ def submit_cart():
         gotsubmit = check_for_existing_account
         student = db.session.query(StdAcc).filter_by(name = session['student']).first()
         check_for_existing_items = db.session.query(Cart_Items).filter_by(acc_id = student.id).first()
-        student = db.session.query(StdAcc).filter_by(name = session['student']).first()
         teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
-        items_promo = db.session.query(Record_Of_Items,Promo_Items, Cart_Items)\
-            .filter(Record_Of_Items.id == Cart_Items.itemID)\
+        items_promo = db.session.query(Record_Of_Items,Promo_Items, Cart_Items).filter(Record_Of_Items.id == Cart_Items.itemID)\
             .filter(Promo_Items.itemID == Record_Of_Items.id)\
             .filter(Promo_Items.promo_no == teacher.promo_state)\
             .filter(Cart_Items.acc_id == student.id).all()
@@ -545,7 +552,7 @@ def submit_cart():
 
         for item in items:
             total += item[1].quantity * item[0].price
-
+        
         if check_for_existing_account:
             gotsubmit = True
             return render_template('checkout.html', items = items, feedback = "You have already submitted once.", total = total, gotsubmit = gotsubmit)
@@ -554,30 +561,20 @@ def submit_cart():
             return render_template('checkout.html', feedback = "There are currently no items in the cart.", total = total, gotitems = gotitems)
         else:
             try:
-                items = db.session.query(Record_Of_Items, Cart_Items)\
-                    .filter(Record_Of_Items.id == Cart_Items.itemID)\
-                    .filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
-                    .filter(Cart_Items.acc_id == student.id).all()
-
-            except:
-                items = db.session.query(Record_Of_Items, Cart_Items)\
-                    .filter(Record_Of_Items.id == Cart_Items.itemID)\
-                    .filter(Cart_Items.acc_id == student.id).all()
-
-            try:
                 for item in items_promo:
-                    new_Promo = Submitted_Cart(acc = session['student'], name = item[0].name, info = item[0].info, price = item[1].price, quantity = item[2].quantity, cat = item[0].cat)
-                
+                    new_Promo = Submitted_Cart(acc = session['student'], name = item[0].name, info = item[0].info, price = item[0].price, quantity = item[2].quantity, cat = item[0].cat)
+                    db.session.add(new_Promo)
                 for item in items:
                     new_Items = Submitted_Cart(acc = session['student'], name = item[0].name, info = item[0].info, price = item[0].price, quantity = item[1].quantity, cat = item[0].cat)
-                db.session.add(new_Promo)
-                db.session.add(new_Items)
+                    db.session.add(new_Items)
+                db.session.commit()
+                
             except:
                 for item in items:
                     new_Items = Submitted_Cart(acc = session['student'], name = item[0].name, info = item[0].info, price = item[0].price, quantity = item[1].quantity, cat = item[0].cat)
-                db.session.add(new_Items)
+                    db.session.add(new_Items)
+                db.session.commit()
             
-            db.session.commit()
                 
             session.pop('student', None)
             return render_template('success.html')
@@ -627,7 +624,7 @@ def admin():
             elif request.form['nav'] == 'View Promotion':
                 return redirect('/viewpromotion')
             elif request.form['nav'] == 'Reset Promotion':
-                items = db.session.query(Record_Of_Items).all()
+                items = db.session.query(Promo_Items).all()
                 for item in items:
                     item.promo_price = None
                 db.session.commit()

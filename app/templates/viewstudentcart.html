@@ -29,7 +29,7 @@
                             <div class="text-20">{{item[0].name}}</div>
                             <div class="text-14">Price: {{"$%.2f"|format(item[0].price)}}</div>
                             <div class="text-14">Quantity: {{item[1].quantity}}</div>
-                            <div class="text-14 bold">Total: {{  "$%.2f"|format(item[1].quantity * item[0].price)  }}</div>
+                            <div class="text-14 bold">Total: {{  "$%.2f"|format(item[2].quantity * item[0].price)  }}</div>
                             <div class="spacer"></div>
                         </div>
                         {% endfor %}

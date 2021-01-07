@@ -64,7 +64,7 @@
         <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-12">
             {% for item in items %}
             <form action="/" , method="POST">
-                <div class="vstack h-512 bg-white rounded-3 shadow shadow-md py-28 px-24">
+                <div class="vstack h-640 bg-white rounded-3 shadow shadow-md py-28 px-24">
                     <input type="submit" name="manipulate" class="bg-transparent text-18 color-blue-500 text-underline" style="font-size: 18px;" value="Change Image"> {% if item.image %}
                     <br>
                     <img src="{{ url_for('display_image', filename=item.image) }}"> {% else %}

@@ -17,8 +17,13 @@
         <div class="spacer"></div>
 
     </nav>
-
     <div class="container py-28">
+<div class="vstack screen">
+<div class="text-36">Submitted Carts</div>
+    <div class="container py-28">
+        <form class="px-28 pb-28" action="/viewsubmittedcarts" , method="POST">
+            <button type="submit" class="text-underline color-green-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="todo" value="View Current Cart">Refresh</button>
+        </form>
         <div class="w-full vstack md:hstack md:space-28 h-auto">
             <div id="example-1" class=" vstack space-28 px-28">
                 {% for student in students %}
@@ -37,19 +42,22 @@
                         </div>
                         {% endfor %} {% endif %}
                     </div>
-                    <div class="mt-28">Total Amount Spent: {{ "$%.2f"|format(student.totalamount) }}
-                        <form action="/removesubmittedcart" method="POST">
-                            <input type="hidden" name="username" value="{{student.name}}">
-                            <input type="submit" name='nav' value="Remove Cart" class="bg-red-600 color-white text-underline w-60 rounded-3 shadow shadow-md p-8">
-                        </form>
+                    <div class="vstack space-12 align-start">
+                          <div>Total Amount Spent: {{ "$%.2f"|format(student.totalamount) }}</div>
+                          <form action="/removesubmittedcart" method="POST">
+                              <input type="hidden" name="username" value="{{student.name}}">
+                              <input type="submit" name='nav' value="Remove Cart" class="bg-red-500 color-white text-underline w-60 rounded-3 shadow shadow-md p-16">
+                          </form>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
-        <form class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-28" action="/viewsubmittedcarts" , method="POST">
-            <button type="submit" class="text-underline color-green-600 w-128 bg-white rounded-3 shadow shadow-md p-28" name="todo" value="View Current Cart">Refresh</button>
+<form class="px-28 pt-28" action="/viewsubmittedcarts" , method="POST">
+            <button type="submit" class="text-underline color-green-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="todo" value="View Current Cart">Refresh</button>
         </form>
+    </div>
+    </div>
     </div>
 </body>
 

@@ -33,25 +33,34 @@
         <div class="vstack md:hstack md:space-28 h-auto">
             <div id="example-1" class=" vstack space-28">
                 <div class="vstack bg-gray-200 p-28 space-28 align-start rounded-28 mx-8">
+                  <div class="hstack w-full space-12">
                     <div class="text-28">Promotion 1</div>
+                    {% if promo_dis1.count() != 0 %}
+                        <a href="{{url_for('setPromoNo', promo_no=1)}}" class="vstack">
+                            <div class="bg-white shadow shadow-md p-16">Reselect items</div>
+                        </a>
+                        <a href="clear all promotion" class="vstack">
+                            <div class="bg-red-500 shadow shadow-md p-16 color-white">Delete all items</div>
+                        </a>
+                        {% endif %}
+                        <div class="spacer"></div>
+                  </div>
                     <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {% if promo_dis1.count() == 0 %}
-            
-                        <div class="text-20">There is no available promotion. 
-                            <a href="{{url_for('setPromoNo', promo_no=1)}}">Click here to add promotion</a>
+                        <div class="vstack align-start space-12">
+                          <div class="text-20">There is no available promotion.</div>
+                          <a href="{{url_for('setPromoNo', promo_no=1)}}" class="bg-white shadow shadow-md p-16">Add promotion</a>
                         </div>
                         {% else %}
                         {% for item in promo_dis1 %}
-                        <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
+                        <div class="vstack space-8 align-start w-full md:w-full h-224 md:h-288 bg-white shadow shadow-md p-16">
                             <div class="text-20">{{item[0].name}}</div>
                             <div class="text-14">Original Price: {{"$%.2f"|format(item[0].price)}}</div>
                             <div class="text-14">Promo Price: {{"$%.2f"|format(item[1].promo_price)}}</div>
                             <div class="spacer"></div>
                         </div>
                         {% endfor %}
-                        <a href="{{url_for('setPromoNo', promo_no=1)}}">
-                            <div class="text-20">Click here to reselect items for promotion.</div>
-                            </a>
+                        
                         {% endif %}
                     </div>
                     
@@ -65,33 +74,39 @@
         <div class="vstack md:hstack md:space-28 h-auto">
             <div id="example-1" class=" vstack space-28">
                 <div class="vstack bg-gray-200 p-28 space-28 align-start rounded-28 mx-8">
+                  <div class="hstack w-full space-12">
                     <div class="text-28">Promotion 2</div>
-                    <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    
-                        {% if promo_dis2.count() == 0 %}
-                
-                        <div class="text-20">There is no available promotion. 
-                            <a href="{{url_for('setPromoNo', promo_no=2)}}">Click here to add promotion</a>
-                        </div>
-
+                    {% if promo_dis2.count() != 0 %}
+                        <a href="{{url_for('setPromoNo', promo_no=1)}}" class="vstack">
+                            <div class="bg-white shadow shadow-md p-16">Reselect items</div>
+                        </a>
+                        <a href="clear all promotion" class="vstack">
+                            <div class="bg-red-500 shadow shadow-md p-16 color-white">Delete all items</div>
+                        </a>
+                        {% endif %}
                         <div class="spacer"></div>
+                  </div>
+                    <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {% if promo_dis2.count() == 0 %}
+                        <div class="vstack align-start space-12">
+                          <div class="text-20">There is no available promotion.</div>
+                          <a href="{{url_for('setPromoNo', promo_no=1)}}" class="bg-white shadow shadow-md p-16">Add promotion</a>
+                        </div>
                         {% else %}
                         {% for item in promo_dis2 %}
-                        <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
+                        <div class="vstack space-8 align-start w-full md:w-full h-224 md:h-288 bg-white shadow shadow-md p-16">
                             <div class="text-20">{{item[0].name}}</div>
                             <div class="text-14">Original Price: {{"$%.2f"|format(item[0].price)}}</div>
                             <div class="text-14">Promo Price: {{"$%.2f"|format(item[1].promo_price)}}</div>
                             <div class="spacer"></div>
                         </div>
                         {% endfor %}
-                        <a href="{{url_for('setPromoNo', promo_no=2)}}">
-                            <div class="text-20">Click here to reselect items for promotion.</div>
-                            </a>
-                        {% endif %}
                         
+                        {% endif %}
                     </div>
+                    
                 </div>
-
+                
             </div>
         </div>
     </div>
@@ -100,28 +115,39 @@
         <div class="vstack md:hstack md:space-28 h-auto">
             <div id="example-1" class=" vstack space-28">
                 <div class="vstack bg-gray-200 p-28 space-28 align-start rounded-28 mx-8">
+                  <div class="hstack w-full space-12">
                     <div class="text-28">Promotion 3</div>
+                    {% if promo_dis3.count() != 0 %}
+                        <a href="{{url_for('setPromoNo', promo_no=1)}}" class="vstack">
+                            <div class="bg-white shadow shadow-md p-16">Reselect items</div>
+                        </a>
+                        <a href="clear all promotion" class="vstack">
+                            <div class="bg-red-500 shadow shadow-md p-16 color-white">Delete all items</div>
+                        </a>
+                        {% endif %}
+                        <div class="spacer"></div>
+                  </div>
                     <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {% if promo_dis3.count() == 0 %}
-                        <div class="text-20">There is no available promotion. 
-                            <a href="{{url_for('setPromoNo', promo_no=3)}}">Click here to add promotion</a>
+                        <div class="vstack align-start space-12">
+                          <div class="text-20">There is no available promotion.</div>
+                          <a href="{{url_for('setPromoNo', promo_no=1)}}" class="bg-white shadow shadow-md p-16">Add promotion</a>
                         </div>
                         {% else %}
                         {% for item in promo_dis3 %}
-                        <div class="vstack space-8 align-start w-full md:w-224 h-224 md:h-288 bg-white shadow shadow-md p-16">
+                        <div class="vstack space-8 align-start w-full md:w-full h-224 md:h-288 bg-white shadow shadow-md p-16">
                             <div class="text-20">{{item[0].name}}</div>
                             <div class="text-14">Original Price: {{"$%.2f"|format(item[0].price)}}</div>
                             <div class="text-14">Promo Price: {{"$%.2f"|format(item[1].promo_price)}}</div>
                             <div class="spacer"></div>
                         </div>
                         {% endfor %}
-                        <a href="{{url_for('setPromoNo', promo_no=3)}}">
-                            <div class="text-20">Click here to reselect items for promotion.</div>
-                            </a>
+                        
                         {% endif %}
                     </div>
+                    
                 </div>
-               
+                
             </div>
         </div>
     </div>

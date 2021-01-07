@@ -67,21 +67,21 @@
                         <div class="vstack space-28">
                             <div class="hstack w-full h-128 bg-white shadow shadow-md px-24">
                                 <div class="vstack align-start h-80">
-                                    <div class="text-blackm mb-2">{{item[0].name}}</div>
-                                    <div class="text-14 text-400 text-black"><strike>{{"$%.2f"|format(item[0].price)}}</strike> {{"$%.2f"|format(item[1].promo_price)}}</div>
+                                    <div class="color-black mb-2 w-144 ellipsis text-14">{{item[0].name}}</div>
+                                    <div class="color-gray-500 text-12 mt-2"><strike>{{"$%.2f"|format(item[0].price)}}</strike> {{"$%.2f"|format(item[1].promo_price)}}</div>
                                     <div class="spacer"></div>
                                     <div class="hstack space-5">
                                         <form action="/decrease_quantity" , method="POST">
-                                        <input type="hidden" name="decremove" value="decrease">
+                                            <input type="hidden" name="decremove" value="decrease">
                                             <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item[0].id}}">-</button>
                                         </form>
                                         <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item[2].quantity}}</div>
                                         <form action="/increase_quantity" , method="POST">
                                             <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item[0].id}}">+</button>
                                         </form>
+                                        <div class="spacer"></div>
                                     </div>
                                 </div>
-                                <div class="spacer"></div>
                                 <div class="spacer"></div>
                                 <div class="vstack h-80">
                                     <div class="spacer"></div>

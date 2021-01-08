@@ -656,7 +656,7 @@ def admin():
 def teacher():
     if 'teacher' in session:
         if request.method == 'POST':
-            if request.form['nav'] == 'Table of Student':
+            if request.form['nav'] == 'Table of Teams':
                 return redirect('/tablestudent')
             elif request.form['nav'] == 'List of Submitted Carts':
                 return redirect('/viewsubmittedcarts')

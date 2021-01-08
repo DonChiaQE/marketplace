@@ -39,7 +39,7 @@
                         <a href="{{url_for('setPromoNo', promo_no=1)}}" class="vstack">
                             <div class="bg-white shadow shadow-md p-16">Reselect items</div>
                         </a>
-                        <a href="clear all promotion" class="vstack">
+                        <a href="{{url_for('promodelete', promoid=1)}}" class="vstack">
                             <div class="bg-red-500 shadow shadow-md p-16 color-white">Delete all items</div>
                         </a>
                         {% endif %}
@@ -80,7 +80,7 @@
                         <a href="{{url_for('setPromoNo', promo_no=1)}}" class="vstack">
                             <div class="bg-white shadow shadow-md p-16">Reselect items</div>
                         </a>
-                        <a href="clear all promotion" class="vstack">
+                        <a href="{{url_for('promodelete', promoid=2)}}" class="vstack">
                             <div class="bg-red-500 shadow shadow-md p-16 color-white">Delete all items</div>
                         </a>
                         {% endif %}
@@ -121,7 +121,7 @@
                         <a href="{{url_for('setPromoNo', promo_no=1)}}" class="vstack">
                             <div class="bg-white shadow shadow-md p-16">Reselect items</div>
                         </a>
-                        <a href="clear all promotion" class="vstack">
+                        <a href="{{url_for('promodelete', promoid=3)}}" class="vstack">
                             <div class="bg-red-500 shadow shadow-md p-16 color-white">Delete all items</div>
                         </a>
                         {% endif %}

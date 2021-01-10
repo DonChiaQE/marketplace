@@ -1108,7 +1108,7 @@ def publishpromotion():
         
         db.session.bulk_save_objects(insert_entries)
         db.session.commit()
-
+        session['promo_items'] = []
         return redirect('/viewpromotion')
     else:
         pass

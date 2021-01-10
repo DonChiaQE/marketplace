@@ -212,6 +212,14 @@ def removeallobjects():
                     db.session.query(Cart_Items).delete()
                     db.session.commit()
                     return redirect('/wipedbpage')
+                elif request.form['objectss'] == 'resetpromotion':
+                    db.session.query(Promo_Items).delete()
+                    teachers = db.session.query(TrAcc).all()
+                    for teacher in teachers:
+                        teacher.promo_state = None
+                    db.session.commit()
+                    session['reset_promo'] = True
+                    return redirect('/wipedbpage')
             else:
                 if request.form['objectss'] == 'removeallstudents':
                     db.session.query(StdAcc).delete()
@@ -396,14 +404,11 @@ def checkout():
     else:
         return render_template('login.html')
 
-@app.route('/AdminDelete/<int:id>')
-def admin_delete(id):
-    to_be_deleted = StdAcc.query.get_or_404(id)
-    try:
-        db.session.delete(to_be_deleted)
-        db.session.commit()
-    except:
-        return "There was a problem deleting that task."
+@app.route('/promodelete/<promoid>')
+def promodelete(promoid):
+    to_be_deleted = db.session.query(Promo_Items).filter_by(promo_no = promoid).delete()
+    db.session.commit()
+    return redirect('/viewpromotion')
 
 @app.route('/deleteItem/<id>', methods = ['POST', 'GET'])
 def delete_item(id):
@@ -503,17 +508,18 @@ def add_to_cart():
     if request.method == "POST":
         idx = request.form['Add2Cart']
         itemcat = db.session.query(Record_Of_Items).filter_by(id = idx).first()
+        quantity_to_add = int(request.form['quantity'])
         local_account = session['student']
         student = db.session.query(StdAcc).filter_by(name = local_account).first()
         check = db.session.query(Cart_Items).filter_by(itemID = idx, acc_id = student.id).first()
         if check:
-            check.quantity +=1
+            check.quantity += quantity_to_add
             db.session.commit()
             items = filterCat(itemcat.cat)
             addedToCart = True
             return render_template('marketplace.html',items_promo = items[0], items=items[1])
         else:
-            add_to_cart_item = Cart_Items(student = student, itemID = idx, quantity = 1)
+            add_to_cart_item = Cart_Items(student = student, itemID = idx, quantity = quantity_to_add)
             db.session.add(add_to_cart_item)
             db.session.commit()
             items = filterCat(itemcat.cat)
@@ -555,7 +561,7 @@ def submit_cart():
         
         if check_for_existing_account:
             gotsubmit = True
-            return render_template('checkout.html', items = items, feedback = "You have already submitted once.", total = total, gotsubmit = gotsubmit)
+            return render_template('checkout.html', items_promo = items_promo, items = items, feedback = "You have already submitted once.", total = total, gotsubmit = gotsubmit)
         elif check_for_existing_items == None:
             gotitems = False
             return render_template('checkout.html', feedback = "There are currently no items in the cart.", total = total, gotitems = gotitems)
@@ -619,22 +625,8 @@ def admin():
                 return redirect('/wipedb')
             elif request.form['nav'] == 'Clear Everything':
                 return redirect('/reinitialisedb')
-            elif request.form['nav'] == 'Create Promotion':
-                return redirect('/promotion/Rice')
             elif request.form['nav'] == 'View Promotion':
                 return redirect('/viewpromotion')
-            elif request.form['nav'] == 'Reset Promotion':
-                items = db.session.query(Promo_Items).all()
-                for item in items:
-                    item.promo_price = None
-                db.session.commit()
-                session['reset_promo'] = True
-                return redirect('/admin')
-
-            elif request.form['nav'] == 'Wipe DB':
-                pass
-            elif request.form['nav'] == 'Reinitialise DB':
-                pass
             elif request.form['nav'] == 'Log Out':
                 return redirect('/logout')
         else:
@@ -664,7 +656,7 @@ def admin():
 def teacher():
     if 'teacher' in session:
         if request.method == 'POST':
-            if request.form['nav'] == 'Table of Student':
+            if request.form['nav'] == 'Table of Teams':
                 return redirect('/tablestudent')
             elif request.form['nav'] == 'List of Submitted Carts':
                 return redirect('/viewsubmittedcarts')
@@ -1107,7 +1099,6 @@ def removePromoItem(item):
 def publishpromotion():
     if request.method == 'POST':
         itemID_list = session['promo_items']
-        print(session['promo_no'])
         check_promo = db.session.query(Promo_Items)\
                 .filter(Promo_Items.promo_no == session['promo_no']).delete()
         insert_entries = []
@@ -1201,4 +1192,5 @@ def test():
 
     
 
-app.run(host='0.0.0.0', port=8080)
+if __name__ == '__main__':
+    app.run(debug=True)

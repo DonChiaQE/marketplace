@@ -54,6 +54,7 @@
 
 
         <div class="spacer"></div>
+        
         <a href="checkout">
             <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
         </a>
@@ -68,14 +69,15 @@
                             <div class="hstack w-full h-128 bg-white shadow shadow-md px-24">
                                 <div class="vstack align-start h-80">
                                     <div class="color-black mb-2 w-144 ellipsis text-14">{{item[0].name}}</div>
-                                    <div class="color-gray-500 text-12 mt-2"><strike>{{"$%.2f"|format(item[0].price)}}</strike> {{"$%.2f"|format(item[1].promo_price)}}</div>
+                                    <div class="color-gray-500 text-12 mt-2"><strike>{{"$%.2f"|format(item[0].price)}}</strike> {{"$%.2f"|format(item[2].promo_price)}}</div>
                                     <div class="spacer"></div>
                                     <div class="hstack space-5">
                                         <form action="/decrease_quantity" , method="POST">
                                             <input type="hidden" name="decremove" value="decrease">
                                             <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item[0].id}}">-</button>
                                         </form>
-                                        <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item[2].quantity}}</div>
+                                        
+                                        <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item[1].quantity}}</div>
                                         <form action="/increase_quantity" , method="POST">
                                             <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item[0].id}}">+</button>
                                         </form>
@@ -85,7 +87,7 @@
                                 <div class="spacer"></div>
                                 <div class="vstack h-80">
                                     <div class="spacer"></div>
-                                    <div class="text-black"><b>{{"$%.2f"|format(item[2].quantity * item[1].promo_price)}}</b></div>
+                                    <div class="text-black"><b>{{"$%.2f"|format(item[1].quantity * item[2].promo_price)}}</b></div>
                                 </div>
                                 <div class="spacer"></div>
                                 <form action="/decrease_quantity" , method="POST">
@@ -108,12 +110,21 @@
                                     <div class="color-gray-500 text-12 mt-2">{{"$%.2f"|format(item[0].price)}}</div>
                                     <div class="spacer"></div>
                                     <div class="hstack space-5">
-                                        <form>
+                                        <!--form>
                                             <button id="minuss" type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons minus" name="Minus" value="{{item[0].id}}">-</button>
                                         </form>
-                                            <input class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center" type="number" pattern="[0-9]" min="1" value="{{item[1].quantity}}">
+                                            <input id="quantity{{item[0].id}}" class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center" type="number" pattern="[0-9]" min="1" value="{{item[1].quantity}}">
                                         <form>
                                             <button id="pluss" type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item[0].id}}">+</button>
+                                        </form-->
+                                        <form action="/decrease_quantity" , method="POST">
+                                            <input type="hidden" name="decremove" value="decrease">
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Minus" value="{{item[0].id}}">-</button>
+                                        </form>
+                                        
+                                        <div class="vstack w-48 h-28 bg-gray-300 border border-1 border-gray-400 text-center">{{item[1].quantity}}</div>
+                                        <form action="/increase_quantity" , method="POST">
+                                            <button type="submit" class="hstack w-28 h-28 bg-black rounded-full color-white buttons" name="Plus" value="{{item[0].id}}">+</button>
                                         </form>
                                         <div class="spacer"></div>
                                     </div>
@@ -219,6 +230,12 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    input[type='number']::-webkit-inner-spin-button, 
+    input[type='number']::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    margin: 0;
+}
 </style>
 
 <script>
@@ -383,7 +400,6 @@
         var $this = $(this);
         var $input = $this.closest('div').find('input');
         var value = parseInt($input.val());
-        console.log(value)
         if (value > 2) {
             value = value - 1;
         } else {
@@ -399,7 +415,6 @@
         var $this = $(this);
         var $input = $this.closest('div').find('input');
         var value = parseInt($input.val());
-        console.log(value)
         if (value < 1000) {
             value = value + 1;
         } else {

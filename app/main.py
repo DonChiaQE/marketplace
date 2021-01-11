@@ -376,26 +376,26 @@ def checkout():
     if "student" in session:
         student = db.session.query(StdAcc).filter_by(name = session['student']).first()
         teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
-        items_promo = db.session.query(Record_Of_Items,Promo_Items, Cart_Items)\
+        items_promo = db.session.query(Record_Of_Items, Cart_Items, Promo_Items)\
             .filter(Record_Of_Items.id == Cart_Items.itemID)\
             .filter(Promo_Items.itemID == Record_Of_Items.id)\
             .filter(Promo_Items.promo_no == teacher.promo_state)\
-            .filter(Cart_Items.acc_id == student.id).all()
+            .filter(Cart_Items.acc_id == student.id).order_by(Cart_Items.id).all()
         
         try:
             items = db.session.query(Record_Of_Items, Cart_Items)\
                 .filter(Record_Of_Items.id == Cart_Items.itemID)\
                 .filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
-                .filter(Cart_Items.acc_id == student.id).all()
+                .filter(Cart_Items.acc_id == student.id).order_by(Cart_Items.id).all()
 
         except:
             items = db.session.query(Record_Of_Items, Cart_Items)\
                 .filter(Record_Of_Items.id == Cart_Items.itemID)\
-                .filter(Cart_Items.acc_id == student.id).all()
+                .filter(Cart_Items.acc_id == student.id).order_by(Cart_Items.id).all()
         
         total = 0
         for item in items_promo:
-            total += item[2].quantity * item[1].promo_price
+            total += item[1].quantity * item[2].promo_price
 
         for item in items:
             total += item[1].quantity * item[0].price
@@ -407,6 +407,10 @@ def checkout():
 @app.route('/promodelete/<promoid>')
 def promodelete(promoid):
     to_be_deleted = db.session.query(Promo_Items).filter_by(promo_no = promoid).delete()
+    teachers = db.session.query(TrAcc).filter_by(promo_state = promoid).all()
+    if teachers:
+        for teacher in teachers:
+            teacher.promo_state = None
     db.session.commit()
     return redirect('/viewpromotion')
 
@@ -1108,7 +1112,7 @@ def publishpromotion():
         
         db.session.bulk_save_objects(insert_entries)
         db.session.commit()
-
+        session['promo_items'] = []
         return redirect('/viewpromotion')
     else:
         pass
@@ -1175,22 +1179,20 @@ def setTeacherPromoState():
 
 @app.route('/test', methods=['POST', 'GET'])
 def test():
-    items = db.session.query(Record_Of_Items).all()
-    listOfItems = []
-
-    for item in items:
-        if db.session.query(Promo_Items).filter_by(itemID = item.id):
-            objTuple = db.session.query(Record_Of_Items,Promo_Items)\
-                .filter(Record_Of_Items.id == Promo_Items.itemID)\
-                .filter(Record_Of_Items.id == item.id).first()
-        else:
-            objTuple = (item, None)
-
-        listOfItems.append(objTuple)
-
-    return render_template('test.html', items_promo = listOfItems)
-
+    student = db.session.query(StdAcc).filter_by(name = session['student']).first()
+    teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
+    items = db.session.query(Cart_Items)\
+    .filter_by(acc_id = student.id).order_by(Cart_Items.id).all()
+    items_promo = db.session.query(Cart_Items)\
+        .filter(Record_Of_Items.id == Cart_Items.itemID)\
+        .filter(Promo_Items.itemID == Record_Of_Items.id)\
+        .filter(Promo_Items.promo_no == teacher.promo_state)\
+        .filter(Cart_Items.acc_id == student.id).order_by(Cart_Items.id).all()
+    req = request.get_json()
+    print(req['quantity' + str(items[0].itemID)])
+    return req
     
 
-if __name__ == '__main__':
+    
+if __name__ == "__main__":
     app.run(debug=True)

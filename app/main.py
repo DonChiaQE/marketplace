@@ -399,8 +399,8 @@ def checkout():
 
         for item in items:
             total += item[1].quantity * item[0].price
-
-        return render_template('checkout.html',items = items, items_promo = items_promo, total = total)
+        items_promomo = filterAllCat()
+        return render_template('checkout.html',items = items, items_promo = items_promo, total = total, items_promomo = items_promomo)
     else:
         return render_template('login.html')
 
@@ -1189,7 +1189,12 @@ def test():
         .filter(Promo_Items.promo_no == teacher.promo_state)\
         .filter(Cart_Items.acc_id == student.id).order_by(Cart_Items.id).all()
     req = request.get_json()
-    print(req['quantity' + str(items[0].itemID)])
+    #print(req['quantity' + str(items[0].itemID)])
+    stuff = req['yo'].splitlines()
+    for lol in stuff:
+        lol.replace('        ', '')
+        print(lol)
+    print(stuff)
     return req
     
 

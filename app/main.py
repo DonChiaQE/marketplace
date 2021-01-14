@@ -670,6 +670,8 @@ def teacher():
                 return redirect('/marketplace')
             elif request.form['nav'] == 'Launch Promotion':
                 return redirect('/viewpromotion')
+            elif request.form['nav'] == 'Reset Launched Promotion':
+                return redirect('/resetTeacherPromoState', code=307)
             elif request.form['nav'] == 'Log Out':
                 return redirect('/logout')
         else:
@@ -1176,6 +1178,14 @@ def setTeacherPromoState():
         db.session.commit()
         return redirect('/teacher')
 
+@app.route('/resetTeacherPromoState', methods =['POST'])
+def resetTeacherPromoState():
+    if 'teacher' in session:
+        teachername = session['teacher']
+        teacherpromostate = db.session.query(TrAcc).filter_by(name = teachername).first()
+        teacherpromostate.promo_state = None
+        db.session.commit()
+        return redirect('/teacher')
 
 @app.route('/test', methods=['POST', 'GET'])
 def test():

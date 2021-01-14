@@ -250,33 +250,15 @@
                 console.log(text);
                 if (data.message == "promoSent1") {
 
-                    swal({
-                            title: "New Promotion!",
-                            text: String(text),
-                            icon: "warning",
-                            buttons: true,
-                            dangerMode: true,
-                        }); 
+                    swal("New Promotion!", String(text), "warning");
                 }
                 else if (data.message == "promoSent2") {
-
-                    swal({
-                            title: "New Promotion!",
-                            text: String(text),
-                            icon: "warning",
-                            buttons: true,
-                            dangerMode: true,
-                        }); 
+                    swal("New Promotion!", String(text), "warning");
+                    
                 } 
                 else if (data.message == "promoSent3") {
 
-                    swal({
-                            title: "New Promotion!",
-                            text: String(text),
-                            icon: "warning",
-                            buttons: true,
-                            dangerMode: true,
-                        }); 
+                    swal("New Promotion!", String(text), "warning");
                 }
             });
 
@@ -303,13 +285,7 @@
 
     function displaypromopls() {
         var text = document.getElementById("text").innerText;
-        swal({
-                title: "New Promotion!",
-                text: String(text),
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            });
+        swal("New Promotion!", String(text), "warning");
     }
 
     $(minuss).on('click', function(e) {

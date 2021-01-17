@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://unpkg.com/@zaydek/duomo@0.7.1/dist/production-full.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 
 <body>
@@ -21,9 +23,9 @@
 <div class="vstack screen">
 <div class="text-36">Submitted Carts</div>
     <div class="container py-28">
-        <form class="px-28 pb-28" action="/viewsubmittedcarts" , method="POST">
-            <button type="submit" class="text-underline color-green-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="todo" value="View Current Cart">Refresh</button>
-        </form>
+        <!--form class="px-28 pb-28" action="/deletestudentsubmitted" , method="POST"-->
+            <button onclick="testing(value);" class="text-underline color-red-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="theaction" value="Remove All Submitted Carts">Remove All Submitted Carts</button>
+        <!--/form-->
         <div class="w-full vstack md:hstack md:space-28 h-auto">
             <div id="example-1" class=" vstack space-28 px-28">
                 {% for student in students %}
@@ -54,7 +56,7 @@
             </div>
         </div>
 <form class="px-28 pt-28" action="/viewsubmittedcarts" , method="POST">
-            <button type="submit" class="text-underline color-green-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="todo" value="View Current Cart">Refresh</button>
+            <button type="submit" class="text-underline color-green-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="theaction" value="Refresh">Refresh</button>
         </form>
     </div>
     </div>
@@ -147,4 +149,34 @@
             }]
         }
     })
+
+    function testing(duh) {
+        swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover them!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    deletus(duh);
+                    swal("Your files have been deleted!", {
+                        icon: "success",
+                    }).then(function() {
+                    window.location.href = '/viewsubmittedcarts'
+                    })
+                  } else {
+
+                }
+            });
+    }
+
+    function deletus(objectss) {
+        $.ajax({
+            url: "/deletestudentsubmitted",
+            type: "POST",
+            
+        })
+    }
 </script>

@@ -664,7 +664,7 @@ def teacher():
                 return redirect('/tablestudent')
             elif request.form['nav'] == 'List of Submitted Carts':
                 return redirect('/viewsubmittedcarts')
-            elif request.form['nav'] == 'Passcodes':
+            elif request.form['nav'] == 'Passcode':
                 return redirect('/passcodepage')
             elif request.form['nav'] == 'List of Shopping Items':
                 return redirect('/marketplace')

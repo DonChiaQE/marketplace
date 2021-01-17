@@ -968,6 +968,19 @@ def view_submitted_carts():
             student.totalamount = total_price
         db.session.commit()
         return render_template('testviewstudent.html', students = students, data = data, set_existing_students = set_existing_students)
+            
+@app.route('/deletestudentsubmitted', methods = ['POST', 'GET'])
+def deletestudentsubmitted():
+    if (request.method == 'POST') and ('teacher' in session):
+        local_account = session['teacher']
+        local_teacher = db.session.query(TrAcc).filter_by(name = local_account).first()
+        students = db.session.query(StdAcc).filter_by(assigned_teacher_id = local_teacher.id).all()
+        for student in students:
+            db.session.query(Submitted_Cart).filter_by(acc = student.name).delete()
+        db.session.commit()
+        set_existing_students = []
+        return render_template('testviewstudent.html', students = students, set_existing_students = set_existing_students)
+
 
 @app.route('/tableteacher', methods = ["POST", 'GET'])
 def tableTeacher():

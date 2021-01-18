@@ -34,27 +34,34 @@
                             <div class="align-self-stretch grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {% if student.name not in set_existing_students %}
                                 <div class="text-20">Not Yet Submitted</div>
-                                {% else %} {% for item in data if item.acc == student.name %}
+                                {% else %}
+                                    {% for item in data if item.acc == student.name %}{% for item_promo in items_promo %}
                                 <div class="vstack space-8 align-start w-full bg-white shadow shadow-md p-16">
-                                    {% for item_promo in items_promo %} {% if item.name == item_promo[1].name %}
+                                        
+                                            {% if item.name == item_promo[1].name %}
                                     <div class="text-20 ellipsis w-full">{{item.name}}</div>
                                     <div class="text-14">Price: {{"$%.2f"|format(item_promo[0].promo_price)}}</div>
                                     <div class="text-14">Quantity: {{item.quantity}}</div>
                                     <div class="text-14 bold">Total: {{"$%.2f"|format(item.quantity * item_promo[0].promo_price)}}</div>
                                     <div class="spacer"></div>
-                                    {% else %}
+                                            {% else %}
                                     <div class="text-20 ellipsis w-full">{{item.name}}</div>
                                     <div class="text-14">Price: {{"$%.2f"|format(item.price)}}</div>
                                     <div class="text-14">Quantity: {{item.quantity}}</div>
                                     <div class="text-14 bold">Total: {{"$%.2f"|format(item.quantity * item.price)}}</div>
                                     <div class="spacer"></div>
-                                    {% endif %} {% endfor %}
-                                </div>
-                                <form class="px-28 pt-28" action="/viewsubmittedcarts" , method="POST">
-                                    <button type="submit" class="text-underline color-green-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="theaction" value="Refresh">Refresh</button>
-                                </form>
+                                            {% endif %} 
+                                        {% endfor %} 
+                                    
+                                </div>{% endfor %}
+                                {% endif %}
+                                <div class="mt-28">Total Amount Spent: {{ "$%.2f"|format(student.totalamount) }}</div>
                             </div>
                         </div>
+                        {% endfor %}
+                        <form class="px-28 pt-28" action="/viewsubmittedcarts" , method="POST">
+                            <button type="submit" class="text-underline color-green-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="theaction" value="Refresh">Refresh</button>
+                        </form>
                     </div>
 </body>
 

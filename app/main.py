@@ -521,14 +521,16 @@ def add_to_cart():
             db.session.commit()
             items = filterCat(itemcat.cat)
             addedToCart = True
-            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+            items_promomo = filterAllCat()
+            return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
         else:
             add_to_cart_item = Cart_Items(student = student, itemID = idx, quantity = quantity_to_add)
             db.session.add(add_to_cart_item)
             db.session.commit()
             items = filterCat(itemcat.cat)
             addedToCart = True
-            return render_template('marketplace.html',items_promo = items[0], items=items[1])
+            items_promomo = filterAllCat()
+            return render_template('marketplace.html',items_promo = items[0], items=items[1], items_promomo = items_promomo)
     else:
         return "Error encountered. Please login again."
 

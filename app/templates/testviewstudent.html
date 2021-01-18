@@ -50,15 +50,12 @@
                                     <div class="spacer"></div>
                                     {% endif %} {% endfor %}
                                 </div>
-                                {% endfor %}
+                                <form class="px-28 pt-28" action="/viewsubmittedcarts" , method="POST">
+                                    <button type="submit" class="text-underline color-green-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="theaction" value="Refresh">Refresh</button>
+                                </form>
                             </div>
                         </div>
-                        <form class="px-28 pt-28" action="/viewsubmittedcarts" , method="POST">
-                            <button type="submit" class="text-underline color-green-600 w-full bg-white rounded-3 shadow shadow-md p-28" name="theaction" value="Refresh">Refresh</button>
-                        </form>
                     </div>
-                </div>
-            </div>
 </body>
 
 </html>

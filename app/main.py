@@ -959,19 +959,30 @@ def view_submitted_carts():
         students = db.session.query(StdAcc).filter_by(assigned_teacher_id = local_teacher.id).all()
         data = db.session.query(Submitted_Cart).all()
         existing_students = []
+        counter = 0
         items_promo = db.session.query(Promo_Items, Record_Of_Items).filter(Promo_Items.promo_no == local_teacher.promo_state).filter(Promo_Items.itemID == Record_Of_Items.id).all()
+        for item_promo in items_promo:
+            counter += 1
         for row in data:
             existing_students.append(row.acc)
         set_existing_students = set(existing_students)
         for student in students:
             student_items = db.session.query(Submitted_Cart).filter_by(acc = student.name)
             total_price = 0
+            i = 0
             for item in student_items:
-                for item_promo in items_promo:
-                    if item.name == item_promo[1].name:
-                        total_price += item.quantity * item_promo[0].promo_price
-                    else:
+                if items_promo:
+                    print(items_promo[0][1].name)
+                    while (i < counter)and (item.name != items_promo[i][1].name):
+                        i += 1
+                        print(i)
+                    if i == counter:
                         total_price += item.price * item.quantity
+                    else:
+                        total_price += items_promo[i][0].promo_price * item.quantity
+                    print('ended')
+                else:
+                    total_price += item.price * item.quantity
             student.totalamount = total_price
         db.session.commit()
         return render_template('testviewstudent.html', students = students, data = data, set_existing_students = set_existing_students, items_promo = items_promo)

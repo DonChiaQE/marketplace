@@ -960,6 +960,7 @@ def view_submitted_carts():
         data = db.session.query(Submitted_Cart).all()
         existing_students = []
         counter = 0
+        i = 0
         items_promo = db.session.query(Promo_Items, Record_Of_Items).filter(Promo_Items.promo_no == local_teacher.promo_state).filter(Promo_Items.itemID == Record_Of_Items.id).all()
         for item_promo in items_promo:
             counter += 1
@@ -969,13 +970,9 @@ def view_submitted_carts():
         for student in students:
             student_items = db.session.query(Submitted_Cart).filter_by(acc = student.name)
             total_price = 0
-            i = 0
             for item in student_items:
                 if items_promo:
-                    print(items_promo[0][1].name)
-                    print(i)
-                    print(counter)
-                    while (item.name != items_promo[i][1].name) and (i < counter):
+                    while (i < counter) and (item.name != items_promo[i][1].name):
                         i += 1
                     if i == counter:
                         total_price += item.price * item.quantity

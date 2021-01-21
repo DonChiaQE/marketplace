@@ -381,11 +381,15 @@ def checkout():
             .filter(Promo_Items.itemID == Record_Of_Items.id)\
             .filter(Promo_Items.promo_no == teacher.promo_state)\
             .filter(Cart_Items.acc_id == student.id).order_by(Cart_Items.id).all()
-        
+
+
         try:
+            items_on_promo = []
+            for item in items_promo:
+                items_on_promo.append(item[0].id)  
             items = db.session.query(Record_Of_Items, Cart_Items)\
                 .filter(Record_Of_Items.id == Cart_Items.itemID)\
-                .filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
+                .filter(Record_Of_Items.id.notin_(items_on_promo))\
                 .filter(Cart_Items.acc_id == student.id).order_by(Cart_Items.id).all()
 
         except:
@@ -542,15 +546,19 @@ def submit_cart():
         student = db.session.query(StdAcc).filter_by(name = session['student']).first()
         check_for_existing_items = db.session.query(Cart_Items).filter_by(acc_id = student.id).first()
         teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
-        items_promo = db.session.query(Record_Of_Items,Promo_Items, Cart_Items).filter(Record_Of_Items.id == Cart_Items.itemID)\
+        items_promo = db.session.query(Record_Of_Items, Cart_Items,Promo_Items)\
+            .filter(Record_Of_Items.id == Cart_Items.itemID)\
             .filter(Promo_Items.itemID == Record_Of_Items.id)\
             .filter(Promo_Items.promo_no == teacher.promo_state)\
             .filter(Cart_Items.acc_id == student.id).all()
         
         try:
+            items_on_promo = []
+            for item in items_promo:
+                items_on_promo.append(item[0].id)
             items = db.session.query(Record_Of_Items, Cart_Items)\
                 .filter(Record_Of_Items.id == Cart_Items.itemID)\
-                .filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
+                .filter(Record_Of_Items.id.notin_(items_on_promo))\
                 .filter(Cart_Items.acc_id == student.id).all()
 
         except:
@@ -560,7 +568,7 @@ def submit_cart():
         
         total = 0
         for item in items_promo:
-            total += item[2].quantity * item[1].promo_price
+            total += item[1].quantity * item[2].promo_price
 
         for item in items:
             total += item[1].quantity * item[0].price
@@ -574,7 +582,7 @@ def submit_cart():
         else:
             try:
                 for item in items_promo:
-                    new_Promo = Submitted_Cart(acc = session['student'], name = item[0].name, info = item[0].info, price = item[0].price, quantity = item[2].quantity, cat = item[0].cat)
+                    new_Promo = Submitted_Cart(acc = session['student'], name = item[0].name, info = item[0].info, price = item[2].promo_price, quantity = item[1].quantity, cat = item[0].cat)
                     db.session.add(new_Promo)
                 for item in items:
                     new_Items = Submitted_Cart(acc = session['student'], name = item[0].name, info = item[0].info, price = item[0].price, quantity = item[1].quantity, cat = item[0].cat)
@@ -972,15 +980,12 @@ def view_submitted_carts():
             total_price = 0
             for item in student_items:
                 if items_promo:
-                    print(items_promo[0][1].name)
                     while (i < counter)and (item.name != items_promo[i][1].name):
                         i += 1
-                        print(i)
                     if i == counter:
                         total_price += item.price * item.quantity
                     else:
                         total_price += items_promo[i][0].promo_price * item.quantity
-                    print('ended')
                 else:
                     total_price += item.price * item.quantity
             student.totalamount = total_price

@@ -972,8 +972,10 @@ def view_submitted_carts():
             total_price = 0
             for item in student_items:
                 if items_promo:
-                    while (i < counter) and (item.name != items_promo[i][1].name):
+                    print(items_promo[0][1].name)
+                    while (i < counter)and (item.name != items_promo[i][1].name):
                         i += 1
+                        print(i)
                     if i == counter:
                         total_price += item.price * item.quantity
                     else:

@@ -476,16 +476,19 @@ def deleteEntry():
             student = db.session.query(StdAcc).filter_by(name = username).first()
             check_for_existing_items = db.session.query(Cart_Items).filter_by(acc_id = student.id).first()
             teacher = db.session.query(TrAcc).filter_by(id = student.assigned_teacher_id).first()
-            items_promo = db.session.query(Record_Of_Items,Promo_Items, Cart_Items)\
+            items_promo = db.session.query(Record_Of_Items,Cart_Items ,Promo_Items)\
                 .filter(Record_Of_Items.id == Cart_Items.itemID)\
                 .filter(Promo_Items.itemID == Record_Of_Items.id)\
                 .filter(Promo_Items.promo_no == teacher.promo_state)\
                 .filter(Cart_Items.acc_id == student.id).all()
             
             try:
+                items_on_promo = []
+                for item in items_promo:
+                    items_on_promo.append(item[0].id)
                 items = db.session.query(Record_Of_Items, Cart_Items)\
                     .filter(Record_Of_Items.id == Cart_Items.itemID)\
-                    .filter(Record_Of_Items.id.notin_([j.id for j in items_promo[0]]))\
+                    .filter(Record_Of_Items.id.notin_(items_on_promo))\
                     .filter(Cart_Items.acc_id == student.id).all()
 
             except:
@@ -495,7 +498,7 @@ def deleteEntry():
             
             total = 0
             for item in items_promo:
-                total += item[2].quantity * item[1].promo_price
+                total += item[1].quantity * item[2].promo_price
 
             for item in items:
                 total += item[1].quantity * item[0].price
